@@ -6,8 +6,7 @@ from django.contrib.auth.models import (
 )
 from django.db import models
 
-from backend.web.enums import Role, CategoryEvent
-
+from web.enums import Role, CategoryEvent
 
 # Create your models here.
 
@@ -32,7 +31,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     name = models.CharField(max_length=127)
     surname = models.CharField(max_length=127)
-    role = models.CharField(choices=Role.choices, default=Role.user)
+    role = models.CharField(choices=Role.choices, default=Role.user, max_length=15)
     email = models.EmailField(unique=True)
 
     EMAIL_FIELD = "email"
@@ -60,7 +59,7 @@ class Event(models.Model):
     finish_time = models.DateTimeField()
     photo = models.ImageField()
     price = models.IntegerField()
-    category = models.CharField(choices=CategoryEvent.choices)
+    category = models.CharField(choices=CategoryEvent.choices, max_length=15)
     tag = models.ForeignKey(Tag, on_delete=models.SET_NULL, null=True, blank=True)
     is_passed = models.BooleanField()
     url = models.URLField(null=True, blank=True)
