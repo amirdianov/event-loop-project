@@ -6,7 +6,7 @@ from django.contrib.auth.models import (
 )
 from django.db import models
 
-from backend.web.enums import Role
+from backend.web.enums import Role, CategoryEvent
 
 
 # Create your models here.
@@ -46,3 +46,54 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def is_superuser(self):
         return self.role == Role.admin
+
+
+class Tag(models.Model):
+    title = models.CharField(max_length=127)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+
+class Event(models.Model):
+    title = models.CharField(max_length=127)
+    description = models.TextField()
+    start_time = models.DateTimeField()
+    finish_time = models.DateTimeField()
+    photo = models.ImageField()
+    price = models.IntegerField()
+    category = models.CharField(choices=CategoryEvent.choices)
+    tag = models.ForeignKey(Tag, on_delete=models.SET_NULL, null=True, blank=True)
+    is_passed = models.BooleanField()
+    url = models.URLField(null=True, blank=True)
+
+
+class UserEvent(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    is_organizer = models.BooleanField()
+
+
+class Comment(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True
+    )  # if user unauthorized
+    text = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+class Rating(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True
+    )  # if user unauthorized
+    count = models.IntegerField()
+
+
+class BankOperation(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=True, blank=True
+    )  # if user unauthorized
+    created_at = models.DateTimeField(auto_now_add=True)
+    price = models.IntegerField()
