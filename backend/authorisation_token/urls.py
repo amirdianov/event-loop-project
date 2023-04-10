@@ -1,5 +1,11 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import SimpleRouter
 
-from authorisation_token.views import status_view
+from authorisation_token.views import status_view, UserViewSet
 
-urlpatterns = [path("", status_view, name="status")]
+router = SimpleRouter()
+router.register("users", UserViewSet, basename="users")
+urlpatterns = [
+    path("drf-auth/", include("rest_framework.urls")),
+    path("", status_view, name="status"),
+] + router.urls
