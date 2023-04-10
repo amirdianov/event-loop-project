@@ -1,9 +1,18 @@
-<script setup>
-import TheWelcome from '../components/TheWelcome.vue'
-</script>
-
 <template>
-  <main>
-    <TheWelcome />
-  </main>
+    <a-input v-model:value="value" placeholder="Basic usage"/>
 </template>
+<script>
+import {defineComponent, ref} from 'vue';
+
+export default defineComponent({
+    setup() {
+        const value = ref('');
+        return {
+            value,
+        };
+    },
+});
+</script>
+<style scoped>
+
+</style>
