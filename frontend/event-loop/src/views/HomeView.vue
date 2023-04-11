@@ -1,18 +1,9 @@
 <template>
-    <a-input v-model:value="value" placeholder="Basic usage"/>
+  <h1>Это домашняя страница</h1>
 </template>
+
 <script>
-import {defineComponent, ref} from 'vue';
 
-export default defineComponent({
-    setup() {
-        const value = ref('');
-        return {
-            value,
-        };
-    },
-});
+export default {
+}
 </script>
-<style scoped>
-
-</style>

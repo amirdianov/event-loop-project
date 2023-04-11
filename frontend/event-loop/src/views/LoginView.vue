@@ -1,8 +1,11 @@
 <template>
-  <div class="about">
-    <h1>This is an login page</h1>
-  </div>
+    <div class="about">
+        <LoginComponent></LoginComponent>
+    </div>
 </template>
 <style>
 
 </style>
+<script setup>
+import LoginComponent from "@/components/LoginComponent.vue";
+</script>
