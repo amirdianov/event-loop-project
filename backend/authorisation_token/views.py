@@ -1,10 +1,6 @@
-import time
-
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
 
-from authorisation_token.models import User
 from authorisation_token.serializers import StatusCheckSerializer, UserSerializer
 
 
@@ -17,6 +13,10 @@ def status_view(request):
     )
 
 
-class UserViewSet(ModelViewSet):
-    queryset = User.object.all()
-    serializer_class = UserSerializer
+@api_view(["GET"])
+def profile_view(request):
+    if not request.user.is_anonymous:
+        serializer = UserSerializer(request.user)
+        return Response(serializer.data)
+    else:
+        return Response(StatusCheckSerializer({"status": "bad", "user_id": 404}).data)
