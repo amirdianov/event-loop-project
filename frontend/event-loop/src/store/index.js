@@ -1,15 +1,6 @@
-import {createStore} from 'vuex'
+import {createStore} from "vuex"
+import {loginModule} from "@/store/loginModule";
 
-const store = createStore({
-    state() {
-        return {
-            count: 0
-        }
-    },
-    mutations: {
-        increment(state) {
-            state.count++
-        }
-    }
+export default createStore({
+    modules: {login: loginModule}
 })
-export default store

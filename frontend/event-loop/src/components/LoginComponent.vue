@@ -5,7 +5,7 @@
             :label-col="{ span: 8 }"
             :wrapper-col="{ span: 16 }"
             autocomplete="off"
-            @finish="onFinish"
+            @finish="submit"
             @finishFailed="onFinishFailed"
     >
         <a-form-item
@@ -35,6 +35,7 @@
 </template>
 <script>
 import {defineComponent, reactive} from 'vue';
+import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
 
 export default defineComponent({
     name: "LoginComponent",
@@ -56,5 +57,19 @@ export default defineComponent({
             onFinishFailed,
         };
     },
+    methods: {
+        ...mapMutations({
+            setUser: 'login/setUser'
+        }),
+        ...mapActions({loginUser: 'login/loginUser',}),
+        async submit(data) {
+            await this.loginUser(data)
+        }
+
+    },
+    computed: {
+        ...mapState({}),
+        ...mapGetters({})
+    }
 });
 </script>
