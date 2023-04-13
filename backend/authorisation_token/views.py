@@ -6,9 +6,9 @@ from rest_framework.response import Response
 
 from authorisation_token.serializers import (
     StatusCheckSerializer,
-    UserSerializer,
     UserFormSerializer,
     TokensSerializer,
+    UserProfileSerializer,
 )
 
 
@@ -18,6 +18,12 @@ def status_view(request):
     return Response(
         StatusCheckSerializer({"status": "ok", "user_id": request.user.id}).data
     )
+
+
+@api_view(["GET"])
+def profile_view(request):
+    profile = UserProfileSerializer(request.user)
+    return Response(profile.data)
 
 
 @api_view(["POST"])
@@ -33,15 +39,5 @@ def auth_view(request):
             "http://127.0.0.1:8000/api/token/",
             data={"email": request.data["email"], "password": request.data["password"]},
         )
-        # print(tokens.json())
         tokens = TokensSerializer(tokens.json())
         return Response(tokens.data)
-
-
-@api_view(["GET"])
-def profile_view(request):
-    if not request.user.is_anonymous:
-        serializer = UserSerializer(request.user)
-        return Response(serializer.data)
-    else:
-        return Response(StatusCheckSerializer({"status": "bad", "user_id": 404}).data)

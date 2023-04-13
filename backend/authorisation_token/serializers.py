@@ -8,6 +8,12 @@ class StatusCheckSerializer(serializers.Serializer):
     user_id = serializers.IntegerField()
 
 
+class UserProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = "__all__"
+
+
 class UserFormSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField()
@@ -16,9 +22,3 @@ class UserFormSerializer(serializers.Serializer):
 class TokensSerializer(serializers.Serializer):
     refresh = serializers.CharField()
     access = serializers.CharField()
-
-
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = "__all__"
