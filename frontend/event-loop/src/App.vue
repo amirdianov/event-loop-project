@@ -22,3 +22,19 @@ import {RouterView} from 'vue-router'
 <style scoped>
 
 </style>
+<script>
+
+import {mapActions} from "vuex";
+
+export default {
+    name: "App",
+    methods: {
+        ...mapActions({
+            loadUser: 'login/loadUser'
+        })
+    },
+    created() {
+        this.loadUser()
+    }
+}
+</script>

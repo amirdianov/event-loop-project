@@ -6,6 +6,13 @@
 <style>
 
 </style>
-<script setup>
+<script>
 import LoginComponent from "@/components/LoginComponent.vue";
+
+export default {
+    components: {LoginComponent},
+    data() {
+        return {}
+    }
+}
 </script>

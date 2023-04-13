@@ -35,7 +35,7 @@
 </template>
 <script>
 import {defineComponent, reactive} from 'vue';
-import {mapActions, mapGetters, mapMutations, mapState} from "vuex";
+import {mapActions, mapMutations} from "vuex";
 
 export default defineComponent({
     name: "LoginComponent",
@@ -67,9 +67,5 @@ export default defineComponent({
         }
 
     },
-    computed: {
-        ...mapState({}),
-        ...mapGetters({})
-    }
 });
 </script>

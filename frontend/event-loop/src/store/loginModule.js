@@ -1,36 +1,38 @@
-import axios from "axios";
-import {API_URL} from "../../services/consts";
+import {auth, profile} from "../../services/api";
+import store from "@/store/index";
+import {clearTokens, getTokens, storeTokens} from "../../services/storage";
 
-const instance = axios.create({
-    baseURL: API_URL,
-});
 export const loginModule =
     {
         state: () => ({
             user: null,
-            tokens: {
-                refresh_token: null,
-                access_token: null,
-            },
+            tokens: getTokens(),
         }),
         actions: {
-            async loginUser({state, commit}, data) {
-                let email = data.username;
-                let password = data.password;
-                console.log(email, password)
-                const resp = await instance.post('/auth/', {email, password})
-                console.log(resp.data.refresh)
-                console.log(resp.data.access)
-
+            async loginUser({commit}, data) {
+                const resp_tokens = await auth(data.username, data.password)
+                storeTokens(resp_tokens.access, resp_tokens.refresh);
+                commit("setTokens", getTokens())
+                await store.dispatch('login/loadUser')
+            },
+            async loadUser({state, commit}) {
+                try {
+                    const user = await profile(state.tokens.access_token)
+                    commit("setUser", user)
+                } catch (e) {
+                    console.error(e);
+                }
+                if (!state.user) {
+                    await store.dispatch('login/logout')
+                }
+            },
+            logout({commit}) {
+                commit("setUser", null);
+                commit("setTokens", null)
+                clearTokens();
             }
         },
         getters: {
-            getRefreshToken(state) {
-                return state.tokens.refresh_token
-            },
-            getAccessToken(state) {
-                return state.tokens.access_token
-            },
             getUser(state) {
                 return state.user
             },
@@ -42,8 +44,8 @@ export const loginModule =
             setUser(state, user) {
                 state.user = user
             },
-            setAccessToken(state, new_access_toke) {
-                state.tokens.access_token = new_access_toke
+            setTokens(state, values) {
+                state.tokens = values
             }
         },
         namespaced: true
