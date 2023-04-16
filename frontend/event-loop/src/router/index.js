@@ -1,7 +1,7 @@
 import {createRouter, createWebHistory} from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import {getTokens} from "../../services/storage";
 import store from "@/store";
+import {getTokens} from "../../services/storage";
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
@@ -48,7 +48,10 @@ const router = createRouter({
 
 router.beforeEach((to, from) => {
     const authOnly = !to.meta?.unauthorizedAccess === true;
-    console.log(store.state.login.user)
+    console.log(store.getters["login/isAuth"])
+    // if (!store.getters["login/isAuth"] && authOnly && from.name !== 'login') {
+    //     return {name: "login"};
+    // }
     if (getTokens().access === 'null' && authOnly && from.name !== 'login') {
         return {name: "login"};
     }

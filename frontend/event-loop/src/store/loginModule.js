@@ -17,8 +17,12 @@ export const loginModule =
                     storageTokens(resp_tokens.access, resp_tokens.refresh);
                     commit("setTokens", resp_tokens)
                     await store.dispatch('login/loadUser')
+                    commit("setError", null)
                 } catch (e) {
-                    commit("setError", e)
+                    if (e.response.status === 401) {
+                        commit("setError", "Попробоуйте ввести другие данные")
+                    }
+                    throw new Error(e)
                 }
             },
             async loadUser({state, commit}) {

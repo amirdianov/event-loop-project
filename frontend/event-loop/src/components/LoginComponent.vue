@@ -9,7 +9,7 @@
             @finishFailed="onFinishFailed"
     >
         <a-form-item
-                label="Username"
+                label="Почта"
                 name="username"
                 :rules="[{ required: true, message: 'Please input your username!' }]"
         >
@@ -17,7 +17,7 @@
         </a-form-item>
 
         <a-form-item
-                label="Password"
+                label="Пароль"
                 name="password"
                 :rules="[{ required: true, message: 'Please input your password!' }]"
         >
@@ -29,14 +29,15 @@
         </a-form-item>
 
         <a-form-item :wrapper-col="{ offset: 5, span: 16 }">
-            <a-button type="primary" html-type="submit">Submit</a-button>
+            <a-button type="primary" html-type="submit" style="margin-right: 10px">Войти</a-button>
+            <a-button type="primary" @click="$router.push('/registration')">Регистрация</a-button>
+
         </a-form-item>
     </a-form>
 </template>
 <script>
 import {defineComponent, reactive} from 'vue';
-import {mapActions, mapMutations} from "vuex";
-import router from "@/router";
+import {mapActions, mapMutations, mapState} from "vuex";
 
 export default defineComponent({
     name: "LoginComponent",
@@ -58,14 +59,23 @@ export default defineComponent({
             onFinishFailed,
         };
     },
+    computed: {
+        ...mapState({
+            error: state => state.login.error
+        })
+    },
     methods: {
         ...mapMutations({
             setUser: 'login/setUser'
         }),
         ...mapActions({loginUser: 'login/loginUser',}),
         async submit(data) {
-            await this.loginUser(data)
-            this.$router.push({name: 'profile'})
+            try {
+                await this.loginUser(data)
+                this.$router.push({name: 'profile'})
+            } catch (e) {
+                console.log(e)
+            }
         }
 
     },

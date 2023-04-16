@@ -1,10 +1,17 @@
 <template>
-    <h1>About</h1>
+    <LayoutNav>
+        <div>
+            <h1>about</h1>
+        </div>
+    </LayoutNav>
 </template>
 
 <script>
+import LayoutNav from "@/containers/LayoutNav.vue";
+
 export default {
-    name: "AboutView"
+    name: "AboutView",
+    components: {LayoutNav}
 }
 </script>
 

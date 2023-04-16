@@ -18,7 +18,7 @@
                     <RouterLink to="/support">Поддержка</RouterLink>
                 </a-menu-item>
                 <a-menu-item v-if="user === null">
-                    <RouterLink to="/login">Войти</RouterLink>
+                    <RouterLink to="/login">Войти | Зарегистрироваться</RouterLink>
                 </a-menu-item>
             </a-menu>
         </a-layout-header>
