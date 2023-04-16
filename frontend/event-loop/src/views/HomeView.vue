@@ -1,11 +1,16 @@
 <template>
-    <h1 v-if="this.user != null">Домашнаяя страница {{ this.user.email }}</h1>
-    <h1 v-else>Общая страница</h1>
+    <div class="main">
+        <LayoutNav>
+            <h1>Домашная страница для всех</h1>
+        </LayoutNav>
+    </div>
 </template>
 <script>
 import {mapState} from "vuex";
+import LayoutNav from "@/containers/LayoutNav.vue";
 
 export default {
+    components: {LayoutNav},
     data() {
         return {}
     },

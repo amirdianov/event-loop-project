@@ -1,6 +1,8 @@
 <template>
     <div class="about">
-        <LoginComponent></LoginComponent>
+        <LayoutNav>
+            <LoginComponent></LoginComponent>
+        </LayoutNav>
     </div>
 </template>
 <style>
@@ -8,9 +10,10 @@
 </style>
 <script>
 import LoginComponent from "@/components/LoginComponent.vue";
+import LayoutNav from "@/containers/LayoutNav.vue";
 
 export default {
-    components: {LoginComponent},
+    components: {LayoutNav, LoginComponent},
     data() {
         return {}
     }
