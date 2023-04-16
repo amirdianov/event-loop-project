@@ -1,26 +1,32 @@
 import {auth, profile} from "../../services/api";
 import store from "@/store/index";
-import {clearTokens, getTokens, storeTokens} from "../../services/storage";
+import {clearTokens, getTokens, storageTokens} from "../../services/storage";
 
 export const loginModule =
     {
         state: () => ({
             user: null,
             tokens: getTokens(),
+            isLoading: null,
+            error: null
         }),
         actions: {
             async loginUser({commit}, data) {
-                const resp_tokens = await auth(data.username, data.password)
-                storeTokens(resp_tokens.access, resp_tokens.refresh);
-                commit("setTokens", getTokens())
-                await store.dispatch('login/loadUser')
+                try {
+                    const resp_tokens = await auth(data.username, data.password)
+                    storageTokens(resp_tokens.access, resp_tokens.refresh);
+                    commit("setTokens", resp_tokens)
+                    await store.dispatch('login/loadUser')
+                } catch (e) {
+                    commit("setError", e)
+                }
             },
             async loadUser({state, commit}) {
                 try {
-                    const user = await profile(state.tokens.access_token)
+                    const user = await profile()
                     commit("setUser", user)
                 } catch (e) {
-                    console.error(e);
+                    console.log(e);
                 }
                 if (!state.user) {
                     await store.dispatch('login/logout')
@@ -46,6 +52,9 @@ export const loginModule =
             },
             setTokens(state, values) {
                 state.tokens = values
+            },
+            setError(state, error) {
+                state.error = error
             }
         },
         namespaced: true
