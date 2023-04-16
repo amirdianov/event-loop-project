@@ -26,6 +26,7 @@ export default {
         ...mapActions({logout: 'login/logout'}),
         logout_click() {
             this.logout()
+            this.$router.push({name: "home"});
         }
     }
 }

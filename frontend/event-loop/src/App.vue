@@ -17,7 +17,7 @@ export default {
             loadUser: 'login/loadUser'
         })
     },
-    mounted() {
+    created() {
         this.loadUser()
     }
 }
