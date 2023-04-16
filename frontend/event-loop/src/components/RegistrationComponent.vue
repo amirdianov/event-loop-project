@@ -1,13 +1,112 @@
 <template>
+    <a-form
+            :model="formState"
+            name="basic"
+            :label-col="{ span: 5 }"
+            :wrapper-col="{ span: 16 }"
+            autocomplete="off"
+            @finish="submit"
+            @finishFailed="onFinishFailed"
+    >
+        <a-form-item
+                label="Имя"
+                name="name"
+                :rules="[{ required: true, message: 'Please input your name!' }]"
+        >
+            <a-input v-model:value="formState.name">
+                <template #prefix>
+                    <UserOutlined class="site-form-item-icon"/>
+                </template>
+            </a-input>
+        </a-form-item>
+        <a-form-item
+                label="Фамилия"
+                name="surname"
+                :rules="[{ required: true, message: 'Please input your surname!' }]"
+        >
+            <a-input v-model:value="formState.surname">
+                <template #prefix>
+                    <UserOutlined class="site-form-item-icon"/>
+                </template>
+            </a-input>
+        </a-form-item>
+        <a-form-item
+                label="Почта"
+                name="email"
+                :rules="[{ required: true, message: 'Please input your email!' }]"
+        >
+            <a-input v-model:value="formState.email">
+                <template #prefix>
+                    <MailOutlined class="site-form-item-icon"></MailOutlined>
+                </template>
+            </a-input>
+        </a-form-item>
 
+        <a-form-item
+                label="Пароль"
+                name="password"
+                :rules="[{ required: true, message: 'Please input your password!' }]"
+        >
+            <a-input-password v-model:value="formState.password">
+                <template #prefix>
+                    <LockOutlined class="site-form-item-icon"/>
+                </template>
+            </a-input-password>
+        </a-form-item>
+
+        <a-form-item name="remember" :wrapper-col="{ offset: 5, span: 16 }">
+            <a-checkbox v-model:checked="formState.remember">Remember me</a-checkbox>
+        </a-form-item>
+
+        <a-form-item :wrapper-col="{ offset: 5, span: 16 }">
+            <a-button type="primary" html-type="submit" style="margin-right: 10px; width: 100%">Войти</a-button>
+        </a-form-item>
+    </a-form>
 </template>
-
 <script>
-export default {
-    name: "RegistrationComponent"
-}
+import {defineComponent, reactive} from 'vue';
+import {mapActions, mapMutations, mapState} from "vuex";
+import {LockOutlined, UserOutlined, MailOutlined} from "@ant-design/icons-vue";
+
+export default defineComponent({
+    name: "LoginComponent",
+    components: {UserOutlined, LockOutlined, MailOutlined},
+    setup() {
+        const formState = reactive({
+            name: '',
+            surname: '',
+            email: '',
+            password: '',
+            remember: true,
+        });
+        const onFinish = values => {
+            console.log('Success:', values);
+        };
+        const onFinishFailed = errorInfo => {
+            console.log('Failed:', errorInfo);
+        };
+        return {
+            formState,
+            onFinish,
+            onFinishFailed,
+        };
+    },
+    computed: {
+        ...mapState({
+            error: state => state.login.error
+        })
+    },
+    methods: {
+        ...mapActions({registrationUser: 'login/registrationUser'}),
+        async submit(data) {
+            try {
+                await this.registrationUser(data)
+                this.$router.push({name: 'profile'})
+            } catch (e) {
+                console.log(e)
+            }
+        }
+
+    },
+});
 </script>
-
-<style scoped>
-
-</style>

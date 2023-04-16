@@ -1,4 +1,4 @@
-import {auth, profile} from "../../services/api";
+import {auth, profile, registration} from "../../services/api";
 import store from "@/store/index";
 import {clearTokens, getTokens, storageTokens} from "../../services/storage";
 
@@ -14,6 +14,21 @@ export const loginModule =
             async loginUser({commit}, data) {
                 try {
                     const resp_tokens = await auth(data.username, data.password)
+                    storageTokens(resp_tokens.access, resp_tokens.refresh);
+                    commit("setTokens", resp_tokens)
+                    await store.dispatch('login/loadUser')
+                    commit("setError", null)
+                } catch (e) {
+                    if (e.response.status === 401) {
+                        commit("setError", "Попробоуйте ввести другие данные")
+                    }
+                    throw new Error(e)
+                }
+            },
+            async registrationUser({commit}, data) {
+                try {
+                    debugger
+                    const resp_tokens = await registration(data)
                     storageTokens(resp_tokens.access, resp_tokens.refresh);
                     commit("setTokens", resp_tokens)
                     await store.dispatch('login/loadUser')

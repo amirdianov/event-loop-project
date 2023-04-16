@@ -21,7 +21,10 @@ export async function auth(email, password) {
     const response = await instance.post('/token/', {email, password})
     return response.data;
 }
-
+export async function registration(data){
+    const response = await instance.post('/registration/', data)
+    return response.data
+}
 
 export async function profile() {
     try {

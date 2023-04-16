@@ -14,7 +14,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class UserFormSerializer(serializers.Serializer):
+class UserRegistrationSerializer(serializers.Serializer):
+    name = serializers.CharField()
+    surname = serializers.CharField()
     email = serializers.EmailField()
     password = serializers.CharField()
 
