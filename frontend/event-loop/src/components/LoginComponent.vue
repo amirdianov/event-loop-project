@@ -2,7 +2,7 @@
     <a-form
             :model="formState"
             name="basic"
-            :label-col="{ span: 8 }"
+            :label-col="{ span: 5 }"
             :wrapper-col="{ span: 16 }"
             autocomplete="off"
             @finish="submit"
@@ -13,7 +13,7 @@
                 name="username"
                 :rules="[{ required: true, message: 'Please input your username!' }]"
         >
-            <a-input v-model:value="formState.username"/>
+            <a-input v-model:value="formState.username" style="border-radius: 10px"/>
         </a-form-item>
 
         <a-form-item
@@ -21,14 +21,14 @@
                 name="password"
                 :rules="[{ required: true, message: 'Please input your password!' }]"
         >
-            <a-input-password v-model:value="formState.password"/>
+            <a-input-password v-model:value="formState.password" style="border-radius: 10px"/>
         </a-form-item>
 
-        <a-form-item name="remember" :wrapper-col="{ offset: 8, span: 16 }">
+        <a-form-item name="remember" :wrapper-col="{ offset: 5, span: 16 }">
             <a-checkbox v-model:checked="formState.remember">Remember me</a-checkbox>
         </a-form-item>
 
-        <a-form-item :wrapper-col="{ offset: 8, span: 16 }">
+        <a-form-item :wrapper-col="{ offset: 5, span: 16 }">
             <a-button type="primary" html-type="submit">Submit</a-button>
         </a-form-item>
     </a-form>
@@ -36,6 +36,7 @@
 <script>
 import {defineComponent, reactive} from 'vue';
 import {mapActions, mapMutations} from "vuex";
+import router from "@/router";
 
 export default defineComponent({
     name: "LoginComponent",
@@ -64,6 +65,7 @@ export default defineComponent({
         ...mapActions({loginUser: 'login/loginUser',}),
         async submit(data) {
             await this.loginUser(data)
+            this.$router.push({name: 'profile'})
         }
 
     },
