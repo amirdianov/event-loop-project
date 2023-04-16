@@ -10,7 +10,7 @@ const instance = axios.create({
 
 instance.interceptors.request.use(function (config) {
     if (store.state.login.tokens) {
-        config.headers['Authorization'] = `Bearer ${store.state.login.tokens}`;
+        config.headers['Authorization'] = `Bearer ${store.state.login.tokens.access}`;
     }
     return config;
 }, function (error) {
