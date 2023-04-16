@@ -32,19 +32,4 @@ export async function profile() {
     catch (e){
         throw new Error(e)
     }
-    // try {
-    //     const response_verify = await access_token_verify(store.state.login.tokens.access)
-    //     const response = await instance.get('/profile/')
-    //     return response.data
-    // } catch (e) {
-    //     try {
-    //         const response_access_token_new = await access_token_refresh(store.state.login.tokens.refresh)
-    //         storageAccessToken(response_access_token_new.data.access)
-    //         store.state.login.tokens.access = response_access_token_new.data.access
-    //         const response = await instance.get('/profile/')
-    //         return response.data
-    //     } catch (e) {
-    //         throw new Error(e)
-    //     }
-    // }
 }

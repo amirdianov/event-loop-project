@@ -1,7 +1,11 @@
 <template>
     <div class="about">
         <LayoutNav>
-            <LoginComponent></LoginComponent>
+            <a-row type="flex" justify="center" align="middle" style="height: 100%">
+                <a-col :span="10">
+                    <LoginComponent></LoginComponent>
+                </a-col>
+            </a-row>
         </LayoutNav>
     </div>
 </template>

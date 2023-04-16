@@ -1,12 +1,12 @@
 <template>
-    <a-layout>
+    <a-layout style="height: 100vh">
         <a-layout-header class="header" style="background-color: #002a29;">
             <div class="logo"/>
             <a-menu
                     v-model:selectedKeys="selectedKeys1"
                     theme="dark"
                     mode="horizontal"
-                    style="background-color: #002a29; width: 100vw"
+                    style="background-color: #002a29;"
             >
                 <a-menu-item>
                     <RouterLink to="/">Главная страница</RouterLink>
@@ -60,9 +60,9 @@
                     </a-sub-menu>
                 </a-menu>
             </a-layout-sider>
-            <a-layout style="padding: 20px; height: 100vh">
+            <a-layout style="padding: 20px">
                 <a-layout-content
-                        :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '280px' }">
+                        :style="{ background: '#fff', padding: '24px', margin: 0}">
                     <slot/>
                 </a-layout-content>
             </a-layout>
