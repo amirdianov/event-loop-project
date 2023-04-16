@@ -1,7 +1,7 @@
 import axios from "axios";
 import {API_URL} from "./consts";
 import store from "@/store";
-import {getTokens, storageAccessToken} from "./storage";
+import {check_token} from "./token_verify";
 
 
 const instance = axios.create({
@@ -25,27 +25,26 @@ export async function auth(email, password) {
 
 export async function profile() {
     try {
-        const response_verify = await access_token_verify(getTokens().access)
+        const token_response = await check_token(store.state.login.tokens, instance)
         const response = await instance.get('/profile/')
         return response.data
-    } catch (e) {
-        try {
-            const response_access_token_new = await access_token_refresh(getTokens().refresh)
-            storageAccessToken(response_access_token_new.data.access)
-            store.state.login.tokens.access = response_access_token_new.data.access
-            const response = await instance.get('/profile/')
-            return response.data
-        } catch (e) {
-            throw new Error(e)
-        }
     }
-}
-
-export async function access_token_verify(token) {
-    return await instance.post('/token/verify/', {"token": token});
-
-}
-
-export async function access_token_refresh(refresh_token) {
-    return await instance.post('/token/refresh/', {"refresh": refresh_token});
+    catch (e){
+        throw new Error(e)
+    }
+    // try {
+    //     const response_verify = await access_token_verify(store.state.login.tokens.access)
+    //     const response = await instance.get('/profile/')
+    //     return response.data
+    // } catch (e) {
+    //     try {
+    //         const response_access_token_new = await access_token_refresh(store.state.login.tokens.refresh)
+    //         storageAccessToken(response_access_token_new.data.access)
+    //         store.state.login.tokens.access = response_access_token_new.data.access
+    //         const response = await instance.get('/profile/')
+    //         return response.data
+    //     } catch (e) {
+    //         throw new Error(e)
+    //     }
+    // }
 }
