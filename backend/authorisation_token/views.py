@@ -38,12 +38,7 @@ def profile_view(request):
 @api_view(["POST"])
 @permission_classes([])
 def registration_view(request):
-    data = {}
-    for key in request.data.keys():
-        if key != "remember":
-            data[key] = request.data[key]
-    print(data)
-    user_info = UserRegistrationSerializer(data=data)
+    user_info = UserRegistrationSerializer(data=request.data)
     user_info.is_valid(raise_exception=True)
     user_info = dict(user_info.validated_data)
     user = User(
