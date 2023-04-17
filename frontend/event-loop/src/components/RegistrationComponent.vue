@@ -26,7 +26,7 @@
         >
             <a-input v-model:value="formState.surname">
                 <template #prefix>
-                    <UserOutlined class="site-form-item-icon"/>
+                    <TeamOutlined class="site-form-item-icon"/>
                 </template>
             </a-input>
         </a-form-item>
@@ -54,30 +54,25 @@
             </a-input-password>
         </a-form-item>
 
-        <a-form-item name="remember" :wrapper-col="{ offset: 5, span: 16 }">
-            <a-checkbox v-model:checked="formState.remember">Remember me</a-checkbox>
-        </a-form-item>
-
         <a-form-item :wrapper-col="{ offset: 5, span: 16 }">
-            <a-button type="primary" html-type="submit" style="margin-right: 10px; width: 100%">Войти</a-button>
+            <a-button type="primary" html-type="submit" style="margin-right: 10px; width: 100%">Зарегистрироваться</a-button>
         </a-form-item>
     </a-form>
 </template>
 <script>
 import {defineComponent, reactive} from 'vue';
-import {mapActions, mapMutations, mapState} from "vuex";
-import {LockOutlined, UserOutlined, MailOutlined} from "@ant-design/icons-vue";
+import {mapActions, mapState} from "vuex";
+import {LockOutlined, UserOutlined, MailOutlined, TeamOutlined} from "@ant-design/icons-vue";
 
 export default defineComponent({
     name: "LoginComponent",
-    components: {UserOutlined, LockOutlined, MailOutlined},
+    components: {UserOutlined, LockOutlined, MailOutlined, TeamOutlined},
     setup() {
         const formState = reactive({
             name: '',
             surname: '',
             email: '',
             password: '',
-            remember: true,
         });
         const onFinish = values => {
             console.log('Success:', values);

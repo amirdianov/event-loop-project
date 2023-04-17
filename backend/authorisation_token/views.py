@@ -22,6 +22,7 @@ def get_tokens_for_user(user):
 
 # Create your views here.
 @api_view()
+@permission_classes([])
 def status_view(request):
     return Response(
         StatusCheckSerializer({"status": "ok", "user_id": request.user.id}).data

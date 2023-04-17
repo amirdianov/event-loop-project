@@ -1,14 +1,16 @@
 <script setup>
 import {RouterView} from 'vue-router'
+import PageLoaderComponent from "@/components/PageLoaderComponent.vue";
 </script>
 
 <template>
+    <PageLoaderComponent v-if="isLoading"/>
     <RouterView/>
 </template>
 
 <script>
 
-import {mapActions} from "vuex";
+import {mapActions, mapState} from "vuex";
 
 export default {
     name: "App",
@@ -19,6 +21,11 @@ export default {
     },
     created() {
         this.loadUser()
+    },
+    computed: {
+        ...mapState({
+            isLoading: state => state.login.isLoading
+        })
     }
 }
 </script>

@@ -12,22 +12,25 @@ export const loginModule =
         }),
         actions: {
             async loginUser({commit}, data) {
+                commit("setLoading", true)
+                commit("setError", null)
                 try {
                     const resp_tokens = await auth(data.username, data.password)
                     storageTokens(resp_tokens.access, resp_tokens.refresh);
                     commit("setTokens", resp_tokens)
                     await store.dispatch('login/loadUser')
-                    commit("setError", null)
                 } catch (e) {
+                    commit("setLoading", false)
                     if (e.response.status === 401) {
                         commit("setError", "Попробоуйте ввести другие данные")
                     }
                     throw new Error(e)
                 }
+                commit("setLoading", false)
             },
             async registrationUser({commit}, data) {
+                commit("setLoading", true)
                 try {
-                    debugger
                     const resp_tokens = await registration(data)
                     storageTokens(resp_tokens.access, resp_tokens.refresh);
                     commit("setTokens", resp_tokens)
@@ -39,8 +42,10 @@ export const loginModule =
                     }
                     throw new Error(e)
                 }
+                commit("setLoading", false)
             },
             async loadUser({state, commit}) {
+                commit("setLoading", true)
                 try {
                     const user = await profile()
                     commit("setUser", user)
@@ -50,6 +55,7 @@ export const loginModule =
                 if (!state.user) {
                     await store.dispatch('login/logout')
                 }
+                commit("setLoading", false)
             },
             logout({commit}) {
                 commit("setUser", null);
@@ -74,6 +80,9 @@ export const loginModule =
             },
             setError(state, error) {
                 state.error = error
+            },
+            setLoading(state, loading) {
+                state.isLoading = loading
             }
         },
         namespaced: true
