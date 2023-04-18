@@ -4,6 +4,7 @@
             name="basic"
             :label-col="{ span: 5 }"
             :wrapper-col="{ span: 16 }"
+            :validate-messages="validateMessages"
             autocomplete="off"
             @finish="submit"
             @finishFailed="onFinishFailed"
@@ -11,7 +12,7 @@
         <a-form-item
                 label="Имя"
                 name="name"
-                :rules="[{ required: true, message: 'Please input your name!' }]"
+                :rules="[{ required: true}]"
         >
             <a-input v-model:value="formState.name">
                 <template #prefix>
@@ -22,7 +23,7 @@
         <a-form-item
                 label="Фамилия"
                 name="surname"
-                :rules="[{ required: true, message: 'Please input your surname!' }]"
+                :rules="[{ required: true}]"
         >
             <a-input v-model:value="formState.surname">
                 <template #prefix>
@@ -33,7 +34,7 @@
         <a-form-item
                 label="Почта"
                 name="email"
-                :rules="[{ required: true, message: 'Please input your email!' }]"
+                :rules="[{ required: true, type: 'email'}]"
         >
             <a-input v-model:value="formState.email">
                 <template #prefix>
@@ -45,7 +46,7 @@
         <a-form-item
                 label="Пароль"
                 name="password"
-                :rules="[{ required: true, message: 'Please input your password!' }]"
+                :rules="[{ required: true}]"
         >
             <a-input-password v-model:value="formState.password">
                 <template #prefix>
@@ -55,14 +56,15 @@
         </a-form-item>
 
         <a-form-item :wrapper-col="{ offset: 5, span: 16 }">
-            <a-button type="primary" html-type="submit" style="margin-right: 10px; width: 100%">Зарегистрироваться</a-button>
+            <a-button type="primary" html-type="submit" style="margin-right: 10px; width: 100%">Зарегистрироваться
+            </a-button>
         </a-form-item>
     </a-form>
 </template>
 <script>
 import {defineComponent, reactive} from 'vue';
 import {mapActions, mapState} from "vuex";
-import {LockOutlined, UserOutlined, MailOutlined, TeamOutlined} from "@ant-design/icons-vue";
+import {LockOutlined, MailOutlined, TeamOutlined, UserOutlined} from "@ant-design/icons-vue";
 
 export default defineComponent({
     name: "LoginComponent",
@@ -80,10 +82,17 @@ export default defineComponent({
         const onFinishFailed = errorInfo => {
             console.log('Failed:', errorInfo);
         };
+        const validateMessages = {
+            required: 'Поле должно быть заполнено!',
+            types: {
+                email: '${label} неверно введена!',
+            },
+        };
         return {
             formState,
             onFinish,
             onFinishFailed,
+            validateMessages
         };
     },
     computed: {

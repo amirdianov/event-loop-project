@@ -22,7 +22,10 @@ export const loginModule =
                 } catch (e) {
                     commit("setLoading", false)
                     if (e.response.status === 401) {
-                        commit("setError", "Попробоуйте ввести другие данные")
+                        commit("setError", "Проверьте корректность введенных данных")
+                    }
+                    if (e.response.status === 500) {
+                        commit("setError", "Что-то пошло не так")
                     }
                     throw new Error(e)
                 }
@@ -37,8 +40,12 @@ export const loginModule =
                     await store.dispatch('login/loadUser')
                     commit("setError", null)
                 } catch (e) {
-                    if (e.response.status === 401) {
-                        commit("setError", "Попробоуйте ввести другие данные")
+                    commit("setLoading", false)
+                    if (e.response.status === 400) {
+                        commit("setError", "Проверьте правильность введенных данных")
+                    }
+                    if (e.response.status === 500) {
+                        commit("setError", "Что-то пошло не так")
                     }
                     throw new Error(e)
                 }
@@ -80,6 +87,7 @@ export const loginModule =
             },
             setError(state, error) {
                 state.error = error
+                setTimeout(() => state.error = null, 3000);
             },
             setLoading(state, loading) {
                 state.isLoading = loading

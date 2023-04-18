@@ -1,6 +1,7 @@
 <template>
     <div class="login">
         <LayoutNav>
+            <a-alert v-if="this.error" :message="this.error" type="error"/>
             <a-row type="flex" justify="center" align="middle" style="height: 100%">
                 <a-col :span="10">
                     <RegistrationComponent></RegistrationComponent>
@@ -13,12 +14,19 @@
 <script>
 import LayoutNav from "@/containers/LayoutNav.vue";
 import RegistrationComponent from "@/components/RegistrationComponent.vue";
-import LoginComponent from "@/components/LoginComponent.vue";
+import {mapState} from "vuex";
 
 export default {
     name: "RegistrationView",
-    components: {LoginComponent, LayoutNav, RegistrationComponent}
-}
+    components: {LayoutNav, RegistrationComponent},
+    data() {
+        return {}
+    },
+    computed: {
+        ...mapState({
+            error: state => state.login.error
+        })
+    }}
 </script>
 
 <style scoped>
