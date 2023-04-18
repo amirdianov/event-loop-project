@@ -15,7 +15,7 @@ export const loginModule =
                 commit("setLoading", true)
                 commit("setError", null)
                 try {
-                    const resp_tokens = await auth(data.username, data.password)
+                    const resp_tokens = await auth(data.email, data.password)
                     storageTokens(resp_tokens.access, resp_tokens.refresh);
                     commit("setTokens", resp_tokens)
                     await store.dispatch('login/loadUser')

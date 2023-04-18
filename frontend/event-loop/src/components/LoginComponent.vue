@@ -4,16 +4,17 @@
             name="basic"
             :label-col="{ span: 5 }"
             :wrapper-col="{ span: 16 }"
+            :validate-messages="validateMessages"
             autocomplete="off"
             @finish="submit"
             @finishFailed="onFinishFailed"
     >
         <a-form-item
                 label="Почта"
-                name="username"
-                :rules="[{ required: true, message: 'Please input your username!' }]"
+                name="email"
+                :rules="[{ required: true, type: 'email'}]"
         >
-            <a-input v-model:value="formState.username">
+            <a-input v-model:value="formState.email">
                 <template #prefix>
                     <MailOutlined class="site-form-item-icon"/>
                 </template>
@@ -23,7 +24,7 @@
         <a-form-item
                 label="Пароль"
                 name="password"
-                :rules="[{ required: true, message: 'Please input your password!' }]"
+                :rules="[{ required: true}]"
         >
             <a-input-password v-model:value="formState.password">
                 <template #prefix>
@@ -45,14 +46,14 @@
 <script>
 import {defineComponent, reactive} from 'vue';
 import {mapActions, mapMutations, mapState} from "vuex";
-import {LockOutlined, UserOutlined, MailOutlined} from "@ant-design/icons-vue";
+import {LockOutlined, MailOutlined} from "@ant-design/icons-vue";
 
 export default defineComponent({
     name: "LoginComponent",
     components: {LockOutlined, MailOutlined},
     setup() {
         const formState = reactive({
-            username: '',
+            email: '',
             password: '',
             remember: true,
         });
@@ -62,10 +63,17 @@ export default defineComponent({
         const onFinishFailed = errorInfo => {
             console.log('Failed:', errorInfo);
         };
+        const validateMessages = {
+            required: 'Поле должно быть заполнено!',
+            types: {
+                email: '${label} неверно введена!',
+            },
+        };
         return {
             formState,
             onFinish,
             onFinishFailed,
+            validateMessages
         };
     },
     computed: {
@@ -79,6 +87,7 @@ export default defineComponent({
         }),
         ...mapActions({loginUser: 'login/loginUser',}),
         async submit(data) {
+            console.log(data)
             try {
                 await this.loginUser(data)
                 this.$router.push({name: 'profile'})
