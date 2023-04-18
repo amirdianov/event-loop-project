@@ -1,8 +1,6 @@
 <template>
     <LayoutNav>
-        <div>
-            <h1>about</h1>
-        </div>
+        <h1>Support</h1>
     </LayoutNav>
 </template>
 
@@ -10,7 +8,7 @@
 import LayoutNav from "@/containers/LayoutNav.vue";
 
 export default {
-    name: "AboutView",
+    name: "SupportView",
     components: {LayoutNav}
 }
 </script>
