@@ -15,10 +15,9 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
 
 class UserRegistrationSerializer(serializers.Serializer):
-    name = serializers.CharField()
-    surname = serializers.CharField()
-    email = serializers.EmailField()
-    password = serializers.CharField()
+    class Meta:
+        model = User
+        fields = ("name", "surname", "email", "password")
 
 
 class TokensSerializer(serializers.Serializer):
