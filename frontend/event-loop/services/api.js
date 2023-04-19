@@ -38,6 +38,11 @@ export async function profile() {
 }
 
 export async function change_profile_information(data) {
-    const response = await instance.patch(`/users/${store.state.login.user.id}/`, data)
-    return response.data
+    try {
+        await check_token(store.state.login.tokens, instance)
+        const response = await instance.patch(`/users/${store.state.login.user.id}/`, data)
+        return response.data
+    } catch (e) {
+        throw new Error(e)
+    }
 }

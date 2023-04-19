@@ -2,8 +2,8 @@
     <div class="profile">
         <LayoutNav>
             <a-alert v-if="this.isSuccess"
-                    message="Success Tips"
-                    description="Detailed description and advices about successful copywriting."
+                    message="Успешно"
+                    description="Информация обновлена!"
                     type="success"
                     show-icon
             />
