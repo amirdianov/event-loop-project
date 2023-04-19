@@ -21,18 +21,23 @@ export async function auth(email, password) {
     const response = await instance.post('/token/', {email, password})
     return response.data;
 }
-export async function registration(data){
+
+export async function registration(data) {
     const response = await instance.post('/registration/', data)
     return response.data
 }
 
 export async function profile() {
     try {
-        const token_response = await check_token(store.state.login.tokens, instance)
+        await check_token(store.state.login.tokens, instance)
         const response = await instance.get('/profile/')
         return response.data
-    }
-    catch (e){
+    } catch (e) {
         throw new Error(e)
     }
+}
+
+export async function change_profile_information(data) {
+    const response = await instance.patch(`/users/${store.state.login.user.id}/`, data)
+    return response.data
 }
