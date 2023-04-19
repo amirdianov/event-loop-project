@@ -20,10 +20,14 @@
                 <a-menu-item v-if="user === null">
                     <RouterLink to="/login">Войти | Зарегистрироваться</RouterLink>
                 </a-menu-item>
+                <a-menu-item v-if="user !== null">
+                    <RouterLink to="/login"><strong>{{this.user.name}}</strong></RouterLink>
+                </a-menu-item>
             </a-menu>
         </a-layout-header>
         <a-layout>
-            <a-layout-sider width="200" style="background: #fff" v-if="user!== null">
+            <a-layout-sider width="200" style="background: #fff" v-if="user!== null &
+            this.$route.name !== 'home' & this.$route.name !== 'about' & this.$route.name !== 'support'">
                 <a-menu
                         v-model:selectedKeys="selectedKeys2"
                         v-model:openKeys="openKeys"
