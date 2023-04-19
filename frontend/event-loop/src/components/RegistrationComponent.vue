@@ -58,6 +58,7 @@
         <a-form-item :wrapper-col="{ offset: 5, span: 16 }">
             <a-button type="primary" html-type="submit" style="margin-right: 10px; width: 100%">Зарегистрироваться
             </a-button>
+            <router-link to="/login">Вход</router-link>
         </a-form-item>
     </a-form>
 </template>

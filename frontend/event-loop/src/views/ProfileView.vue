@@ -2,10 +2,10 @@
     <div class="profile">
         <LayoutNav>
             <a-alert v-if="this.isSuccess"
-                    message="Успешно"
-                    description="Информация обновлена!"
-                    type="success"
-                    show-icon
+                     message="Успешно"
+                     description="Информация обновлена!"
+                     type="success"
+                     show-icon
             />
             <a-alert v-if="this.error" :message="this.error" type="error"/>
             <a-row type="flex" justify="space-around" align="middle" style="height: 100%">
@@ -42,10 +42,10 @@ export default {
         }
     },
     computed: {
-      ...mapState({
-          error: state => state.login.error,
-          isSuccess: state => state.profile.isSuccess,
-      })
+        ...mapState({
+            error: state => state.login.error,
+            isSuccess: state => state.profile.isSuccess,
+        })
     }
 }
 </script>
