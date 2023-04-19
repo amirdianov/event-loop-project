@@ -1,5 +1,6 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from authorisation_token.models import User
@@ -48,3 +49,8 @@ def registration_view(request):
     user.save()
     tokens = get_tokens_for_user(user)
     return Response(TokensSerializer(tokens).data)
+
+
+class UserViewSet(ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserProfileSerializer
