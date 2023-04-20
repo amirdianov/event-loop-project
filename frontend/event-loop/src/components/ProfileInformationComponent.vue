@@ -1,12 +1,12 @@
 <template>
-    <a-form
+    <a-form v-if="changePassword"
             :model="formState"
             name="basic"
             :label-col="{ span: 5 }"
             :wrapper-col="{ span: 16 }"
             :validate-messages="validateMessages"
             autocomplete="off"
-            @finish="submit"
+            @finish="changeInformation"
             @finishFailed="onFinishFailed"
     >
         <a-form-item
@@ -42,7 +42,21 @@
                 </template>
             </a-input>
         </a-form-item>
-
+        <a-form-item :wrapper-col="{ offset: 5, span: 16 }">
+            <a-button type="primary" html-type="submit" style="margin-right: 10px; width: 100%">Подвердить изменения
+            </a-button>
+            <p style="color: #1d39c4" @click="changePassword = !changePassword">Изменить пароль?</p>
+        </a-form-item>
+    </a-form>
+    <a-form v-else
+            :model="formState"
+            name="basic"
+            :label-col="{ span: 5 }"
+            :wrapper-col="{ span: 16 }"
+            :validate-messages="validateMessages"
+            autocomplete="off"
+            @finish="submit"
+            @finishFailed="onFinishFailed">
         <a-form-item
                 label="Пароль"
                 name="password"
@@ -54,27 +68,29 @@
                 </template>
             </a-input-password>
         </a-form-item>
-
         <a-form-item :wrapper-col="{ offset: 5, span: 16 }">
-            <a-button type="primary" html-type="submit" style="margin-right: 10px; width: 100%">Зарегистрироваться
+            <a-button type="primary" html-type="submit" style="margin-right: 10px; width: 100%">Подвердить изменения
             </a-button>
-            <router-link to="/login">Вход</router-link>
+            <p style="color: #1d39c4" @click="changePassword = !changePassword">Изменить личные данные?</p>
         </a-form-item>
     </a-form>
+
+
 </template>
 <script>
 import {defineComponent, reactive} from 'vue';
 import {mapActions, mapState} from "vuex";
 import {LockOutlined, MailOutlined, TeamOutlined, UserOutlined} from "@ant-design/icons-vue";
+import store from "@/store";
 
 export default defineComponent({
-    name: "LoginComponent",
+    name: "ProfileInformationComponent",
     components: {UserOutlined, LockOutlined, MailOutlined, TeamOutlined},
     setup() {
         const formState = reactive({
-            name: '',
-            surname: '',
-            email: '',
+            name: store.state.login.user !== null ? store.state.login.user.name : store.state.login.user,
+            surname: store.state.login.user !== null ? store.state.login.user.surname : store.state.login.user,
+            email: store.state.login.user !== null ? store.state.login.user.email : store.state.login.user,
             password: '',
         });
         const onFinish = values => {
@@ -96,22 +112,30 @@ export default defineComponent({
             validateMessages
         };
     },
+    data() {
+        return {
+            changePassword: true,
+        }
+    },
     computed: {
         ...mapState({
-            error: state => state.login.error
+            user: state => state.login.user
         })
     },
     methods: {
-        ...mapActions({registrationUser: 'login/registrationUser'}),
-        async submit(data) {
+        ...mapActions({changeUserInformation: 'profile/changeUserInformation', logout: 'login/logout'}),
+        async changeInformation(data) {
             try {
-                await this.registrationUser(data)
+                await this.changeUserInformation(data)
                 this.$router.push({name: 'profile'})
             } catch (e) {
                 console.log(e)
             }
+        },
+        logout_click() {
+            this.logout()
+            this.$router.push({name: "home"});
         }
-
-    },
+    }
 });
 </script>

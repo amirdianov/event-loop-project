@@ -1,5 +1,7 @@
-from rest_framework.decorators import api_view, permission_classes
+from drf_yasg.utils import swagger_auto_schema
+from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from authorisation_token.models import User
@@ -21,6 +23,7 @@ def get_tokens_for_user(user):
 
 
 # Create your views here.
+@swagger_auto_schema(method="GET", operation_id="api_status")
 @api_view()
 @permission_classes([])
 def status_view(request):
@@ -29,22 +32,26 @@ def status_view(request):
     )
 
 
-@api_view(["GET"])
-def profile_view(request):
-    profile = UserProfileSerializer(request.user)
-    return Response(profile.data)
+class UserViewSet(ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserProfileSerializer
 
+    @action(detail=False, methods=["post"])
+    def registration(self, request, pk=None):
+        user_info = UserRegistrationSerializer(data=request.data)
+        user_info.is_valid(raise_exception=True)
+        user_info = dict(user_info.validated_data)
+        user = User(
+            name=user_info["name"],
+            surname=user_info["surname"],
+            email=user_info["email"],
+        )
+        user.set_password(user_info["password"])
+        user.save()
+        tokens = get_tokens_for_user(user)
+        return Response(TokensSerializer(tokens).data)
 
-@api_view(["POST"])
-@permission_classes([])
-def registration_view(request):
-    user_info = UserRegistrationSerializer(data=request.data)
-    user_info.is_valid(raise_exception=True)
-    user_info = dict(user_info.validated_data)
-    user = User(
-        name=user_info["name"], surname=user_info["surname"], email=user_info["email"]
-    )
-    user.set_password(user_info["password"])
-    user.save()
-    tokens = get_tokens_for_user(user)
-    return Response(TokensSerializer(tokens).data)
+    @action(detail=False, methods=["get"])
+    def profile(self, request, pk=None):
+        profile = UserProfileSerializer(request.user)
+        return Response(profile.data)
