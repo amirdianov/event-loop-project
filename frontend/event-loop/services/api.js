@@ -23,14 +23,14 @@ export async function auth(email, password) {
 }
 
 export async function registration(data) {
-    const response = await instance.post('/registration/', data)
+    const response = await instance.post('/users/registration/', data)
     return response.data
 }
 
 export async function profile() {
     try {
         await check_token(store.state.login.tokens, instance)
-        const response = await instance.get('/profile/')
+        const response = await instance.get('/users/profile/')
         return response.data
     } catch (e) {
         throw new Error(e)
