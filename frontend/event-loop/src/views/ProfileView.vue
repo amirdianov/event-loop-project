@@ -16,7 +16,7 @@
                         </template>
                     </a-avatar>
                 </a-col>
-                <a-col :span="14">
+                <a-col :span="14" v-if="!isLoading">
                     <ProfileInformationComponent></ProfileInformationComponent>
                 </a-col>
             </a-row>
@@ -45,6 +45,7 @@ export default {
         ...mapState({
             error: state => state.login.error,
             isSuccess: state => state.profile.isSuccess,
+            isLoading: state => state.login.isLoading,
         })
     }
 }

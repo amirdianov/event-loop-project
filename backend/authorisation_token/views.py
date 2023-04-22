@@ -1,5 +1,6 @@
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework.decorators import api_view, permission_classes, action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -36,7 +37,7 @@ class UserViewSet(ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserProfileSerializer
 
-    @action(detail=False, methods=["post"])
+    @action(detail=False, methods=["post"], permission_classes=[])
     def registration(self, request, pk=None):
         user_info = UserRegistrationSerializer(data=request.data)
         user_info.is_valid(raise_exception=True)
@@ -51,7 +52,7 @@ class UserViewSet(ModelViewSet):
         tokens = get_tokens_for_user(user)
         return Response(TokensSerializer(tokens).data)
 
-    @action(detail=False, methods=["get"])
+    @action(detail=False, methods=["get"], permission_classes=[IsAuthenticated])
     def profile(self, request, pk=None):
         profile = UserProfileSerializer(request.user)
         return Response(profile.data)
