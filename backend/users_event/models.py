@@ -6,10 +6,10 @@ from stdimage import StdImageField
 from authorisation_token.models import User
 from users_event.enums import Category
 
-
+# TODO поля created_at, updated_at
 def get_note_image_path(instance, filename):
     return os.path.join(
-        "event_images", instance.created_at.strftime("%Y-%m-%d"), filename
+        "event_images", instance.start_time.strftime("%Y-%m-%d"), filename
     )
 
 
@@ -39,9 +39,11 @@ class Event(models.Model):
     is_passed = models.BooleanField()
     url = models.URLField(null=True, blank=True)
     is_organizer = models.ManyToManyField(
-        User, through="Participants", related_name="is_organizer"
+        User, through="Participant", related_name="is_organizer"
     )
-    rating = models.ManyToManyField(User, through="Ratings", related_name="rating")
+    rating_event = models.ManyToManyField(
+        User, through="Rating", related_name="rating_event"
+    )
     tags = models.ManyToManyField("Tag", blank=True)
 
 
@@ -53,9 +55,9 @@ class BaseManyToMany(models.Model):
         abstract = True
 
 
-class Participants(BaseManyToMany):
+class Participant(BaseManyToMany):
     is_organizer = models.BooleanField()
 
 
-class Ratings(BaseManyToMany):
+class Rating(BaseManyToMany):
     rating = models.IntegerField()
