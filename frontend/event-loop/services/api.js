@@ -46,3 +46,9 @@ export async function change_profile_information(data) {
         throw new Error(e)
     }
 }
+
+export async function all_events(data) {
+    await check_token(store.state.login.tokens, instance)
+    const response = await instance.get('/events/')
+    return response.data
+}

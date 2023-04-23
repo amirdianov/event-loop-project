@@ -3,7 +3,7 @@
         <template #cover>
             <img
                     alt="example"
-                    src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png"
+                    :src=photo
             />
         </template>
         <template #actions>
@@ -11,7 +11,7 @@
             <edit-outlined key="edit"/>
             <ellipsis-outlined key="ellipsis"/>
         </template>
-        <a-card-meta title="Card title" description="This is the description">
+        <a-card-meta :title=title :description=description>
             <template #avatar>
                 <a-avatar src="https://joeschmoe.io/api/v1/random"/>
             </template>
@@ -30,6 +30,11 @@ export default defineComponent({
         EditOutlined,
         EllipsisOutlined,
     },
+    props: {
+        title: {},
+        description: {},
+        photo: {},
+    }
 });
 
 </script>

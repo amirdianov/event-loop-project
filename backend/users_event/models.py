@@ -25,22 +25,14 @@ class Event(models.Model):
     description = models.TextField()
     start_time = models.DateTimeField()
     finish_time = models.DateTimeField()
-    photo = StdImageField(
-        upload_to=get_note_image_path,
-        null=False,
-        verbose_name="Картинка",
-        variations={
-            "thumbnail": {
-                "height": 400,
-                "width": 400,
-            }
-        },
+    photo = models.ImageField(
+        upload_to=get_note_image_path, null=False, verbose_name="Картинка"
     )
     price = models.IntegerField(null=True, blank=True)
     category = models.CharField(choices=Category.choices)
     is_passed = models.BooleanField()
     url = models.URLField(null=True, blank=True)
-    is_organizer = models.ManyToManyField(
+    organizer = models.ManyToManyField(
         User, through="Participant", related_name="is_organizer"
     )
     rating_event = models.ManyToManyField(
