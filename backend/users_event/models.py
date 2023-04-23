@@ -1,4 +1,5 @@
 import os
+from datetime import datetime
 
 from django.db import models
 from stdimage import StdImageField
@@ -6,16 +7,17 @@ from stdimage import StdImageField
 from authorisation_token.models import User
 from users_event.enums import Category
 
-# TODO поля created_at, updated_at
+
 def get_note_image_path(instance, filename):
-    return os.path.join(
-        "event_images", instance.start_time.strftime("%Y-%m-%d"), filename
-    )
+    return os.path.join("event_images", datetime.today().strftime("%Y-%m-%d"), filename)
 
 
 class Tag(models.Model):
     title = models.CharField(max_length=200)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.title
 
 
 class Event(models.Model):
@@ -45,6 +47,9 @@ class Event(models.Model):
         User, through="Rating", related_name="rating_event"
     )
     tags = models.ManyToManyField("Tag", blank=True)
+
+    def __str__(self):
+        return self.title
 
 
 class BaseManyToMany(models.Model):
