@@ -1,4 +1,5 @@
 <template>
+<!--    TODO with height problem-->
     <a-layout style="height: 100vh">
         <a-layout-header class="header" style="background-color: #002a29;">
             <div class="logo"/>
@@ -8,20 +9,20 @@
                     mode="horizontal"
                     style="background-color: #002a29;"
             >
-                <a-menu-item>
+                <a-menu-item key="1">
                     <RouterLink to="/">Главная страница</RouterLink>
                 </a-menu-item>
-                <a-menu-item>
+                <a-menu-item  key="2">
                     <RouterLink to="/about">О нас</RouterLink>
                 </a-menu-item>
-                <a-menu-item>
+                <a-menu-item  key="3">
                     <RouterLink to="/support">Поддержка</RouterLink>
                 </a-menu-item>
-                <a-menu-item v-if="user === null">
+                <a-menu-item  key="4" v-if="user === null">
                     <RouterLink to="/login">Войти | Зарегистрироваться</RouterLink>
                 </a-menu-item>
-                <a-menu-item v-if="user !== null">
-                    <RouterLink to="/login"><strong>{{this.user.name}}</strong></RouterLink>
+                <a-menu-item  key="5" v-if="user !== null">
+                    <RouterLink to="/login"><strong>{{ this.user.name }}</strong></RouterLink>
                 </a-menu-item>
             </a-menu>
         </a-layout-header>
@@ -46,7 +47,11 @@
                                 Профиль
                             </RouterLink>
                         </a-menu-item>
-                        <a-menu-item key="2">Мои мероприятия</a-menu-item>
+                        <a-menu-item key="2">
+                            <RouterLink to="/my-events">
+                                Мои мероприятия
+                            </RouterLink>
+                        </a-menu-item>
                         <a-menu-item key="3">Мой календарь</a-menu-item>
                         <a-menu-item key="4">Посещенные мероприятия</a-menu-item>
                     </a-sub-menu>
