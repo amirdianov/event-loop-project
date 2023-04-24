@@ -1,8 +1,6 @@
 <template>
     <div class="main">
-        <LayoutNav>
-            <h1>Домашная страница для всех</h1>
-        </LayoutNav>
+        <h1>Домашная страница для всех</h1>
     </div>
 </template>
 <script>

@@ -1,11 +1,14 @@
 <script setup>
 import {RouterView} from 'vue-router'
 import PageLoaderComponent from "@/components/PageLoaderComponent.vue";
+import LayoutNav from "@/containers/LayoutNav.vue";
 </script>
 
 <template>
     <PageLoaderComponent v-if="isLoading"/>
-    <RouterView/>
+    <LayoutNav>
+        <RouterView/>
+    </LayoutNav>
 </template>
 
 <script>

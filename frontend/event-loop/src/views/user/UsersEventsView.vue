@@ -1,11 +1,9 @@
 <template>
-    <LayoutNav v-if="!isLoading">
-        <div>
-            <div v-for="(event, index) in events" :key="index" style="display: inline-block; padding: 10px">
-                <CardComponent :title="event.title" :description="event.description" :photo="event.photo"></CardComponent>
-            </div>
+    <div>
+        <div v-for="(event, index) in events" :key="index" style="display: inline-block; padding: 10px">
+            <CardComponent :title="event.title" :description="event.description" :photo="event.photo"></CardComponent>
         </div>
-    </LayoutNav>
+    </div>
 </template>
 
 <script>

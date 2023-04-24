@@ -1,14 +1,10 @@
 <template>
-    <div class="login">
-        <LayoutNav>
-            <a-alert v-if="this.error" :message="this.error" type="error"/>
-            <a-row type="flex" justify="center" align="middle" style="height: 100%">
-                <a-col :span="10">
-                    <RegistrationComponent></RegistrationComponent>
-                </a-col>
-            </a-row>
-        </LayoutNav>
-    </div>
+    <a-alert v-if="this.error" :message="this.error" type="error"/>
+    <a-row type="flex" justify="center" align="middle" style="height: 100%">
+        <a-col :span="10">
+            <RegistrationComponent></RegistrationComponent>
+        </a-col>
+    </a-row>
 </template>
 
 <script>
@@ -26,7 +22,8 @@ export default {
         ...mapState({
             error: state => state.login.error
         })
-    }}
+    }
+}
 </script>
 
 <style scoped>

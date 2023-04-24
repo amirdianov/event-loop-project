@@ -1,5 +1,5 @@
 <template>
-<!--    TODO with height problem-->
+  <!--    TODO with height problem-->
     <a-layout style="height: 100vh">
         <a-layout-header class="header" style="background-color: #002a29;">
             <div class="logo"/>
@@ -12,17 +12,32 @@
                 <a-menu-item key="1">
                     <RouterLink to="/">Главная страница</RouterLink>
                 </a-menu-item>
-                <a-menu-item  key="2">
+                <a-menu-item key="2">
                     <RouterLink to="/about">О нас</RouterLink>
                 </a-menu-item>
-                <a-menu-item  key="3">
+                <a-menu-item key="3">
                     <RouterLink to="/support">Поддержка</RouterLink>
                 </a-menu-item>
-                <a-menu-item  key="4" v-if="user === null">
+                <a-menu-item key="4" v-if="user === null">
                     <RouterLink to="/login">Войти | Зарегистрироваться</RouterLink>
                 </a-menu-item>
-                <a-menu-item  key="5" v-if="user !== null">
-                    <RouterLink to="/login"><strong>{{ this.user.name }}</strong></RouterLink>
+                <a-menu-item key="5" v-if="user !== null">
+                    <a-dropdown trigger="click">
+                        <a class="ant-dropdown-link" @click.prevent>
+                            <strong>{{ this.user.name }}</strong>
+                            <DownOutlined/>
+                        </a>
+                        <template #overlay>
+                            <a-menu>
+                                <a-menu-item>
+                                    <RouterLink to="/profile">Профиль</RouterLink>
+                                </a-menu-item>
+                                <a-menu-item @click="logout_click">
+                                    <span>Выйти</span>
+                                </a-menu-item>
+                            </a-menu>
+                        </template>
+                    </a-dropdown>
                 </a-menu-item>
             </a-menu>
         </a-layout-header>
@@ -79,15 +94,16 @@
     </a-layout>
 </template>
 <script>
-import {LaptopOutlined, NotificationOutlined, UserOutlined} from '@ant-design/icons-vue';
+import {DownOutlined, LaptopOutlined, NotificationOutlined, UserOutlined} from '@ant-design/icons-vue';
 import {defineComponent, ref} from 'vue';
-import {mapState} from "vuex";
+import {mapActions, mapState} from "vuex";
 
 export default defineComponent({
     components: {
         UserOutlined,
         LaptopOutlined,
         NotificationOutlined,
+        DownOutlined,
     },
     setup() {
         return {
@@ -101,6 +117,13 @@ export default defineComponent({
         ...mapState({
             user: state => state.login.user
         })
+    },
+    methods: {
+        ...mapActions({logout: 'login/logout'}),
+        logout_click() {
+            this.logout()
+            this.$router.push({name: "home"});
+        }
     },
 });
 </script>

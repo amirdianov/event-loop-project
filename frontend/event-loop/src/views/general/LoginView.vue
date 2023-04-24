@@ -1,14 +1,10 @@
 <template>
-    <div class="login">
-        <LayoutNav>
-            <a-alert v-if="this.error" :message="this.error" type="error"/>
-            <a-row type="flex" justify="center" align="middle" style="height: 100%">
-                <a-col :span="10">
-                    <LoginComponent></LoginComponent>
-                </a-col>
-            </a-row>
-        </LayoutNav>
-    </div>
+    <a-alert v-if="this.error" :message="this.error" type="error"/>
+    <a-row type="flex" justify="center" align="middle" style="height: 100%">
+        <a-col :span="10">
+            <LoginComponent></LoginComponent>
+        </a-col>
+    </a-row>
 </template>
 <style>
 

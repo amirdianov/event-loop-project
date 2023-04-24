@@ -1,28 +1,23 @@
 <template>
-    <div class="profile">
-        <LayoutNav>
-            <a-alert v-if="this.isSuccess"
-                     message="Успешно"
-                     description="Информация обновлена!"
-                     type="success"
-                     show-icon
-            />
-            <a-alert v-if="this.error" :message="this.error" type="error"/>
-            <a-row type="flex" justify="space-around" align="middle" style="height: 100%">
-                <a-col :span="6">
-                    <a-avatar :size="400">
-                        <template #icon>
-                            <UserOutlined/>
-                        </template>
-                    </a-avatar>
-                </a-col>
-                <a-col :span="14" v-if="!isLoading">
-                    <ProfileInformationComponent></ProfileInformationComponent>
-                </a-col>
-            </a-row>
-            <a-button @click="logout_click" style="float: right">Выйти</a-button>
-        </LayoutNav>
-    </div>
+    <a-alert v-if="this.isSuccess"
+             message="Успешно"
+             description="Информация обновлена!"
+             type="success"
+             show-icon
+    />
+    <a-alert v-if="this.error" :message="this.error" type="error"/>
+    <a-row type="flex" justify="space-around" align="middle" style="height: 100%">
+        <a-col :span="6">
+            <a-avatar :size="400">
+                <template #icon>
+                    <UserOutlined/>
+                </template>
+            </a-avatar>
+        </a-col>
+        <a-col :span="14" v-if="!isLoading">
+            <ProfileInformationComponent></ProfileInformationComponent>
+        </a-col>
+    </a-row>
 </template>
 
 <script>

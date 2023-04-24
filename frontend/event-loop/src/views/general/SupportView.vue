@@ -1,7 +1,5 @@
 <template>
-    <LayoutNav>
-        <h1>Support</h1>
-    </LayoutNav>
+    <h1>Support</h1>
 </template>
 
 <script>

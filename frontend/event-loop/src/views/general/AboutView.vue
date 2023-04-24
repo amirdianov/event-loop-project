@@ -1,9 +1,7 @@
 <template>
-    <LayoutNav>
-        <div>
-            <h1>about</h1>
-        </div>
-    </LayoutNav>
+    <div>
+        <h1>about</h1>
+    </div>
 </template>
 
 <script>
