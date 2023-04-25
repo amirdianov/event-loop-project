@@ -49,7 +49,25 @@ const router = createRouter({
             component: () => import('../views/user/UsersEventsView.vue'),
             meta: {unauthorizedAccess: true}
 
-        }
+        },
+        {
+            path: '/my-events/:id',
+            name: 'my-event-page',
+            component: () => import('../views/user/DetailUsersEventView.vue'),
+            meta: {unauthorizedAccess: true}
+        },
+        {
+            path: '/events/:slug',
+            name: 'events',
+            component: () => import('../views/events/EventsView.vue'),
+            meta: {unauthorizedAccess: true}
+        },
+        // {
+        //     path: '/events/:slug/event/:id',
+        //     name: 'events',
+        //     component: () => import('../views/events/DetailEventsView.vue'),
+        //     meta: {unauthorizedAccess: true}
+        // }
     ]
 })
 

@@ -1,19 +1,31 @@
 import store from "@/store/index";
-import {all_events as loadAllEvents} from "../../services/api";
+import {all_events, user_events} from "../../services/api";
 
 export const eventsModule = {
     state: () => ({
-        allEvents: null
+        allEvents: null,
+        userEvents: null
     }),
     actions: {
-        async loadEvents({commit}) {
+        async loadAllEvents({commit}) {
             store.state.login.isLoading = true
             try {
-                const events = await loadAllEvents()
-                commit("setEvents", events)
+                const events = await all_events()
+                commit("setAllEvents", events)
             } catch (e) {
                 store.state.login.isLoading = true
-                commit("setError", 'К сожалению, данные изменить не удалось')
+                commit("setError", 'Ошибка')
+            }
+            store.state.login.isLoading = false
+        },
+        async loadUsersEvents({commit}) {
+            store.state.login.isLoading = true
+            try {
+                const events = await user_events()
+                commit("setUserEvents", events)
+            } catch (e) {
+                store.state.login.isLoading = true
+                commit("setError", 'Ошибка')
             }
             store.state.login.isLoading = false
         }
@@ -23,8 +35,11 @@ export const eventsModule = {
             store.state.login.error = error
             setTimeout(() => store.state.login.error = null, 3000);
         },
-        setEvents(state, events) {
+        setAllEvents(state, events) {
             state.allEvents = events
+        },
+        setUserEvents(state, events) {
+            state.userEvents = events
         }
     },
     namespaced: true

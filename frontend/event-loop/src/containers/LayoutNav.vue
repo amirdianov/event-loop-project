@@ -8,6 +8,7 @@
                     theme="dark"
                     mode="horizontal"
                     style="background-color: #002a29;"
+                    @click="keyDefaultSet"
             >
                 <a-menu-item key="1">
                     <RouterLink to="/">Главная страница</RouterLink>
@@ -30,7 +31,7 @@
                         <template #overlay>
                             <a-menu>
                                 <a-menu-item>
-                                    <RouterLink to="/profile">Профиль</RouterLink>
+                                    <RouterLink to="/profile">Личный кабинет</RouterLink>
                                 </a-menu-item>
                                 <a-menu-item @click="logout_click">
                                     <span>Выйти</span>
@@ -59,7 +60,7 @@
                         </template>
                         <a-menu-item key="1">
                             <RouterLink to="/profile">
-                                Профиль
+                                Личный кабинет
                             </RouterLink>
                         </a-menu-item>
                         <a-menu-item key="2">
@@ -77,10 +78,18 @@
                 Мероприятия
               </span>
                         </template>
-                        <a-menu-item key="5">Вебинары</a-menu-item>
-                        <a-menu-item key="6">Курсы</a-menu-item>
-                        <a-menu-item key="7">Мастер-классы</a-menu-item>
-                        <a-menu-item key="8">Развлечения</a-menu-item>
+                        <a-menu-item key="5">
+                            <RouterLink :to="{name: 'events', params: {slug: 'lessons'}}">Уроки</RouterLink>
+                        </a-menu-item>
+                        <a-menu-item key="6">
+                            <RouterLink :to="{name: 'events', params: {slug: 'webinar'}}">Вебинары</RouterLink>
+                        </a-menu-item>
+                        <a-menu-item key="7">
+                            <RouterLink :to="{name: 'events', params: {slug: 'masterclass'}}">Мастер-классы</RouterLink>
+                        </a-menu-item>
+                        <a-menu-item key="8">
+                            <RouterLink :to="{name: 'events', params: {slug: 'entertainments'}}">Развлечения</RouterLink>
+                        </a-menu-item>
                     </a-sub-menu>
                 </a-menu>
             </a-layout-sider>
@@ -123,6 +132,9 @@ export default defineComponent({
         logout_click() {
             this.logout()
             this.$router.push({name: "home"});
+        },
+        keyDefaultSet() {
+            this.selectedKeys2 = ref(['1'])
         }
     },
 });

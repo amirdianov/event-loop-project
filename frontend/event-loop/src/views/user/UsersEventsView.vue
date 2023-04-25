@@ -1,7 +1,13 @@
 <template>
     <div>
-        <div v-for="(event, index) in events" :key="index" style="display: inline-block; padding: 10px">
-            <CardComponent :title="event.title" :description="event.description" :photo="event.photo"></CardComponent>
+        <div v-for="(event, index) in userEvents" :key="index" style="display: inline-block; padding: 10px">
+            <div>
+                <CardComponent :title="event.title" :description="event.description" :photo="event.photo"
+                               @click="this.$router.push({name: 'my-event-page', params: {id: event.id}})">
+                </CardComponent>
+                <router-link :to="{name: 'my-event-page', params: {id: event.id}}"></router-link>
+
+            </div>
         </div>
     </div>
 </template>
@@ -22,11 +28,11 @@ export default {
     computed: {
         ...mapState({
             isLoading: state => state.login.isLoading,
-            events: state => state.events.allEvents
+            userEvents: state => state.events.userEvents
         })
     },
     methods: {
-        ...mapActions({loadEvents: "events/loadEvents"})
+        ...mapActions({loadEvents: "events/loadUsersEvents"})
     },
     created() {
         this.loadEvents()
