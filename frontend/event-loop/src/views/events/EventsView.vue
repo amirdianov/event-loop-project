@@ -1,7 +1,7 @@
 <template>
     <div>
         <div v-for="(event, index) in allEvents" :key="index" style="display: inline-block; padding: 10px">
-            <CardComponent :title="event.title" :description="event.description" :photo="event.photo"></CardComponent>
+            <CardComponent :event="event"></CardComponent>
         </div>
     </div>
 </template>

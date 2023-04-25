@@ -35,8 +35,6 @@ class EventViewSet(
 
     @action(detail=False, methods=["get"], permission_classes=[IsAuthenticated])
     def my_events(self, request, pk=None):
-        qs = self.get_queryset(user_id=self.request.user.id)
-        resp = EventInfoSerializer(data=qs, many=True)
-        resp.is_valid()
-        print(resp.data)
-        return Response(resp.data)
+        queryset = self.filter_queryset(self.get_queryset(user_id=self.request.user.id))
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)

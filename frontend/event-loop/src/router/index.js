@@ -54,7 +54,13 @@ const router = createRouter({
             path: '/my-events/:id',
             name: 'my-event-page',
             component: () => import('../views/user/DetailUsersEventView.vue'),
-            meta: {unauthorizedAccess: true}
+            meta: {unauthorizedAccess: true},
+        },
+        {
+            path: '/my-events/:id/edit',
+            name: 'my-event-page-edit',
+            component: () => import('../views/user/EditUsersEventView.vue'),
+            meta: {unauthorizedAccess: true},
         },
         {
             path: '/events/:slug',

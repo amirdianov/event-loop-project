@@ -1,12 +1,9 @@
 <template>
-    <div>
+    <div v-if="!isLoading">
         <div v-for="(event, index) in userEvents" :key="index" style="display: inline-block; padding: 10px">
             <div>
-                <CardComponent :title="event.title" :description="event.description" :photo="event.photo"
-                               @click="this.$router.push({name: 'my-event-page', params: {id: event.id}})">
+                <CardComponent :event="event">
                 </CardComponent>
-                <router-link :to="{name: 'my-event-page', params: {id: event.id}}"></router-link>
-
             </div>
         </div>
     </div>

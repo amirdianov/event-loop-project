@@ -1,5 +1,9 @@
 <template>
-    <h1>{{ this.event }}</h1>
+    <div v-for="(event, index) in userEvents" :key="index">
+        <div v-if="event.id==this.$route.params.id" class="event">
+            {{ event.title }}
+        </div>
+    </div>
 </template>
 
 <script>
@@ -13,7 +17,7 @@ export default {
     components: {ProfileInformationComponent, LayoutNav, UserOutlined},
     data() {
         return {
-           event: null
+            event: null
         }
     },
     methods: {
@@ -29,13 +33,12 @@ export default {
             error: state => state.login.error,
             isSuccess: state => state.profile.isSuccess,
             isLoading: state => state.login.isLoading,
-            userEvents: state => state.events.userEvents
+            userEvents: state => state.events.userEvents,
+            user: state => state.login.user
         }),
     },
     created() {
         this.userEvents.forEach((event) => {
-            console.log(event.id)
-            console.log(this.$route.params.id)
             if (event.id == this.$route.params.id) {
                 this.event = event
             }
