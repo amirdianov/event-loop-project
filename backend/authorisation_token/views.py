@@ -36,7 +36,6 @@ def status_view(request):
 
 class UserViewSet(
     mixins.UpdateModelMixin,
-    mixins.DestroyModelMixin,
     mixins.ListModelMixin,
     GenericViewSet,
 ):
