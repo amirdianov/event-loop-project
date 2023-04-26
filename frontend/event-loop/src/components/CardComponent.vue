@@ -4,14 +4,14 @@
             <img
                     alt="example"
                     :src=event.photo
-                    @click="this.$router.push({name: 'my-event-page', params: {id: event.id}})"/>
+                    @click="this.$router.push({name: name, params: {id: event.id}})"/>
         </template>
         <template #actions>
             <edit-outlined key="edit" @click="this.$router.push({name: 'my-event-page-edit', params: {id: event.id}})">
             </edit-outlined>
         </template>
         <a-card-meta :title=event.title :description="event.price ? event.price + ` р` : `Посещение свободное`"
-                     @click="this.$router.push({name: 'my-event-page', params: {id: event.id}})">
+                     @click="this.$router.push({name: name, params: {id: event.id, slug: slug}})">
             <template #avatar>
                 <!--                <a-avatar src={{store.state.login.user.photo}}></a-avatar>-->
             </template>
@@ -32,12 +32,12 @@ export default defineComponent({
     },
 
     components: {
-        SettingOutlined,
         EditOutlined,
-        EllipsisOutlined,
     },
     props: {
         event: {},
+        name: {},
+        slug: {},
     }
 });
 

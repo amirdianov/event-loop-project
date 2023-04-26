@@ -1,8 +1,10 @@
 <template>
+    <a-alert v-if="this.error" :message="this.error" type="error"/>
+
     <div v-if="!isLoading">
         <div v-for="(event, index) in userEvents" :key="index" style="display: inline-block; padding: 10px">
             <div>
-                <CardComponent :event="event">
+                <CardComponent :event="event" name="my-event-page">
                 </CardComponent>
             </div>
         </div>
@@ -11,7 +13,7 @@
 
 <script>
 import LayoutNav from "@/containers/LayoutNav.vue";
-import {mapActions, mapState} from "vuex";
+import {mapState} from "vuex";
 import CardComponent from "@/components/CardComponent.vue";
 
 export default {
@@ -25,15 +27,11 @@ export default {
     computed: {
         ...mapState({
             isLoading: state => state.login.isLoading,
-            userEvents: state => state.events.userEvents
+            userEvents: state => state.events.userEvents,
+            error: state => state.login.error
         })
     },
-    methods: {
-        ...mapActions({loadEvents: "events/loadUsersEvents"})
-    },
-    created() {
-        this.loadEvents()
-    }
+
 }
 </script>
 

@@ -19,7 +19,8 @@ export default {
     name: "App",
     methods: {
         ...mapActions({
-            loadUser: 'login/loadUser'
+            loadUser: 'login/loadUser',
+            loadUsersEvents: 'events/loadUsersEvents'
         })
     },
     created() {

@@ -54,7 +54,10 @@ export const loginModule =
             async loadUser({state, commit}) {
                 commit("setLoading", true)
                 try {
+                    debugger
                     const user = await profile()
+                    await store.dispatch('events/loadUsersEvents')
+                    // await store.dispatch('events/loadAllEvents')
                     commit("setUser", user)
                 } catch (e) {
                     console.log(e);

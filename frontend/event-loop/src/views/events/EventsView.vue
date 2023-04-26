@@ -1,22 +1,25 @@
 <template>
-    <div>
-        <div v-for="(event, index) in allEvents" :key="index" style="display: inline-block; padding: 10px">
-            <CardComponent :event="event"></CardComponent>
+    <div v-if="!isLoading">
+        <div v-for="(event, index) in this.allEvents" :key="index" style="display: inline-block; padding: 10px">
+            <div>
+                <CardComponent :event="event" name="event-page" :slug="slug">
+                </CardComponent>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-import LayoutNav from "@/containers/LayoutNav.vue";
 import {mapActions, mapState} from "vuex";
 import CardComponent from "@/components/CardComponent.vue";
 
 export default {
     name: "EventsView",
-    components: {CardComponent, LayoutNav},
+    components: {CardComponent},
     data() {
         return {
-            items: 10
+            items: 10,
+            slug: this.$route.params.slug
         }
     },
     computed: {
@@ -29,7 +32,15 @@ export default {
         ...mapActions({loadEvents: "events/loadAllEvents"})
     },
     created() {
-        this.loadEvents()
+        this.loadEvents(this.$route.params.slug)
+    },
+    watch: {
+        $route(to) {
+            console.log(this.$route.params.slug)
+            this.loadEvents(this.$route.params.slug)
+            // const params = {...to.query, "page": this.parameters.page};
+            // this.loadEvents(`?${qs.stringify(params, {indices: false})}`);
+        }
     }
 }
 </script>

@@ -79,7 +79,7 @@
               </span>
                         </template>
                         <a-menu-item key="5">
-                            <RouterLink :to="{name: 'events', params: {slug: 'lessons'}}">Уроки</RouterLink>
+                            <RouterLink :to="{name: 'events', params: {slug: 'lesson'}}">Уроки</RouterLink>
                         </a-menu-item>
                         <a-menu-item key="6">
                             <RouterLink :to="{name: 'events', params: {slug: 'webinar'}}">Вебинары</RouterLink>

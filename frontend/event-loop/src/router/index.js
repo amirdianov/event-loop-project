@@ -51,6 +51,13 @@ const router = createRouter({
 
         },
         {
+            path: '/my-events/create',
+            name: 'my-events-create',
+            component: () => import('../views/user/EditUsersEventView.vue'),
+            meta: {unauthorizedAccess: true}
+
+        },
+        {
             path: '/my-events/:id',
             name: 'my-event-page',
             component: () => import('../views/user/DetailUsersEventView.vue'),
@@ -66,14 +73,21 @@ const router = createRouter({
             path: '/events/:slug',
             name: 'events',
             component: () => import('../views/events/EventsView.vue'),
-            meta: {unauthorizedAccess: true}
+            meta: {unauthorizedAccess: true},
+            // children: [
+            //     {
+            //         path: ':id',
+            //         name: 'event-page',
+            //         component: DetailEventsView
+            //     }
+            // ],
         },
-        // {
-        //     path: '/events/:slug/event/:id',
-        //     name: 'events',
-        //     component: () => import('../views/events/DetailEventsView.vue'),
-        //     meta: {unauthorizedAccess: true}
-        // }
+        {
+            path: '/events/:slug/:id',
+            name: 'event-page',
+            component: () => import('../views/events/DetailEventsView.vue'),
+            meta: {unauthorizedAccess: true}
+        }
     ]
 })
 
