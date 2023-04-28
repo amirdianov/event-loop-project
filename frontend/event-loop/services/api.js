@@ -60,6 +60,9 @@ export async function user_events() {
 }
 
 export async function create_event(data) {
+    for (const value of data.values()) {
+        console.log(value);
+    }
     await check_token(store.state.login.tokens, instance)
 
     const response = await instance.post('/my_events/', data, {

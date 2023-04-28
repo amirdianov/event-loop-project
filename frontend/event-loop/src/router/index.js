@@ -53,7 +53,7 @@ const router = createRouter({
         {
             path: '/my-events/create',
             name: 'my-events-create',
-            component: () => import('../views/user/EditUsersEventView.vue'),
+            component: () => import('../views/user/CreateEditUsersEventView.vue'),
             meta: {unauthorizedAccess: true}
 
         },
@@ -66,7 +66,7 @@ const router = createRouter({
         {
             path: '/my-events/:id/edit',
             name: 'my-event-page-edit',
-            component: () => import('../views/user/EditUsersEventView.vue'),
+            component: () => import('../views/user/CreateEditUsersEventView.vue'),
             meta: {unauthorizedAccess: true},
         },
         {

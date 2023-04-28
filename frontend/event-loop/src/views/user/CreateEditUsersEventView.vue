@@ -12,33 +12,17 @@
         <a-form-item :name="['event', 'description']" label="Description" :rules="[{ required: true }]">
             <a-input v-model:value="formState.event.description"/>
         </a-form-item>
-        <a-form-item :name="['event', 'start_time']">
-            <label for="party">Start time</label>
-            <input
-                    id="party"
-                    type="datetime-local"
-                    name="partydate"
-                    v-model="formState.event.start_time"/>
+        <a-form-item :name="['event', 'start_time']" label="Start Time">
+            <time-component @update:model-value="formState.event.start_time = $event"></time-component>
         </a-form-item>
-        <a-form-item :name="['event', 'finish_time']">
-            <label for="party">Finish time</label>
-            <input
-                    id="party"
-                    type="datetime-local"
-                    name="partydate"
-                    v-model="formState.event.finish_time"/>
+        <a-form-item :name="['event', 'finish_time']" label="Finish Time">
+            <time-component @update:model-value="formState.event.finish_time = $event"></time-component>
         </a-form-item>
-        <!--        <a-form-item :name="['event', 'start_time']" label="StartTime">-->
-        <!--            <time-component v-model:value="formState.event.start_time"/>-->
-        <!--        </a-form-item>-->
-        <!--        <a-form-item :name="['event', 'finish_time']" label="FinishTime">-->
-        <!--            <time-component v-model:value="formState.event.finish_time"/>-->
-        <!--        </a-form-item>-->
         <a-form-item :name="['event', 'category']" label="Category">
             <a-textarea v-model:value="formState.event.category"/>
         </a-form-item>
-        <a-form-item>
-            <!--            <upload-component v-model:value="formState.event.photo"></upload-component>-->
+        <a-form-item :name="['event', 'photo']" label="Photo">
+<!--                        <upload-component v-model:value="formState.event.photo"></upload-component>-->
             <input type="file" ref="file">
 
         </a-form-item>
@@ -86,6 +70,7 @@ export default defineComponent({
                 start_time: '',
                 finish_time: '',
                 category: '',
+                photo: ''
             },
         });
         const onFinish = values => {

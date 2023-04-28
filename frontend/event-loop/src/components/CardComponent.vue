@@ -4,7 +4,9 @@
             <img
                     alt="example"
                     :src=event_info.photo
-                    @click="this.$router.push({name: name, params: {id: this.event_info.id, slug: this.slug}})"/>
+                    @click="this.$router.push({name: name, params: {id: this.event_info.id, slug: this.slug}})"
+                    width="300" height="300"
+            />
         </template>
         <template #actions>
             <edit-outlined v-if="name==='my-event-page'" key="edit" style="font-size: 20px"
