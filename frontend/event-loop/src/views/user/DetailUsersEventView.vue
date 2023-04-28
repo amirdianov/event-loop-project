@@ -1,11 +1,12 @@
 <template>
     <a-alert v-if="this.error" :message="this.error" type="error"/>
-    <EventInformationComponent v-if="!isLoading"/>
+    <EventInformationComponent v-if="!isLoading" :event="this.event"/>
 </template>
 
 <script>
-import {mapState} from "vuex";
+import {mapMutations, mapState} from "vuex";
 import EventInformationComponent from "@/components/EventInformationComponent.vue";
+import {getUserEvent} from "../../../services/api";
 
 export default {
     name: "DetailUsersEventView",
@@ -17,7 +18,19 @@ export default {
             isLoading: state => state.login.isLoading,
         }),
     },
-
+    methods: {
+        ...mapMutations({
+            setLoading: 'login/setLoading'
+        }),
+        async loadUserEvent(event_id) {
+            this.setLoading(true)
+            this.event = await getUserEvent(event_id);
+            this.setLoading(false)
+        }
+    },
+    created() {
+        this.loadUserEvent(this.$route.params.id)
+    }
 }
 </script>
 

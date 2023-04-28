@@ -69,6 +69,6 @@ export async function create_event(data) {
 }
 export async function getUserEvent(event_id) {
     await check_token(store.state.login.tokens, instance)
-    const response = await instance.get(`/events/my_events/${event_id}`)
+    const response = await instance.get(`/my_events/${event_id}`)
     return response.data
 }

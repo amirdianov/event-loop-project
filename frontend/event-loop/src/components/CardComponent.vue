@@ -14,8 +14,9 @@
             <a-rate v-if="name==='event-page'" :value="2" disabled/>
             <carry-out-outlined v-if="name==='event-page'" style="font-size: 25px"/>
         </template>
-        <a-card-meta :title=event.title :description="event.price ? `Цена доступа: ` + event.price + ` р` : `Посещение свободное`"
-                     @click="this.$router.push({name: name, params: {id: event.id, slug: slug}})">
+        <a-card-meta :title=event.title
+                     :description="event.price ? `Цена доступа: ` + event.price + ` р` : `Посещение свободное`"
+                     @click="this.$router.push({name: name, params: {id: event.id}})">
             <template #avatar>
                 <!--            TODO avatar-->
                 <!--                <a-avatar src={{store.state.login.user.photo}}></a-avatar>-->
