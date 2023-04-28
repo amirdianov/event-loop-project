@@ -11,10 +11,11 @@ from rest_framework_simplejwt.views import (
 from authorisation_token.views import (
     status_view,
 )
-from users_event.views import EventViewSet
+from users_event.views import EventViewSet, UserEventViewSet
 
 users_router = SimpleRouter()
 users_router.register("events", EventViewSet, basename="events")
+users_router.register("my_events", UserEventViewSet, basename="my_events")
 
 urlpatterns = [
     path("", status_view, name="status"),
