@@ -16,7 +16,7 @@
         </template>
         <a-card-meta :title=event.title
                      :description="event.price ? `Цена доступа: ` + event.price + ` р` : `Посещение свободное`"
-                     @click="this.$router.push({name: name, params: {id: event.id}})">
+                     @click="this.$router.push({name: name, params: {id: event.id, slug: slug}})">
             <template #avatar>
                 <!--            TODO avatar-->
                 <!--                <a-avatar src={{store.state.login.user.photo}}></a-avatar>-->
