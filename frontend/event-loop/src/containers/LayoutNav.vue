@@ -1,6 +1,6 @@
 <template>
   <!--    TODO with height problem-->
-    <a-layout style="height: 100vh">
+    <a-layout>
         <a-layout-header class="header" style="background-color: #002a29;">
             <div class="logo"/>
             <a-menu
@@ -88,16 +88,19 @@
                             <RouterLink :to="{name: 'events', params: {slug: 'masterclass'}}">Мастер-классы</RouterLink>
                         </a-menu-item>
                         <a-menu-item key="8">
-                            <RouterLink :to="{name: 'events', params: {slug: 'entertainments'}}">Развлечения</RouterLink>
+                            <RouterLink :to="{name: 'events', params: {slug: 'entertainments'}}">Развлечения
+                            </RouterLink>
                         </a-menu-item>
                     </a-sub-menu>
                 </a-menu>
             </a-layout-sider>
-            <a-layout style="padding: 20px">
+            <a-layout style="padding: 24px 24px;">
                 <a-layout-content
-                        :style="{ background: '#fff', padding: '24px', margin: 0}">
+                        :style="{ background: '#fff', padding: '24px', margin: 0, minHeight: '600px' }"
+                >
                     <slot/>
                 </a-layout-content>
+
             </a-layout>
         </a-layout>
     </a-layout>
@@ -106,9 +109,11 @@
 import {DownOutlined, LaptopOutlined, NotificationOutlined, UserOutlined} from '@ant-design/icons-vue';
 import {defineComponent, ref} from 'vue';
 import {mapActions, mapState} from "vuex";
+import EventsView from "@/views/events/EventsView.vue";
 
 export default defineComponent({
     components: {
+        EventsView,
         UserOutlined,
         LaptopOutlined,
         NotificationOutlined,
