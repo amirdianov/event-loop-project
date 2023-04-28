@@ -20,7 +20,6 @@ export default {
     methods: {
         ...mapActions({
             loadUser: 'login/loadUser',
-            loadUsersEvents: 'events/loadUsersEvents'
         })
     },
     created() {

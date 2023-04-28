@@ -1,29 +1,24 @@
 <template>
     <a-alert v-if="this.error" :message="this.error" type="error"/>
-
-    <div v-if="!isLoading">
-        <div v-for="(event, index) in userEvents" :key="index" style="display: inline-block; padding: 10px">
-            <div>
-                <CardComponent :event="event" name="my-event-page">
-                </CardComponent>
-            </div>
-        </div>
-    </div>
+    <a-row type="flex" justify="start" style="height: 100%">
+        <a-col v-if="!isLoading">
+                <div v-for="(event, index) in userEvents" :key="index" style="display: inline-block; padding: 10px">
+                    <div class="cards">
+                        <CardComponent :event="event" name="my-event-page"/>
+                    </div>
+                </div>
+        </a-col>
+    </a-row>
 </template>
 
 <script>
-import LayoutNav from "@/containers/LayoutNav.vue";
 import {mapState} from "vuex";
 import CardComponent from "@/components/CardComponent.vue";
+import LoginComponent from "@/components/LoginComponent.vue";
 
 export default {
     name: "UsersEventsView",
-    components: {CardComponent, LayoutNav},
-    data() {
-        return {
-            items: 10
-        }
-    },
+    components: {LoginComponent, CardComponent},
     computed: {
         ...mapState({
             isLoading: state => state.login.isLoading,

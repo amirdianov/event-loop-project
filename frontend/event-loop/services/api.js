@@ -55,15 +55,20 @@ export async function all_events(data) {
 
 export async function user_events() {
     await check_token(store.state.login.tokens, instance)
-    const response = await instance.get('/events/my_events/')
+    const response = await instance.get('/my_events/')
     return response.data
 }
 
 export async function create_event(data) {
     await check_token(store.state.login.tokens, instance)
 
-    const response = await instance.post('/events/my_events/', data, {
+    const response = await instance.post('/my_events/', data, {
         "content-type": `multipart/form-data; boundary=${data._boundary}`,
     },)
+    return response.data
+}
+export async function getUserEvent(event_id) {
+    await check_token(store.state.login.tokens, instance)
+    const response = await instance.get(`/events/my_events/${event_id}`)
     return response.data
 }

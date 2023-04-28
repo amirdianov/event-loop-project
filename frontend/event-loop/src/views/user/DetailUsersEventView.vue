@@ -1,6 +1,6 @@
 <template>
-    <EventInformationComponent v-if="!isLoading">
-    </EventInformationComponent>
+    <a-alert v-if="this.error" :message="this.error" type="error"/>
+    <EventInformationComponent v-if="!isLoading"/>
 </template>
 
 <script>
@@ -8,20 +8,13 @@ import {mapState} from "vuex";
 import EventInformationComponent from "@/components/EventInformationComponent.vue";
 
 export default {
-    name: "ProfileView",
+    name: "DetailUsersEventView",
     components: {EventInformationComponent},
-    data() {
-        return {
-            event: null
-        }
-    },
+
     computed: {
         ...mapState({
             error: state => state.login.error,
-            isSuccess: state => state.profile.isSuccess,
             isLoading: state => state.login.isLoading,
-            userEvents: state => state.events.userEvents,
-            user: state => state.login.user
         }),
     },
 
