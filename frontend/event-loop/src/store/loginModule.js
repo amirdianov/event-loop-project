@@ -55,7 +55,7 @@ export const loginModule =
                 commit("setLoading", true)
                 try {
                     const user = await profile()
-                    await store.dispatch('events/loadUsersEvents')
+                    // await store.dispatch('events/loadUsersEvents')
                     commit("setUser", user)
                 } catch (e) {
                     console.log(e);

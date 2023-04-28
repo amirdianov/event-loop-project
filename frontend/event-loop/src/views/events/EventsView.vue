@@ -2,7 +2,7 @@
     <div v-if="!isLoading">
         <div v-for="(event, index) in this.allEvents" :key="index" style="display: inline-block; padding: 10px">
             <div>
-                <CardComponent :event="event" name="event-page" :slug="slug">
+                <CardComponent :event_info="event" name="event-page" :slug="slug">
                 </CardComponent>
             </div>
         </div>
@@ -19,7 +19,7 @@ export default {
     data() {
         return {
             items: 10,
-            slug: this.$route.params.slug
+            slug: null
         }
     },
     computed: {
@@ -32,14 +32,13 @@ export default {
         ...mapActions({loadEvents: "events/loadAllEvents"})
     },
     created() {
-        this.loadEvents(this.$route.params.slug)
+        this.slug = this.$route.params.slug
+        this.loadEvents(this.slug)
     },
     watch: {
         $route(to) {
-            console.log(this.$route.params.slug)
-            this.loadEvents(this.$route.params.slug)
-            // const params = {...to.query, "page": this.parameters.page};
-            // this.loadEvents(`?${qs.stringify(params, {indices: false})}`);
+            this.slug = this.$route.params.slug
+            this.loadEvents(this.slug)
         }
     }
 }

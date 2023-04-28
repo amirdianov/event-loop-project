@@ -20,12 +20,18 @@ export const eventsModule = {
             store.state.login.isLoading = false
         },
         async loadUsersEvents({commit}) {
+            store.state.login.isLoading = true
+
             try {
                 const events = await user_events()
                 commit("setUserEvents", events)
             } catch (e) {
+                store.state.login.isLoading = false
+
                 commit("setError", 'Ошибка')
             }
+            store.state.login.isLoading = false
+
         },
         async createUsersEvent({commit}, data) {
             try {

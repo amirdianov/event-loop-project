@@ -3,20 +3,20 @@
         <template #cover>
             <img
                     alt="example"
-                    :src=event.photo
-                    @click="this.$router.push({name: name, params: {id: event.id, slug: slug}})"/>
+                    :src=event_info.photo
+                    @click="this.$router.push({name: name, params: {id: this.event_info.id, slug: this.slug}})"/>
         </template>
         <template #actions>
             <edit-outlined v-if="name==='my-event-page'" key="edit" style="font-size: 20px"
-                           @click="this.$router.push({name: 'my-event-page-edit', params: {id: event.id, slug: slug}})">
+                           @click="this.$router.push({name: 'my-event-page-edit', params: {id: event_info.id, slug: slug}})">
             </edit-outlined>
             <!--            TODO rate-->
             <a-rate v-if="name==='event-page'" :value="2" disabled/>
             <carry-out-outlined v-if="name==='event-page'" style="font-size: 25px"/>
         </template>
-        <a-card-meta :title=event.title
-                     :description="event.price ? `Цена доступа: ` + event.price + ` р` : `Посещение свободное`"
-                     @click="this.$router.push({name: name, params: {id: event.id, slug: slug}})">
+        <a-card-meta :title=event_info.title
+                     :description="event_info.price ? `Цена доступа: ` + event_info.price + ` р` : `Посещение свободное`"
+                     @click="this.$router.push({name: name, params: {id: event_info.id, slug: slug}})">
             <template #avatar>
                 <!--            TODO avatar-->
                 <!--                <a-avatar src={{store.state.login.user.photo}}></a-avatar>-->
@@ -41,7 +41,7 @@ export default defineComponent({
         EditOutlined, CarryOutOutlined
     },
     props: {
-        event: {},
+        event_info: {},
         name: {},
         slug: {},
     }

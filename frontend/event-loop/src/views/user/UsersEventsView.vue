@@ -4,7 +4,7 @@
         <a-col v-if="!isLoading">
                 <div v-for="(event, index) in userEvents" :key="index" style="display: inline-block; padding: 10px">
                     <div class="cards">
-                        <CardComponent :event="event" name="my-event-page"/>
+                        <CardComponent :event_info="event" name="my-event-page"/>
                     </div>
                 </div>
         </a-col>
@@ -12,13 +12,12 @@
 </template>
 
 <script>
-import {mapState} from "vuex";
+import {mapActions, mapState} from "vuex";
 import CardComponent from "@/components/CardComponent.vue";
-import LoginComponent from "@/components/LoginComponent.vue";
 
 export default {
     name: "UsersEventsView",
-    components: {LoginComponent, CardComponent},
+    components: {CardComponent},
     computed: {
         ...mapState({
             isLoading: state => state.login.isLoading,
@@ -26,6 +25,12 @@ export default {
             error: state => state.login.error
         })
     },
+    methods: {
+        ...mapActions({loadUsersEvents: "events/loadUsersEvents"})
+    },
+    created() {
+      this.loadUsersEvents()
+    }
 
 }
 </script>

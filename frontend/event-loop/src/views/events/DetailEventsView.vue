@@ -1,6 +1,6 @@
 <template>
     <a-alert v-if="this.error" :message="this.error" type="error"/>
-    <EventInformationComponent v-if="!isLoading" :event="this.event"/>
+    <EventInformationComponent v-if="!isLoading" :event="this.event_info"/>
 </template>
 
 <script>
@@ -12,7 +12,11 @@ import {getEvent} from "../../../services/api";
 export default {
     name: "DetailEventsView",
     components: {EventInformationComponent},
-
+    data(){
+        return{
+            isLoading: true
+        }
+    },
     computed: {
         ...mapState({
             error: state => state.login.error,
@@ -24,9 +28,11 @@ export default {
             setLoading: 'login/setLoading'
         }),
         async loadUserEvent(event_id) {
-            this.setLoading(true)
-            this.event = await getEvent(event_id);
-            this.setLoading(false)
+            // this.setLoading(true)
+            this.isLoading = true
+            this.event_info = await getEvent(event_id);
+            this.isLoading = false
+            // this.setLoading(false)
         }
     },
     created() {
