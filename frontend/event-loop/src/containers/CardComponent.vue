@@ -24,6 +24,13 @@
                 <!--                <a-avatar src={{store.state.login.user.photo}}></a-avatar>-->
             </template>
         </a-card-meta>
+<!--        TODO tags-->
+        <div style="display: inline-block; margin-top:10px;">
+            <a-tag>Tag 1</a-tag>
+            <a-tag>Tag 1</a-tag>
+
+        </div>
+
     </a-card>
 </template>
 <script>

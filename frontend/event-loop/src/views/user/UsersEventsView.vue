@@ -2,7 +2,7 @@
     <a-alert v-if="this.error" :message="this.error" type="error"/>
     <a-row type="flex" justify="end">
         <a-col>
-            <a-button @click="this.$router.push({name: 'my-events-create'})">
+            <a-button @click="this.$router.push({name: 'my-events-create'})" type="primary">
                 Добавить мероприятие
             </a-button>
         </a-col>

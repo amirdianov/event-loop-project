@@ -2,9 +2,9 @@ from rest_framework import mixins
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from users_event.models import Event
+from users_event.models import Event, Participant
 from users_event.serializers import EventInfoSerializer
-
+from authorisation_token.models import User
 
 # Create your views here.
 class EventViewSet(
@@ -73,11 +73,16 @@ class UserEventViewSet(
             return Event.objects.all()
 
     def perform_create(self, serializer):
-        serializer.save()
+        obj = serializer.save()
+        return obj
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         print(serializer.validated_data)
-        self.perform_create(serializer)
+        event = self.perform_create(serializer)
+        ans = Participant(
+            user=User.objects.get(id=request.user.id), event=event, is_organizer=True
+        )
+        ans.save()
         return Response(serializer.data)
