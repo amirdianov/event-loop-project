@@ -29,15 +29,9 @@
 <script>
 import {CarryOutOutlined, EditOutlined} from '@ant-design/icons-vue';
 import {defineComponent} from 'vue';
-import store from "../store";
 
 export default defineComponent({
     name: "CardComponent",
-    computed: {
-        store() {
-            return store
-        }
-    },
 
     components: {
         EditOutlined, CarryOutOutlined

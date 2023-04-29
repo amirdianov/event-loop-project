@@ -10,7 +10,7 @@
 
 </style>
 <script>
-import LoginComponent from "@/components/LoginComponent.vue";
+import LoginComponent from "@/containers/LoginComponent.vue";
 import LayoutNav from "@/containers/LayoutNav.vue";
 import {mapState} from "vuex";
 

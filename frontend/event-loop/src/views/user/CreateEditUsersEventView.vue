@@ -21,6 +21,7 @@
         <a-form-item :name="['event', 'category']" label="Category">
             <a-textarea v-model:value="formState.event.category"/>
         </a-form-item>
+<!--        TODO antdv upload file-->
         <a-form-item :name="['event', 'photo']" label="Photo">
 <!--                        <upload-component v-model:value="formState.event.photo"></upload-component>-->
             <input type="file" ref="file">

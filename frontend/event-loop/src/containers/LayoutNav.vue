@@ -1,5 +1,4 @@
 <template>
-  <!--    TODO with height problem-->
     <a-layout>
         <a-layout-header class="header" style="background-color: #002a29;">
             <div class="logo"/>

@@ -9,7 +9,7 @@
 
 <script>
 import LayoutNav from "@/containers/LayoutNav.vue";
-import RegistrationComponent from "@/components/RegistrationComponent.vue";
+import RegistrationComponent from "@/containers/RegistrationComponent.vue";
 import {mapState} from "vuex";
 
 export default {

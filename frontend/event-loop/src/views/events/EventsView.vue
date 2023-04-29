@@ -1,17 +1,15 @@
 <template>
     <div v-if="!isLoading">
         <div v-for="(event, index) in this.allEvents" :key="index" style="display: inline-block; padding: 10px">
-            <div>
                 <CardComponent :event_info="event" name="event-page" :slug="slug">
                 </CardComponent>
-            </div>
         </div>
     </div>
 </template>
 
 <script>
 import {mapActions, mapState} from "vuex";
-import CardComponent from "@/components/CardComponent.vue";
+import CardComponent from "@/containers/CardComponent.vue";
 
 export default {
     name: "EventsView",

@@ -23,7 +23,7 @@
 <script>
 import LayoutNav from "@/containers/LayoutNav.vue";
 import {mapActions, mapState} from "vuex";
-import ProfileInformationComponent from "@/components/ProfileInformationComponent.vue";
+import ProfileInformationComponent from "@/containers/ProfileInformationComponent.vue";
 import {UserOutlined} from "@ant-design/icons-vue";
 
 export default {
