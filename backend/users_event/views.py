@@ -1,12 +1,19 @@
 from rest_framework import mixins
 from rest_framework.response import Response
-from rest_framework.viewsets import GenericViewSet
+from rest_framework.viewsets import GenericViewSet, ModelViewSet
 
-from users_event.models import Event, Participant
-from users_event.serializers import EventInfoSerializer
-from authorisation_token.models import User
+from users_event.models import Event, Participant, Tag
+from users_event.serializers import EventInfoSerializer, TagSerializer
 
-# Create your views here.
+
+class TagViewSet(ModelViewSet):
+    serializer_class = TagSerializer
+    queryset = Tag.objects.all()
+
+    def get_queryset(self):
+        return Tag.objects.filter(user=self.request.user)
+
+
 class EventViewSet(
     mixins.RetrieveModelMixin,
     # mixins.UpdateModelMixin,
@@ -16,9 +23,6 @@ class EventViewSet(
 ):
     serializer_class = EventInfoSerializer
 
-    # def perform_create(self, serializer):
-    #     serializer.save()
-
     def get_queryset(self, *args, **kwargs):
         if "slug" in self.request.GET.keys():
             category = self.request.GET["slug"]
@@ -26,22 +30,6 @@ class EventViewSet(
             return Event.objects.filter(category=category)
         else:
             return Event.objects.all()
-
-    # @action(detail=False, methods=["get", "post"], permission_classes=[IsAuthenticated])
-    # def my_events(self, request, pk=None):
-    #     if request.method == "POST":
-    #         print(request.data)
-    #         serializer = self.get_serializer(data=request.data)
-    #         serializer.is_valid(raise_exception=True)
-    #         print(serializer.validated_data)
-    #         self.perform_create(serializer)
-    #         return Response(serializer.data)
-    #     else:
-    #         queryset = self.filter_queryset(
-    #             self.get_queryset(user_id=self.request.user.id)
-    #         )
-    #         serializer = self.get_serializer(queryset, many=True)
-    #         return Response(serializer.data)
 
 
 class UserEventViewSet(
@@ -76,13 +64,27 @@ class UserEventViewSet(
         obj = serializer.save()
         return obj
 
+    def create_new_tag(self, request, title):
+        print(request.user, title)
+        new_tag = Tag(title=title, user=request.user)
+        new_tag.save()
+        return new_tag
+
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        tag_names = request.data.getlist("tags")
+        tags = []
+        for tag_request in tag_names:
+            try:
+                tag = Tag.objects.get(id=tag_request)
+            except (Tag.DoesNotExist, ValueError):
+                tag = self.create_new_tag(request, tag_request)
+            tags.append(tag.id)
+
+        event_data = request.data.dict()
+        event_data["tags"] = tags
+        serializer = self.get_serializer(data=event_data)
         serializer.is_valid(raise_exception=True)
-        print(serializer.validated_data)
         event = self.perform_create(serializer)
-        ans = Participant(
-            user=User.objects.get(id=request.user.id), event=event, is_organizer=True
-        )
+        ans = Participant(user=request.user, event=event, is_organizer=True)
         ans.save()
         return Response(serializer.data)

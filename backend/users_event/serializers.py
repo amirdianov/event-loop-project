@@ -6,10 +6,20 @@ from users_event.models import Event, Tag
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
-        fields = ("id", "title")
+        fields = "__all__"
 
 
 class EventInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
-        fields = "__all__"
+        fields = (
+            "id",
+            "title",
+            "category",
+            "description",
+            "tags",
+            "start_time",
+            "finish_time",
+            "photo",
+            "is_passed",
+        )

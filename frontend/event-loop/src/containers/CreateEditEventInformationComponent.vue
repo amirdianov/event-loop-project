@@ -4,7 +4,7 @@
             v-bind="layout"
             name="nest-messages"
             :validate-messages="validateMessages"
-            @finish="sub"
+            @finish="submit"
             :wrapper-col="{span: 21}"
             :label-col="{span: 3}"
     >
@@ -18,21 +18,24 @@
                     :options="options1"
             ></a-select>
         </a-form-item>
+        <a-form-item :name="['event', 'description']" label="Description">
+            <a-textarea v-model:value="formState.event.description"/>
+        </a-form-item>
+        <a-form-item :name="['event', 'tags']" label="Tags">
+            <div>
+                <tags-component @update:model-value="formState.event.tags = $event"></tags-component>
+            </div>
+        </a-form-item>
         <a-form-item :name="['event', 'start_time']" label="Start Time">
             <time-component @update:model-value="formState.event.start_time = $event"></time-component>
         </a-form-item>
         <a-form-item :name="['event', 'finish_time']" label="Finish Time">
             <time-component @update:model-value="formState.event.finish_time = $event"></time-component>
         </a-form-item>
-
-        <a-form-item :name="['event', 'description']" label="Description">
-            <a-textarea v-model:value="formState.event.description"/>
-        </a-form-item>
         <!--        TODO antdv upload file-->
         <a-form-item :name="['event', 'photo']" label="Photo">
             <!--                        <upload-component v-model:value="formState.event.photo"></upload-component>-->
             <input type="file" ref="file">
-
         </a-form-item>
         <a-form-item :wrapper-col="{ ...layout.wrapperCol, offset: 3}">
             <a-button type="primary" html-type="submit">Submit</a-button>
@@ -44,16 +47,11 @@ import {defineComponent, reactive, ref} from 'vue';
 import UploadComponent from "@/components/UploadComponent.vue";
 import TimeComponent from "@/components/TimeComponent.vue";
 import {mapActions} from "vuex";
+import TagsComponent from "@/components/TagsComponent.vue";
 
 export default defineComponent({
     name: 'CreateEditEventInformationComponent',
-    components: {TimeComponent, UploadComponent},
-    data() {
-        return {
-            val: ''
-
-        }
-    },
+    components: {TagsComponent, TimeComponent, UploadComponent},
     setup() {
         const layout = {
             labelCol: {
@@ -94,6 +92,7 @@ export default defineComponent({
                 finish_time: '',
                 photo: '',
                 category: '',
+                tags: '',
             },
         });
         const onFinish = values => {
@@ -109,13 +108,21 @@ export default defineComponent({
     },
     methods: {
         ...mapActions({createUsersEvent: 'events/createUsersEvent'}),
-        async sub(data) {
+        async submit(data) {
             const formData = new FormData();
             let keys = Object.keys(data['event'])
             keys.forEach((key) => {
-                console.log(key, data['event'][key])
-                formData.append(key, data['event'][key])
-                console.log(formData.get(key))
+                console.log(key, data['event'][key], 'DDDDDD')
+                if (key === 'tags') {
+                    const ans = JSON.parse(JSON.stringify(data['event'][key]))
+                    console.log(ans)
+                    for (let i in ans) {
+                        formData.append('tags', ans[i])
+                    }
+                } else {
+                    formData.append(key, data['event'][key])
+                    console.log(formData.get(key))
+                }
             })
             formData.append('photo', this.$refs.file.files[0]);
             try {
@@ -127,14 +134,5 @@ export default defineComponent({
             }
         },
     }
-    //     async load() {
-    //         this.isLoading = true;
-    //         this.results = await getTags();
-    //         this.isLoading = false;
-    //     }
-    // },
-    // created() {
-    //     this.load();
-    // },
 });
 </script>

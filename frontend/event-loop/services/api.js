@@ -82,3 +82,9 @@ export async function getEvent(event_id) {
     const response = await instance.get(`/events/${event_id}`)
     return response.data
 }
+
+export async function getTags() {
+    await check_token(store.state.login.tokens, instance)
+    const response = await instance.get(`/tags`)
+    return response.data
+}

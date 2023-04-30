@@ -30,7 +30,7 @@ class Event(models.Model):
     )
     price = models.IntegerField(null=True, blank=True)
     category = models.CharField(choices=Category.choices)
-    is_passed = models.BooleanField()
+    is_passed = models.BooleanField(default=False)
     url = models.URLField(null=True, blank=True)
     organizer = models.ManyToManyField(
         User, through="Participant", related_name="is_organizer"
