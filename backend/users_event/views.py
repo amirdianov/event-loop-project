@@ -6,9 +6,9 @@ from users_event.models import Event, Participant, Tag
 from users_event.serializers import EventInfoSerializer, TagSerializer
 
 
-class TagViewSet(ModelViewSet):
+class TagViewSet(mixins.ListModelMixin, GenericViewSet):
+    pagination_class = None
     serializer_class = TagSerializer
-    queryset = Tag.objects.all()
 
     def get_queryset(self):
         return Tag.objects.filter(user=self.request.user)
