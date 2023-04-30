@@ -1,6 +1,6 @@
 <template>
     <a-alert v-if="this.error" :message="this.error" type="error"/>
-    <a-row type="flex" justify="end">
+    <a-row type="flex" justify="center" style="margin-bottom: 5px">
         <a-col>
             <a-button @click="this.$router.push({name: 'my-events-create'})" type="primary">
                 Добавить мероприятие
@@ -9,11 +9,12 @@
     </a-row>
     <a-row type="flex" justify="start" style="height: 100%">
         <a-col v-if="!isLoading">
-                <div v-for="(event, index) in userEvents" :key="index" style="display: inline-block; padding: 10px">
-                    <CardComponent :event_info="event" name="my-event-page"/>
-                </div>
+            <div v-for="(event, index) in userEvents" :key="index" style="display: inline-block; padding: 10px">
+                <CardComponent :event_info="event" name="my-event-page"/>
+            </div>
         </a-col>
     </a-row>
+
 </template>
 
 <script>

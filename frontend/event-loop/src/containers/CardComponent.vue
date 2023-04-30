@@ -17,7 +17,7 @@
             <carry-out-outlined v-if="name==='event-page'" style="font-size: 25px"/>
         </template>
         <a-card-meta :title=event_info.title
-                     :description="event_info.price ? `Цена доступа: ` + event_info.price + ` р` : `Посещение свободное`"
+                     :description="event_info.price ? `Платный доступ` : `Посещение свободное`"
                      @click="this.$router.push({name: name, params: {id: event_info.id, slug: slug}})">
             <template #avatar>
                 <!--            TODO avatar-->
@@ -28,7 +28,6 @@
         <div style="display: inline-block; margin-top:10px;">
             <a-tag>Tag 1</a-tag>
             <a-tag>Tag 1</a-tag>
-
         </div>
 
     </a-card>
