@@ -1,10 +1,10 @@
 <template>
-<!--    <a-alert v-if="this.isSuccess"-->
-<!--             message="Успешно"-->
-<!--             description="Информация обновлена!"-->
-<!--             type="success"-->
-<!--             show-icon-->
-<!--    />-->
+  <!--    <a-alert v-if="this.isSuccess"-->
+  <!--             message="Успешно"-->
+  <!--             description="Информация обновлена!"-->
+  <!--             type="success"-->
+  <!--             show-icon-->
+  <!--    />-->
     <a-alert v-if="this.error" :message="this.error" type="error"/>
     <a-row type="flex" justify="space-around" align="middle" style="height: 100%">
         <a-col :span="18" v-if="!isLoading">
@@ -15,7 +15,8 @@
 <script>
 import {defineComponent} from 'vue';
 import CreateEditEventInformationComponent from "@/containers/CreateEditEventInformationComponent.vue";
-import {mapState} from "vuex";
+import {mapActions, mapState} from "vuex";
+import store from "@/store";
 
 
 export default defineComponent({
@@ -23,10 +24,30 @@ export default defineComponent({
     components: {CreateEditEventInformationComponent},
     computed: {
         ...mapState({
-            isLoading: state => state.login.isLoading,
             error: state => state.login.error,
         })
     },
+    data() {
+        return {
+            event: null,
+            isLoading: false
+        }
+    },
+    methods: {
+        ...mapActions({getUserEvent: "events/getUserEvent"}),
+        async loadUserEvent(event_id) {
+            this.isLoading = true
+            this.event = await this.getUserEvent(event_id)
+            this.isLoading = false
+            console.log('z nne')
+            console.log(store.state.events.userEvent)
 
+        }
+    },
+    created() {
+        if (this.$route.params.id) {
+            this.loadUserEvent(this.$route.params.id)
+        }
+    }
 });
 </script>

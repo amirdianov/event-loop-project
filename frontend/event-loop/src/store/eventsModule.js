@@ -1,10 +1,11 @@
 import store from "@/store/index";
-import {all_events, create_event, user_events} from "../../services/api";
+import {all_events, create_event, update_event, user_event, user_events} from "../../services/api";
 
 export const eventsModule = {
     state: () => ({
         allEvents: null,
-        userEvents: null
+        userEvents: null,
+        userEvent: null,
     }),
     actions: {
         async loadAllEvents({commit}, data) {
@@ -33,9 +34,24 @@ export const eventsModule = {
             store.state.login.isLoading = false
 
         },
+        async getUserEvent({commit}, id) {
+            try {
+                const events = await user_event(id)
+                commit("setUserEvent", events)
+            } catch (e) {
+                commit("setError", 'Ошибка')
+            }
+        },
         async createUsersEvent({commit}, data) {
             try {
                 await create_event(data)
+            } catch (e) {
+                commit("setError", 'Ошибка')
+            }
+        },
+        async updateUsersEvent({commit}, data) {
+            try {
+                await update_event(data)
             } catch (e) {
                 commit("setError", 'Ошибка')
             }
@@ -51,6 +67,9 @@ export const eventsModule = {
         },
         setUserEvents(state, events) {
             state.userEvents = events
+        },
+        setUserEvent(state, event) {
+            state.userEvent = event
         }
     },
     namespaced: true

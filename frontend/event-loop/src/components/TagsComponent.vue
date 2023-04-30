@@ -1,7 +1,7 @@
 <template>
     <div>
         <a-select v-if="!isLoading"
-                  v-model:value="value"
+                  v-model:value="val"
                   mode="tags"
                   style="width: 100%"
                   placeholder="Tags Mode"
@@ -19,11 +19,12 @@ export default defineComponent({
     data() {
         return {
             isLoading: false,
-            value: []
+            val: this.value
         }
     },
     props: {
-        modelValue: Array
+        modelValue: Array,
+        value: Array,
     },
     emits: ["update:modelValue"],
 

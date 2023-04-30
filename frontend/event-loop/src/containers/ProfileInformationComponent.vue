@@ -88,9 +88,9 @@ export default defineComponent({
     components: {UserOutlined, LockOutlined, MailOutlined, TeamOutlined},
     setup() {
         const formState = reactive({
-            name: store.state.login.user !== null ? store.state.login.user.name : store.state.login.user,
-            surname: store.state.login.user !== null ? store.state.login.user.surname : store.state.login.user,
-            email: store.state.login.user !== null ? store.state.login.user.email : store.state.login.user,
+            name: store.state.login.user.name,
+            surname: store.state.login.user.surname,
+            email: store.state.login.user.email,
             password: '',
         });
         const onFinish = values => {

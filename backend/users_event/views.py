@@ -82,6 +82,7 @@ class UserEventViewSet(
 
         event_data = request.data.dict()
         event_data["tags"] = tags
+        print(event_data)
         serializer = self.get_serializer(data=event_data)
         serializer.is_valid(raise_exception=True)
         event = self.perform_create(serializer)

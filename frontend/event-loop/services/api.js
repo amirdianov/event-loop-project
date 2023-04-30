@@ -71,7 +71,7 @@ export async function create_event(data) {
     return response.data
 }
 
-export async function getUserEvent(event_id) {
+export async function user_event(event_id) {
     await check_token(store.state.login.tokens, instance)
     const response = await instance.get(`/my_events/${event_id}`)
     return response.data
@@ -88,3 +88,13 @@ export async function getTags() {
     const response = await instance.get(`/tags`)
     return response.data
 }
+
+export async function update_event(data) {
+    await check_token(store.state.login.tokens, instance)
+
+    const response = await instance.patch(`/my_events/${data.id}/`, data.data, {
+        "content-type": `multipart/form-data; boundary=${data._boundary}`,
+    },)
+    return response.data
+}
+

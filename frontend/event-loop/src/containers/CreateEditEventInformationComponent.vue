@@ -23,11 +23,13 @@
         </a-form-item>
         <a-form-item :name="['event', 'tags']" label="Tags">
             <div>
-                <tags-component @update:model-value="formState.event.tags = $event"></tags-component>
+                <tags-component @update:model-value="formState.event.tags = $event"
+                                v-model:value="formState.event.tags"></tags-component>
             </div>
         </a-form-item>
         <a-form-item :name="['event', 'start_time']" label="Start Time">
-            <time-component @update:model-value="formState.event.start_time = $event"></time-component>
+            <time-component @update:model-value="formState.event.start_time = $event"
+            ></time-component>
         </a-form-item>
         <a-form-item :name="['event', 'finish_time']" label="Finish Time">
             <time-component @update:model-value="formState.event.finish_time = $event"></time-component>
@@ -44,14 +46,14 @@
 </template>
 <script>
 import {defineComponent, reactive, ref} from 'vue';
-import UploadComponent from "@/components/UploadComponent.vue";
 import TimeComponent from "@/components/TimeComponent.vue";
 import {mapActions} from "vuex";
 import TagsComponent from "@/components/TagsComponent.vue";
+import store from "@/store";
 
 export default defineComponent({
     name: 'CreateEditEventInformationComponent',
-    components: {TagsComponent, TimeComponent, UploadComponent},
+    components: {TagsComponent, TimeComponent},
     setup() {
         const layout = {
             labelCol: {
@@ -85,14 +87,14 @@ export default defineComponent({
             label: 'Развлечения',
         }]);
         const formState = reactive({
-            event: {
+            event: store.state.events.userEvent ? store.state.events.userEvent : {
                 title: '',
                 description: undefined,
                 start_time: '',
                 finish_time: '',
                 photo: '',
                 category: '',
-                tags: '',
+                tags: undefined,
             },
         });
         const onFinish = values => {
@@ -107,12 +109,16 @@ export default defineComponent({
         };
     },
     methods: {
-        ...mapActions({createUsersEvent: 'events/createUsersEvent'}),
+        ...mapActions({
+            createUsersEvent: 'events/createUsersEvent',
+            updateUserEvent: 'events/updateUsersEvent'
+        }),
         async submit(data) {
+            console.log(data)
             const formData = new FormData();
             let keys = Object.keys(data['event'])
             keys.forEach((key) => {
-                console.log(key, data['event'][key], 'DDDDDD')
+                console.log(key, data['event'][key])
                 if (key === 'tags') {
                     const ans = JSON.parse(JSON.stringify(data['event'][key]))
                     console.log(ans)
@@ -120,19 +126,36 @@ export default defineComponent({
                         formData.append('tags', ans[i])
                     }
                 } else {
-                    formData.append(key, data['event'][key])
-                    console.log(formData.get(key))
+                    if (key !== 'photo') {
+                        formData.append(key, data['event'][key])
+                        console.log(formData.get(key))
+                    }
                 }
             })
-            formData.append('photo', this.$refs.file.files[0]);
+            if (this.$refs.file.files[0]) {
+                formData.append('photo', this.$refs.file.files[0]);
+            }
             try {
-                await this.createUsersEvent(formData)
+                if (this.$route.params.id) {
+                    await this.updateUserEvent({data: formData, id: this.$route.params.id})
+                } else {
+                    await this.createUsersEvent(formData)
+                }
                 this.$router.push({name: 'my-events'})
 
             } catch (e) {
                 console.log(e)
             }
         },
-    }
-});
+    },
+    watch: {
+        $route() {
+            if (!this.$route.params.id) {
+                store.state.events.userEvent = null
+            }
+        },
+
+    },
+})
+;
 </script>
