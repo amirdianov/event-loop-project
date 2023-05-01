@@ -10,6 +10,10 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class EventInfoSerializer(serializers.ModelSerializer):
+    tags = serializers.SlugRelatedField(
+        many=True, read_only=False, slug_field="title", queryset=Tag.objects.all()
+    )
+
     class Meta:
         model = Event
         fields = (

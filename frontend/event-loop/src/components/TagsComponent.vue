@@ -44,7 +44,7 @@ export default defineComponent({
     computed: {
         options() {
             return [
-                ...this.result.map(x => ({value: x.id, label: x.title}))
+                ...this.result.map(x => ({value: x.title, label: x.title}))
             ]
         }
     }

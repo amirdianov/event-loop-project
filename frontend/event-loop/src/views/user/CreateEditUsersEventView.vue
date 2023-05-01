@@ -16,8 +16,6 @@
 import {defineComponent} from 'vue';
 import CreateEditEventInformationComponent from "@/containers/CreateEditEventInformationComponent.vue";
 import {mapActions, mapState} from "vuex";
-import store from "@/store";
-
 
 export default defineComponent({
     name: "CreateEditUsersEventView",
@@ -39,9 +37,6 @@ export default defineComponent({
             this.isLoading = true
             this.event = await this.getUserEvent(event_id)
             this.isLoading = false
-            console.log('z nne')
-            console.log(store.state.events.userEvent)
-
         }
     },
     created() {

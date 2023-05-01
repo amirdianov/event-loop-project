@@ -2,7 +2,6 @@ import os
 from datetime import datetime
 
 from django.db import models
-from stdimage import StdImageField
 
 from authorisation_token.models import User
 from users_event.enums import Category
@@ -15,6 +14,9 @@ def get_note_image_path(instance, filename):
 class Tag(models.Model):
     title = models.CharField(max_length=200)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ("title", "user")
 
     def __str__(self):
         return self.title
