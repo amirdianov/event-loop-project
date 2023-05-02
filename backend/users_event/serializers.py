@@ -13,7 +13,7 @@ class TagSerializer(serializers.ModelSerializer):
 class RatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Rating
-        fields = ("user", "rating")
+        fields = "__all__"
 
 
 class ParticipantSerializer(serializers.ModelSerializer):

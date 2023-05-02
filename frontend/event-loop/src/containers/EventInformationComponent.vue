@@ -17,7 +17,7 @@
                 <p><strong>Стоимость мероприятия: {{ event.price }} р</strong></p>
                 <a-button>Оплатить мероприятие</a-button>
             </div>
-            <div class="rate" v-if="showRatingToRate" style="margin-top: 10px">
+            <div class="rate" v-if="showRatingToRate" style="margin-top: 10px" @click="rateEvent">
                 <a-rate v-model:value="value"/>
             </div>
             <div class="rate" v-if="showRating" style="margin-top: 10px">
@@ -30,6 +30,7 @@
 
 <script>
 import {mapState} from "vuex";
+import {setRate} from "../../services/api";
 
 export default {
     name: "EventInformationComponent",
@@ -68,10 +69,17 @@ export default {
         } else {
             this.showRatingToRate = false
         }
-
     },
     props: {
         event: {}
+    },
+    methods: {
+        async rateEvent() {
+            await setRate({user: this.user.id, event: this.event.id, rating: this.value})
+            this.showRatingToRate = false
+            this.showRating = true
+            this.users_value = this.value
+        }
     }
 
 }

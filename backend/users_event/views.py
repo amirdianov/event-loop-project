@@ -2,11 +2,12 @@ from rest_framework import mixins
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from users_event.models import Event, Participant, Tag
+from users_event.models import Event, Participant, Tag, Rating
 from users_event.serializers import (
     EventInfoSerializer,
     TagSerializer,
     EventDetailSerializer,
+    RatingSerializer,
 )
 
 
@@ -16,6 +17,20 @@ class TagViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, GenericViewSet)
 
     def get_queryset(self):
         return Tag.objects.filter(user=self.request.user)
+
+
+class RatingViewSet(mixins.CreateModelMixin, GenericViewSet):
+    serializer_class = RatingSerializer
+    queryset = Rating.objects.all()
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(serializer.data)
 
 
 class EventViewSet(

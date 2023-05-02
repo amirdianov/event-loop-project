@@ -4,7 +4,7 @@ from rest_framework.routers import SimpleRouter
 from authorisation_token.views import (
     status_view,
 )
-from users_event.views import EventViewSet, UserEventViewSet, TagViewSet
+from users_event.views import EventViewSet, UserEventViewSet, TagViewSet, RatingViewSet
 
 users_router = SimpleRouter()
 users_router.register("events", EventViewSet, basename="events")
@@ -18,4 +18,5 @@ urlpatterns = [
     path("", include(users_router.urls)),
     path("", include(events_router.urls)),
     path("", include(tags_router.urls)),
+    path("rate/", RatingViewSet.as_view({"post": "create"}), name="rate"),
 ]

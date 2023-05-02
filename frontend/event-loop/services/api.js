@@ -83,11 +83,6 @@ export async function getEvent(event_id) {
     return response.data
 }
 
-export async function getTags() {
-    await check_token(store.state.login.tokens, instance)
-    const response = await instance.get(`/tags`)
-    return response.data
-}
 
 export async function update_event(data) {
     await check_token(store.state.login.tokens, instance)
@@ -98,3 +93,14 @@ export async function update_event(data) {
     return response.data
 }
 
+export async function getTags() {
+    await check_token(store.state.login.tokens, instance)
+    const response = await instance.get(`/tags`)
+    return response.data
+}
+
+export async function setRate(data) {
+    await check_token(store.state.login.tokens, instance)
+    const response = await instance.post(`/rate/`, data)
+    return response.data
+}
