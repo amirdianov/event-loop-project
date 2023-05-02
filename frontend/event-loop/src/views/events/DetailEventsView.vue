@@ -29,14 +29,14 @@ export default {
             setLoading: 'login/setLoading'
         }),
         // TODO почему не работает с глобальным loading
-        async loadUserEvent(event_id) {
+        async loadEvent(event_id) {
             this.isLoading = true
             this.event_info = await getEvent(event_id);
             this.isLoading = false
         }
     },
     created() {
-        this.loadUserEvent(this.$route.params.id)
+        this.loadEvent(this.$route.params.id)
     }
 }
 </script>

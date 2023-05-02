@@ -60,7 +60,7 @@ const router = createRouter({
         {
             path: '/my-events/:id',
             name: 'my-event-page',
-            component: () => import('../views/user/DetailUsersEventView.vue'),
+            component: () => import('../views/events/DetailEventsView.vue'),
             meta: {unauthorizedAccess: true},
         },
         {

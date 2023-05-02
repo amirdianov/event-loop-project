@@ -1,11 +1,24 @@
+from django.db.models import Q
 from rest_framework import serializers
 
-from users_event.models import Event, Tag, Rating
+from users_event.models import Event, Tag, Rating, Participant
 
 
 class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
+        fields = "__all__"
+
+
+class RatingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rating
+        fields = ("user", "rating")
+
+
+class ParticipantSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Participant
         fields = "__all__"
 
 
@@ -19,14 +32,9 @@ class EventInfoSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class RatingSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Rating
-        fields = ("user_id", "rating")
-
-
 class EventDetailSerializer(EventInfoSerializer):
     rating_event = serializers.SerializerMethodField()
+    organizer = serializers.SerializerMethodField()
 
     def __init__(self, *args, **kwargs):
         user_id = kwargs.pop("user_id", None)
@@ -34,9 +42,15 @@ class EventDetailSerializer(EventInfoSerializer):
         self.user_id = user_id
 
     def get_rating_event(self, event):
-        print(event)
         qs = Rating.objects.filter(event=event)
         if self.user_id:
             qs.filter(user_id=self.user_id)
         serializer = RatingSerializer(qs, many=True)
+        return serializer.data
+
+    def get_organizer(self, event):
+        qs = Participant.objects.filter(event=event)
+        if self.user_id:
+            qs.filter(Q(is_organizer=True) & Q(user=self.user_id))
+        serializer = ParticipantSerializer(qs, many=True)
         return serializer.data
