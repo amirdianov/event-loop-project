@@ -13,7 +13,7 @@
                            @click="this.$router.push({name: 'my-event-page-edit', params: {id: event_info.id, slug: slug}})">
             </edit-outlined>
             <!--            TODO rate-->
-            <a-rate v-if="name==='event-page'" :value="2" disabled/>
+            <a-rate v-if="name==='event-page'" :value="2.5" disabled allow-half/>
             <carry-out-outlined v-if="name==='event-page'" style="font-size: 25px"/>
         </template>
         <a-card-meta :title=event_info.title
