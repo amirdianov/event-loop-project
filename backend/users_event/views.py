@@ -3,7 +3,11 @@ from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from users_event.models import Event, Participant, Tag
-from users_event.serializers import EventInfoSerializer, TagSerializer
+from users_event.serializers import (
+    EventInfoSerializer,
+    TagSerializer,
+    EventDetailSerializer,
+)
 
 
 class TagViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, GenericViewSet):
@@ -21,15 +25,23 @@ class EventViewSet(
     mixins.ListModelMixin,
     GenericViewSet,
 ):
-    serializer_class = EventInfoSerializer
+    def get_serializer_class(self):
+        if self.action in "retrieve":
+            return EventDetailSerializer
+        else:
+            return EventInfoSerializer
 
     def get_queryset(self, *args, **kwargs):
         if "slug" in self.request.GET.keys():
             category = self.request.GET["slug"]
-            print(Event.objects.filter(category=category))
             return Event.objects.filter(category=category)
         else:
             return Event.objects.all()
+
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, user_id=request.user.id)
+        return Response(serializer.data)
 
 
 class UserEventViewSet(
