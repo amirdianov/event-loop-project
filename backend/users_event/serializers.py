@@ -16,6 +16,10 @@ class RatingSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class MeanRatingSerializer(serializers.Serializer):
+    rate = serializers.FloatField()
+
+
 class ParticipantSerializer(serializers.ModelSerializer):
     class Meta:
         model = Participant

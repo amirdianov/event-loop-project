@@ -18,5 +18,9 @@ urlpatterns = [
     path("", include(users_router.urls)),
     path("", include(events_router.urls)),
     path("", include(tags_router.urls)),
-    path("rate/", RatingViewSet.as_view({"post": "create"}), name="rate"),
+    path(
+        "rate/",
+        RatingViewSet.as_view({"post": "create", "get": "mean_rate"}),
+        name="rate",
+    ),
 ]

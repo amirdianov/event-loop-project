@@ -1,4 +1,7 @@
+from django.db.models import Avg
 from rest_framework import mixins
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
@@ -8,6 +11,7 @@ from users_event.serializers import (
     TagSerializer,
     EventDetailSerializer,
     RatingSerializer,
+    MeanRatingSerializer,
 )
 
 
@@ -19,9 +23,14 @@ class TagViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, GenericViewSet)
         return Tag.objects.filter(user=self.request.user)
 
 
-class RatingViewSet(mixins.CreateModelMixin, GenericViewSet):
-    serializer_class = RatingSerializer
+class RatingViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, GenericViewSet):
     queryset = Rating.objects.all()
+
+    def get_serializer_class(self):
+        if self.action == "mean_rate":
+            return MeanRatingSerializer
+        else:
+            return RatingSerializer
 
     def perform_create(self, serializer):
         serializer.save()
@@ -30,6 +39,16 @@ class RatingViewSet(mixins.CreateModelMixin, GenericViewSet):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=["get"], permission_classes=[IsAuthenticated])
+    def mean_rate(self, request, *args, **kwargs):
+        event_id = self.request.GET["event_id"]
+        avg_rating = Rating.objects.filter(event=event_id).aggregate(Avg("rating"))[
+            "rating__avg"
+        ]
+        print(avg_rating)
+        serializer = self.get_serializer({"rate": avg_rating})
         return Response(serializer.data)
 
 
