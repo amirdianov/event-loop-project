@@ -1,6 +1,6 @@
 <template>
     <a-alert v-if="this.error" :message="this.error" type="error"/>
-    <a-row type="flex" justify="center" align="middle" style="height: 100%">
+    <a-row type="flex" justify="center" align="middle" style="min-height: 550px">
         <a-col :span="10">
             <LoginComponent></LoginComponent>
         </a-col>

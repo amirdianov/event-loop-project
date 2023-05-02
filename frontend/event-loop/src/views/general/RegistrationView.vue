@@ -1,6 +1,6 @@
 <template>
     <a-alert v-if="this.error" :message="this.error" type="error"/>
-    <a-row type="flex" justify="center" align="middle" style="height: 100%">
+    <a-row type="flex" justify="center" align="middle" style="min-height: 550px">
         <a-col :span="10">
             <RegistrationComponent></RegistrationComponent>
         </a-col>
@@ -14,7 +14,7 @@ import {mapState} from "vuex";
 
 export default {
     name: "RegistrationView",
-    components: {LayoutNav, RegistrationComponent},
+    components: {RegistrationComponent},
     data() {
         return {}
     },
