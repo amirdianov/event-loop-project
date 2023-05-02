@@ -24,7 +24,11 @@
                 <a-rate v-model:value="value"/>
             </div>
             <div class="rate" v-if="showRating" style="margin-top: 10px">
-                <a-rate v-model:value="users_value" disabled/>
+                <a-tooltip placement="bottom">
+                    <template #title>Вы уже оценили
+                    </template>
+                    <a-rate v-model:value="users_value" disabled/>
+                </a-tooltip>
             </div>
         </a-col>
     </a-row>
