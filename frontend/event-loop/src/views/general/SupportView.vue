@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import LayoutNav from "@/containers/LayoutNav.vue";
+import LayoutNav from "@/components/LayoutNav.vue";
 
 export default {
     name: "SupportView",

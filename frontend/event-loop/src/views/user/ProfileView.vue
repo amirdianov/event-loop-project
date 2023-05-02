@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import LayoutNav from "@/containers/LayoutNav.vue";
+import LayoutNav from "@/components/LayoutNav.vue";
 import {mapActions, mapState} from "vuex";
 import ProfileInformationComponent from "@/containers/ProfileInformationComponent.vue";
 import {UserOutlined} from "@ant-design/icons-vue";

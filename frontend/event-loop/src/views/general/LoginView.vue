@@ -11,7 +11,7 @@
 </style>
 <script>
 import LoginComponent from "@/containers/LoginComponent.vue";
-import LayoutNav from "@/containers/LayoutNav.vue";
+import LayoutNav from "@/components/LayoutNav.vue";
 import {mapState} from "vuex";
 
 export default {

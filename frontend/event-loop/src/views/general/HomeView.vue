@@ -5,7 +5,7 @@
 </template>
 <script>
 import {mapState} from "vuex";
-import LayoutNav from "@/containers/LayoutNav.vue";
+import LayoutNav from "@/components/LayoutNav.vue";
 
 export default {
     components: {LayoutNav},

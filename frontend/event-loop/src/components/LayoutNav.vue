@@ -120,7 +120,7 @@ export default defineComponent({
     },
     setup() {
         return {
-            selectedKeys1: ref(['2']),
+            selectedKeys1: ref(['1']),
             selectedKeys2: ref(['1']),
             collapsed: ref(false),
             openKeys: ref(['sub1']),

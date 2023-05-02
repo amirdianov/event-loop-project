@@ -7,7 +7,7 @@
 
 <script>
 import {mapActions, mapMutations, mapState} from "vuex";
-import EventInformationComponent from "@/components/EventInformationComponent.vue";
+import EventInformationComponent from "@/containers/EventInformationComponent.vue";
 import store from "@/store";
 
 export default {

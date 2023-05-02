@@ -5,7 +5,7 @@
 
 <script>
 
-import EventInformationComponent from "@/components/EventInformationComponent.vue";
+import EventInformationComponent from "@/containers/EventInformationComponent.vue";
 import {mapMutations, mapState} from "vuex";
 import {getEvent} from "../../../services/api";
 
