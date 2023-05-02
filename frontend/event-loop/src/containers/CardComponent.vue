@@ -24,7 +24,6 @@
                 <!--                <a-avatar src={{store.state.login.user.photo}}></a-avatar>-->
             </template>
         </a-card-meta>
-        <!--        TODO tags-->
         <div style="display: inline-block; margin-top:10px;">
             <a-tag v-for="(tag, index) in event_info.tags" :key="index">
                 {{ tag }}

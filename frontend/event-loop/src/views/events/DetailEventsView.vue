@@ -12,27 +12,27 @@ import {getEvent} from "../../../services/api";
 export default {
     name: "DetailEventsView",
     components: {EventInformationComponent},
-    data(){
-        return{
+    data() {
+        return {
+            event_info: '',
             isLoading: true
         }
     },
     computed: {
         ...mapState({
             error: state => state.login.error,
-            isLoading: state => state.login.isLoading,
+            // isLoading: state => state.login.isLoading,
         }),
     },
     methods: {
         ...mapMutations({
             setLoading: 'login/setLoading'
         }),
+        // TODO почему не работает с глобальным loading
         async loadUserEvent(event_id) {
-            // this.setLoading(true)
             this.isLoading = true
             this.event_info = await getEvent(event_id);
             this.isLoading = false
-            // this.setLoading(false)
         }
     },
     created() {
