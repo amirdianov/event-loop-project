@@ -16,14 +16,4 @@ class EventInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Event
-        fields = (
-            "id",
-            "title",
-            "category",
-            "description",
-            "tags",
-            "start_time",
-            "finish_time",
-            "photo",
-            "is_passed",
-        )
+        fields = "__all__"

@@ -5,42 +5,49 @@
             name="nest-messages"
             :validate-messages="validateMessages"
             @finish="submit"
-            :wrapper-col="{span: 21}"
-            :label-col="{span: 3}"
+            :wrapper-col="{span: 20}"
+            :label-col="{span: 4}"
     >
-        <a-form-item :name="['event', 'title']" label="Title">
+        <a-form-item :name="['event', 'title']" label="Заголовок" :rules="[{ required: true}]">
             <a-input v-model:value="formState.event.title"/>
         </a-form-item>
-        <a-form-item :name="['event', 'category']" label="Category">
+        <a-form-item :name="['event', 'category']" label="Категория" :rules="[{ required: true}]">
             <a-select
                     ref="select"
                     v-model:value="formState.event.category"
                     :options="options1"
             ></a-select>
         </a-form-item>
-        <a-form-item :name="['event', 'description']" label="Description">
+        <a-form-item :name="['event', 'description']" label="Описание" :rules="[{ required: true}]">
             <a-textarea v-model:value="formState.event.description"/>
         </a-form-item>
-        <a-form-item :name="['event', 'tags']" label="Tags">
+        <a-form-item :name="['event', 'tags']" label="Теги">
             <div>
                 <tags-component @update:model-value="formState.event.tags = $event"
                                 v-model:value="formState.event.tags"></tags-component>
             </div>
         </a-form-item>
-        <a-form-item :name="['event', 'start_time']" label="Start Time">
+        <a-form-item :name="['event', 'price']" label="Цена">
+            <a-input-number v-model:value="formState.event.price" style="width: 100%"></a-input-number>
+        </a-form-item>
+        <a-form-item :name="['event', 'url']" label="Ссылка">
+            <a-input v-model:value="formState.event.url" style="width: 100%"></a-input>
+        </a-form-item>
+        <a-form-item :name="['event', 'start_time']" label="Начало мероприятия" :rules="[{ required: true}]"
+        >
             <time-component @update:model-value="formState.event.start_time = $event"
             ></time-component>
         </a-form-item>
-        <a-form-item :name="['event', 'finish_time']" label="Finish Time">
+        <a-form-item :name="['event', 'finish_time']" label="Конец мероприятия" :rules="[{ required: true}]">
             <time-component @update:model-value="formState.event.finish_time = $event"></time-component>
         </a-form-item>
         <!--        TODO antdv upload file-->
-        <a-form-item :name="['event', 'photo']" label="Photo">
+        <a-form-item :name="['event', 'photo']" label="Фото" style="margin-bottom: 20px">
             <!--                        <upload-component v-model:value="formState.event.photo"></upload-component>-->
             <input type="file" ref="file">
         </a-form-item>
-        <a-form-item :wrapper-col="{ ...layout.wrapperCol, offset: 3}">
-            <a-button type="primary" html-type="submit">Submit</a-button>
+        <a-form-item :wrapper-col="{ ...layout.wrapperCol, offset: 4}" style="margin-bottom: 0">
+            <a-button type="primary" html-type="submit">Подтвердить</a-button>
         </a-form-item>
     </a-form>
 </template>
@@ -64,14 +71,7 @@ export default defineComponent({
             },
         };
         const validateMessages = {
-            required: '${label} is required!',
-            types: {
-                email: '${label} is not a valid email!',
-                number: '${label} is not a valid number!',
-            },
-            number: {
-                range: '${label} must be between ${min} and ${max}',
-            },
+            required: 'Поле должно быть заполнено!',
         };
         const options1 = ref([{
             value: 'lesson',
@@ -95,6 +95,8 @@ export default defineComponent({
                 photo: '',
                 category: '',
                 tags: undefined,
+                price: null,
+                url: null,
             },
         });
         const onFinish = values => {
@@ -120,13 +122,21 @@ export default defineComponent({
             keys.forEach((key) => {
                 console.log(key, data['event'][key])
                 if (key === 'tags') {
-                    const ans = JSON.parse(JSON.stringify(data['event'][key]))
-                    console.log(ans)
-                    for (let i in ans) {
-                        formData.append('tags', ans[i])
+                    if (data['event'][key] !== undefined) {
+                        const ans = JSON.parse(JSON.stringify(data['event'][key]))
+                        console.log(ans)
+                        for (let i in ans) {
+                            formData.append('tags', ans[i])
+                        }
+                    }
+                } else if (key === 'photo') {
+                    {
+                        if (this.$refs.file.files[0]) {
+                            formData.append('photo', this.$refs.file.files[0]);
+                        }
                     }
                 } else {
-                    if (key !== 'photo') {
+                    if (key !== null) {
                         formData.append(key, data['event'][key])
                         console.log(formData.get(key))
                     }

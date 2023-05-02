@@ -72,12 +72,21 @@ class UserEventViewSet(
 
     def converting_data(self, request):
         """
-        Создает новый тег, если его не существует
+        Создает новый тег, если его не существует и
+        заменяет значения price и url на null
         :param request:
         :type request:
         :return:
         :rtype:
         """
+        price = request.POST.get("price")
+        if price == "null":
+            price = None
+        else:
+            price = int(price)
+        url = request.POST.get("url")
+        if url == "null":
+            url = None
         tag_names = request.data.getlist("tags")
         print(request.data)
         tags = []
@@ -88,6 +97,8 @@ class UserEventViewSet(
             tags.append(tag.title)
         event_data = request.data.dict()
         event_data["tags"] = tags
+        event_data["price"] = price
+        event_data["url"] = url
         return event_data
 
     def create(self, request, *args, **kwargs):
