@@ -1,13 +1,12 @@
 <template>
-    <div class="main">
-        <LayoutNav>
-            <h1>Домашная страница для всех</h1>
-        </LayoutNav>
+    <div class="main" style="min-height: 550px">
+        <h1>Домашная страница для всех</h1>
+        <img src="@/assets/images/home-sunset.jpg" width="400" height="500">
     </div>
 </template>
 <script>
 import {mapState} from "vuex";
-import LayoutNav from "@/containers/LayoutNav.vue";
+import LayoutNav from "@/components/LayoutNav.vue";
 
 export default {
     components: {LayoutNav},

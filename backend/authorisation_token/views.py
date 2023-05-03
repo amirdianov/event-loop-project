@@ -1,8 +1,9 @@
 from drf_yasg.utils import swagger_auto_schema
+from rest_framework import mixins
 from rest_framework.decorators import api_view, permission_classes, action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import GenericViewSet
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from authorisation_token.models import User
@@ -33,7 +34,11 @@ def status_view(request):
     )
 
 
-class UserViewSet(ModelViewSet):
+class UserViewSet(
+    mixins.UpdateModelMixin,
+    mixins.ListModelMixin,
+    GenericViewSet,
+):
     queryset = User.objects.all()
     serializer_class = UserProfileSerializer
 

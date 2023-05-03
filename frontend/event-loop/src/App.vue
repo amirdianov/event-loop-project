@@ -1,11 +1,14 @@
 <script setup>
 import {RouterView} from 'vue-router'
 import PageLoaderComponent from "@/components/PageLoaderComponent.vue";
+import LayoutNav from "@/components/LayoutNav.vue";
 </script>
 
 <template>
     <PageLoaderComponent v-if="isLoading"/>
-    <RouterView/>
+    <LayoutNav>
+        <RouterView/>
+    </LayoutNav>
 </template>
 
 <script>
@@ -16,7 +19,7 @@ export default {
     name: "App",
     methods: {
         ...mapActions({
-            loadUser: 'login/loadUser'
+            loadUser: 'login/loadUser',
         })
     },
     created() {
