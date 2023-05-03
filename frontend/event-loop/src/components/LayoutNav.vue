@@ -67,7 +67,9 @@
                                 Мои мероприятия
                             </RouterLink>
                         </a-menu-item>
-                        <a-menu-item key="3">Мой календарь</a-menu-item>
+                        <a-menu-item key="3">
+                            <RouterLink to="/calendar">Мой календарь</RouterLink>
+                        </a-menu-item>
                         <a-menu-item key="4">Посещенные мероприятия</a-menu-item>
                     </a-sub-menu>
                     <a-sub-menu key="sub2">

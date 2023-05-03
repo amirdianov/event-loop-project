@@ -11,6 +11,7 @@ from users_event.views import (
     RatingViewSet,
     SubscribeViewSet,
     ParticipantViewSet,
+    ParticipantViewSetForCalendar,
 )
 
 users_router = SimpleRouter()
@@ -32,4 +33,9 @@ urlpatterns = [
     ),
     path("subscribe/", SubscribeViewSet.as_view(), name="subscribe"),
     path("subscribers/", ParticipantViewSet.as_view(), name="subscribers"),
+    path(
+        "user_subscriptions/",
+        ParticipantViewSetForCalendar.as_view({"get": "list"}),
+        name="subscriptions",
+    ),
 ]

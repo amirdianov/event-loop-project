@@ -118,8 +118,16 @@ export async function subscribe(data) {
     return response.data
 }
 
-export async function subscribers(event_id){
+export async function subscribers(event_id) {
     await check_token(store.state.login.tokens, instance)
     const response = await instance.get(`/subscribers/`, {params: {event_id: event_id}})
     return response.data
 }
+
+export async function getUsersSubscribedEvents() {
+    await check_token(store.state.login.tokens, instance)
+    const response = await instance.get(`/user_subscriptions`)
+    console.log(response.data)
+    return response.data
+}
+

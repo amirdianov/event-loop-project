@@ -14,10 +14,27 @@ from users_event.serializers import (
     RatingSerializer,
     MeanRatingSerializer,
     ParticipantSerializer,
+    ParticipantSerializerForCalendar,
 )
 
 
+class ParticipantViewSetForCalendar(mixins.ListModelMixin, GenericViewSet):
+    serializer_class = ParticipantSerializerForCalendar
+
+    def get_queryset(self, *args, **kwargs):
+        return Participant.objects.filter(
+            Q(user=self.request.user) & Q(is_organizer=False)
+        )
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
+
 class ParticipantViewSet(APIView):
+    """API для просмотра подписчиков мероприятия"""
+
     def get(self, request):
         event_id = request.GET["event_id"]
         subscribed_users = Participant.objects.filter(
@@ -28,6 +45,8 @@ class ParticipantViewSet(APIView):
 
 
 class SubscribeViewSet(APIView):
+    """API для подписки пользователя на бесплатное мероприятие"""
+
     def post(self, request):
         event_id = request.data["event"]["id"]
         ans = Participant(user=request.user, event_id=event_id, is_organizer=False)

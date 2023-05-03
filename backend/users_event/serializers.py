@@ -26,6 +26,15 @@ class ParticipantSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class ParticipantSerializerForCalendar(ParticipantSerializer):
+    event = serializers.SerializerMethodField()
+
+    def get_event(self, obj):
+        event = Event.objects.filter(id=obj.event_id).first()
+        serializer = EventDetailSerializerForCalendar(event)
+        return serializer.data
+
+
 class EventInfoSerializer(serializers.ModelSerializer):
     """Сериализатор, для редактирвования и добавления мероприятия"""
 
@@ -68,3 +77,11 @@ class EventDetailSerializer(EventInfoSerializer):
         qs = Participant.objects.filter(Q(event=event) & Q(is_organizer=True))
         serializer = ParticipantSerializer(qs, many=True)
         return serializer.data
+
+
+class EventDetailSerializerForCalendar(EventDetailSerializer):
+    def get_start_time(self, event):
+        return event.start_time.strftime("%Y-%m-%d")
+
+    def get_finish_time(self, event):
+        return event.finish_time.strftime("%Y-%m-%d")
