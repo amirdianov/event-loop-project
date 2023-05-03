@@ -14,7 +14,7 @@
 </template>
 <script>
 import {defineComponent} from 'vue';
-import CreateEditEventInformationComponent from "@/containers/CreateEditEventInformationComponent.vue";
+import CreateEditEventInformationComponent from "@/containers/events/CreateEditEventInformationComponent.vue";
 import {mapActions, mapState} from "vuex";
 
 export default defineComponent({

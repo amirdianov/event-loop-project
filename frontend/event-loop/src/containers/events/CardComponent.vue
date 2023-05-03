@@ -9,17 +9,17 @@
             />
         </template>
         <template #actions>
-            <!--            TODO выполнить подписку-->
             <edit-outlined v-if="name==='my-event-page'" key="edit" style="font-size: 30px"
                            @click="this.$router.push({name: 'my-event-page-edit', params: {id: event_info.id, slug: slug}})">
             </edit-outlined>
             <a-rate v-if="name==='event-page' && !isLoading" :value="this.rate" disabled allow-half/>
-            <div v-else>
+            <div v-if="name==='event-page' && isLoading">
                 <LoadingOutlined></LoadingOutlined>
             </div>
-            <carry-out-outlined
-                    v-if="name==='event-page' && !event_info.price && !this.organizators.includes(this.user.id)"
-                    style="font-size: 30px"/>
+            <SubscribeComponent
+                    v-if="name==='event-page' && !event_info.price && !this.organizators.includes(this.user.id)">
+            </SubscribeComponent>
+<!--            TODO pay component-->
             <pay-circle-outlined
                     v-if="name==='event-page' && event_info.price && !this.organizators.includes(this.user.id)"
                     style="font-size: 30px"/>
@@ -38,8 +38,9 @@
 <script>
 import {CarryOutOutlined, EditOutlined, LoadingOutlined, PayCircleOutlined} from '@ant-design/icons-vue';
 import {defineComponent} from 'vue';
-import {getEventRate} from "../../services/api";
+import {getEventRate} from "../../../services/api";
 import {mapState} from "vuex";
+import SubscribeComponent from "@/components/SubscribeComponent.vue";
 
 export default defineComponent({
     name: "CardComponent",
@@ -51,6 +52,7 @@ export default defineComponent({
         }
     },
     components: {
+        SubscribeComponent,
         EditOutlined, CarryOutOutlined, PayCircleOutlined, LoadingOutlined
     },
     props: {

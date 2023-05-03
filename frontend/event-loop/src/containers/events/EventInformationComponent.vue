@@ -38,7 +38,7 @@
 
 <script>
 import {mapState} from "vuex";
-import {setRate} from "../../services/api";
+import {setRate} from "../../../services/api";
 
 export default {
     name: "EventInformationComponent",

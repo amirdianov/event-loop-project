@@ -19,7 +19,7 @@
 
 <script>
 import {mapActions, mapState} from "vuex";
-import CardComponent from "@/containers/CardComponent.vue";
+import CardComponent from "@/containers/events/CardComponent.vue";
 
 export default {
     name: "UsersEventsView",
