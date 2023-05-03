@@ -39,7 +39,7 @@ class EventInfoSerializer(serializers.ModelSerializer):
 
 
 class EventDetailSerializer(EventInfoSerializer):
-    """Сериализатор, для получения детальной (полной) информации о мероприятии"""
+    """Сериализатор, для получения детальной (полной) информации о мероприятии и для вывода информации на карточках"""
 
     start_time = serializers.SerializerMethodField()
     finish_time = serializers.SerializerMethodField()

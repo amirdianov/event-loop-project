@@ -114,7 +114,12 @@ export async function getEventRate(event_id) {
 
 export async function subscribe(data) {
     await check_token(store.state.login.tokens, instance)
-    console.log(data)
     const response = await instance.post(`/subscribe/`, data)
+    return response.data
+}
+
+export async function subscribers(event_id){
+    await check_token(store.state.login.tokens, instance)
+    const response = await instance.get(`/subscribers/`, {params: {event_id: event_id}})
     return response.data
 }

@@ -19,6 +19,7 @@
             </div>
             <div v-if="!event.price && !this.organizators.includes(user.id)" class="payment">
                 <p><strong>Посещение свободное</strong></p>
+<!--                TODO Сделать disable button "Вы подписаны"-->
                 <a-button>Подписаться на мероприятие</a-button>
             </div>
             <div class="rate" v-if="showRatingToRate" style="margin-top: 10px" @click="rateEvent">

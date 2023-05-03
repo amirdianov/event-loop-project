@@ -1,4 +1,4 @@
-from django.db.models import Avg
+from django.db.models import Avg, Q
 from rest_framework import mixins
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -13,13 +13,22 @@ from users_event.serializers import (
     EventDetailSerializer,
     RatingSerializer,
     MeanRatingSerializer,
+    ParticipantSerializer,
 )
+
+
+class ParticipantViewSet(APIView):
+    def get(self, request):
+        event_id = request.GET["event_id"]
+        subscribed_users = Participant.objects.filter(
+            Q(event_id=event_id) & Q(is_organizer=False)
+        )
+        serializer = ParticipantSerializer(subscribed_users, many=True)
+        return Response(serializer.data)
 
 
 class SubscribeViewSet(APIView):
     def post(self, request):
-        print(request.POST)
-        print(request.data)
         event_id = request.data["event"]["id"]
         ans = Participant(user=request.user, event_id=event_id, is_organizer=False)
         ans.save()

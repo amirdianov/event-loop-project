@@ -10,6 +10,7 @@ from users_event.views import (
     TagViewSet,
     RatingViewSet,
     SubscribeViewSet,
+    ParticipantViewSet,
 )
 
 users_router = SimpleRouter()
@@ -30,4 +31,5 @@ urlpatterns = [
         name="rate",
     ),
     path("subscribe/", SubscribeViewSet.as_view(), name="subscribe"),
+    path("subscribers/", ParticipantViewSet.as_view(), name="subscribers"),
 ]
