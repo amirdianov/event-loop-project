@@ -19,6 +19,7 @@
             </div>
             <div v-if="!event.price && !this.organizators.includes(user.id)" class="payment">
                 <p><strong>Посещение свободное</strong></p>
+                <a-button>Подписаться на мероприятие</a-button>
             </div>
             <div class="rate" v-if="showRatingToRate" style="margin-top: 10px" @click="rateEvent">
                 <a-rate v-model:value="value"/>
@@ -61,9 +62,7 @@ export default {
     },
     created() {
         this.event.organizer.forEach((element) => {
-            if (element.is_organizer === true) {
-                this.organizators.push(element.user)
-            }
+            this.organizators.push(element.user)
         })
         if (!this.organizators.includes(this.user.id)) {
             this.event.rating_event.forEach((element) => {

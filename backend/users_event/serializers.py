@@ -65,8 +65,6 @@ class EventDetailSerializer(EventInfoSerializer):
         return serializer.data
 
     def get_organizer(self, event):
-        qs = Participant.objects.filter(event=event)
-        if self.user_id:
-            qs.filter(Q(is_organizer=True) & Q(user=self.user_id))
+        qs = Participant.objects.filter(Q(event=event) & Q(is_organizer=True))
         serializer = ParticipantSerializer(qs, many=True)
         return serializer.data

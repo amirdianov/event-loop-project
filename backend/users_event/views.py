@@ -60,7 +60,7 @@ class EventViewSet(
     GenericViewSet,
 ):
     def get_serializer_class(self):
-        if self.action in "retrieve":
+        if self.action in ("retrieve", "list"):
             return EventDetailSerializer
         else:
             return EventInfoSerializer

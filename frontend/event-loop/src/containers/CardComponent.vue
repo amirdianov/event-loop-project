@@ -9,21 +9,26 @@
             />
         </template>
         <template #actions>
-            <edit-outlined v-if="name==='my-event-page'" key="edit" style="font-size: 20px"
+            <!--            TODO выполнить подписку-->
+            <edit-outlined v-if="name==='my-event-page'" key="edit" style="font-size: 30px"
                            @click="this.$router.push({name: 'my-event-page-edit', params: {id: event_info.id, slug: slug}})">
             </edit-outlined>
             <a-rate v-if="name==='event-page' && !isLoading" :value="this.rate" disabled allow-half/>
-            <carry-out-outlined v-if="name==='event-page'" style="font-size: 25px"/>
+            <div v-else>
+                <LoadingOutlined></LoadingOutlined>
+            </div>
+            <carry-out-outlined
+                    v-if="name==='event-page' && !event_info.price && !this.organizators.includes(this.user.id)"
+                    style="font-size: 30px"/>
+            <pay-circle-outlined
+                    v-if="name==='event-page' && event_info.price && !this.organizators.includes(this.user.id)"
+                    style="font-size: 30px"/>
         </template>
         <a-card-meta :title=event_info.title
                      :description="event_info.price ? `Платный доступ` : `Посещение свободное`"
                      @click="this.$router.push({name: name, params: {id: event_info.id, slug: slug}})">
-            <template #avatar>
-                <!--            TODO avatar-->
-                <!--                <a-avatar src={{store.state.login.user.photo}}></a-avatar>-->
-            </template>
         </a-card-meta>
-        <div style="display: inline-block; margin-top:10px;">
+        <div v-if="!isLoading" style="display: inline-block; margin-top:10px; ">
             <a-tag v-for="(tag, index) in event_info.tags" :key="index">
                 {{ tag }}
             </a-tag>
@@ -31,25 +36,32 @@
     </a-card>
 </template>
 <script>
-import {CarryOutOutlined, EditOutlined} from '@ant-design/icons-vue';
+import {CarryOutOutlined, EditOutlined, LoadingOutlined, PayCircleOutlined} from '@ant-design/icons-vue';
 import {defineComponent} from 'vue';
 import {getEventRate} from "../../services/api";
+import {mapState} from "vuex";
 
 export default defineComponent({
     name: "CardComponent",
     data() {
         return {
             isLoading: false,
-            rate: 0
+            rate: 0,
+            organizators: []
         }
     },
     components: {
-        EditOutlined, CarryOutOutlined
+        EditOutlined, CarryOutOutlined, PayCircleOutlined, LoadingOutlined
     },
     props: {
         event_info: {},
         name: {},
         slug: {},
+    },
+    computed: {
+        ...mapState({
+            user: state => state.login.user,
+        }),
     },
     methods: {
         async getRate() {
@@ -61,7 +73,12 @@ export default defineComponent({
         }
     },
     created() {
-        this.getRate()
+        this.event_info.organizer.forEach((element) => {
+            this.organizators.push(element.user)
+        })
+        if (this.name === 'event-page') {
+            this.getRate()
+        }
     }
 });
 
