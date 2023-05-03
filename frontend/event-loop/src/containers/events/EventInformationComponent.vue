@@ -19,8 +19,10 @@
             </div>
             <div v-if="!event.price && !this.organizators.includes(user.id)" class="payment">
                 <p><strong>Посещение свободное</strong></p>
-<!--                TODO Сделать disable button "Вы подписаны"-->
-                <a-button>Подписаться на мероприятие</a-button>
+                <div v-if="!isLoading">
+                    <a-button v-if="showConfirmButton">Подписаться на мероприятие</a-button>
+                </div>
+
             </div>
             <div class="rate" v-if="showRatingToRate" style="margin-top: 10px" @click="rateEvent">
                 <a-rate v-model:value="value"/>
@@ -39,7 +41,7 @@
 
 <script>
 import {mapState} from "vuex";
-import {setRate} from "../../../services/api";
+import {setRate, subscribers} from "../../../services/api";
 
 export default {
     name: "EventInformationComponent",
@@ -47,21 +49,41 @@ export default {
         return {
             showRatingToRate: true,
             showRating: false,
+            showConfirmButton: true,
             value: 0,
             users_value: 0,
             organizators: [],
+            isLoading: false
         }
     },
     computed: {
         ...mapState({
             error: state => state.login.error,
             isSuccess: state => state.profile.isSuccess,
-            isLoading: state => state.login.isLoading,
             userEvents: state => state.events.userEvents,
             user: state => state.login.user
         }),
     },
-    created() {
+    props: {
+        event: {}
+    },
+    methods: {
+        async rateEvent() {
+            await setRate({user: this.user.id, event: this.event.id, rating: this.value})
+            this.showRatingToRate = false
+            this.showRating = true
+            this.users_value = this.value
+        },
+        async loadSubscribers() {
+            this.isLoading = true
+            const all_subscribers = await subscribers(this.event.id)
+            this.isLoading = false
+            return all_subscribers
+        }
+
+    },
+    async created() {
+        // проверка на то, является ли пользователь создателем
         this.event.organizer.forEach((element) => {
             this.organizators.push(element.user)
         })
@@ -76,19 +98,15 @@ export default {
         } else {
             this.showRatingToRate = false
         }
-    },
-    props: {
-        event: {}
-    },
-    methods: {
-        async rateEvent() {
-            await setRate({user: this.user.id, event: this.event.id, rating: this.value})
-            this.showRatingToRate = false
-            this.showRating = true
-            this.users_value = this.value
-        }
+        // проверка на то, является ли пользователь подписчиком
+        const all_subscribers = await this.loadSubscribers()
+        all_subscribers.forEach((element) => {
+            console.log('Я тут')
+            if (element.user === this.user.id) {
+                this.showConfirmButton = false
+            }
+        })
     }
-
 }
 </script>
 

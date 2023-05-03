@@ -79,10 +79,6 @@ export default defineComponent({
                 this.showConfirmIcon = false
             }
         })
-        //     TODO посмотреть Participant к данному методу,
-        //      TODO если он есть в подписчиках, то this.showConfirmIcon = false
-        //     TODO предаешь this.event_info.id и user.id  в isSubscribed() и смотришь после
-        //     TODO какой ответ выдает API
     }
 });
 </script>
