@@ -1,49 +1,64 @@
 <template>
-    <carry-out-outlined v-if="this.confirm" style="font-size: 30px" @click="showConfirm"/>
+    <carry-out-outlined v-if="this.showConfirmIcon" style="font-size: 30px" @click="callShowConfirm"/>
+    <check-outlined v-else style="font-size: 30px"/>
 </template>
 
 
 <script>
 import {createVNode, defineComponent} from 'vue';
-import {CarryOutOutlined, CheckCircleOutlined} from "@ant-design/icons-vue";
+import {CarryOutOutlined, CheckCircleOutlined, CheckOutlined} from "@ant-design/icons-vue";
 import {Modal} from 'ant-design-vue';
+import {subscribe} from "../../services/api";
 
 export default defineComponent({
     name: "SubscribeComponent",
-    components: {CarryOutOutlined},
+    components: {CarryOutOutlined, CheckOutlined},
     data() {
         return {
-            confirm: true
+            showConfirmIcon: true,
         }
+    },
+    props: {
+        event_info: {}
     },
     methods: {
-        answerFromModal() {
+        callShowConfirm() {
+            this.showConfirm(this.event_info)
+        },
+        async showConfirm(event) {
+            try {
+                await new Promise((resolve) => {
+                    Modal.confirm({
+                        title: 'Вы уверены, что хотите подписаться на мероприятие?',
+                        icon: createVNode(CheckCircleOutlined, {style: 'color: green'}),
+                        content: createVNode('div', {
+                            style: 'color:red;',
+                        }, 'Действие нельзя будет отменить по техническим причинам'),
+                        okText: 'Подтвердить',
+                        cancelText: 'Отменить',
+                        autoFocusButton: null,
+                        async onOk() {
+                            await subscribe({'event': event});
+                            resolve()
+                        },
+                        onCancel() {
+                            console.log('Cancel');
+                        },
+                        closable: true
+                    });
+                })
+                this.showConfirmIcon = false
+            } catch (error) {
+                console.error(error);
+
+            }
         }
+
     },
-    setup() {
-        const showConfirm = () => {
-            Modal.confirm({
-                title: 'Вы уверены, что хотите подписаться на мероприятие?',
-                icon: createVNode(CheckCircleOutlined, {style: 'color: green'}),
-                content: createVNode('div', {
-                    style: 'color:red;',
-                }, 'Действие нельзя будет отменить по техническим причинам'),
-                okText: 'Подтвердить',
-                cancelText: 'Отменить',
-                autoFocusButton: null,
-                onOk() {
-                    console.log('OK');
-                },
-                onCancel() {
-                    console.log('Cancel');
-                },
-                closable: true
-            });
-        };
-        return {
-            showConfirm,
-        }
-    },
+    created() {
+        //     TODO посмотреть Participant к данному методу,
+        //      TODO если он есть в подписчиках, то this.showConfirmIcon = false
+    }
 });
 </script>
 

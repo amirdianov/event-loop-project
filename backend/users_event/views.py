@@ -3,6 +3,7 @@ from rest_framework import mixins
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 
 from users_event.models import Event, Participant, Tag, Rating
@@ -13,6 +14,16 @@ from users_event.serializers import (
     RatingSerializer,
     MeanRatingSerializer,
 )
+
+
+class SubscribeViewSet(APIView):
+    def post(self, request):
+        print(request.POST)
+        print(request.data)
+        event_id = request.data["event"]["id"]
+        ans = Participant(user=request.user, event_id=event_id, is_organizer=False)
+        ans.save()
+        return Response({"message": "Subscribe successful"})
 
 
 class TagViewSet(mixins.ListModelMixin, mixins.CreateModelMixin, GenericViewSet):

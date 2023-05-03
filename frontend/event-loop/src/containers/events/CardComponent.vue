@@ -17,7 +17,7 @@
                 <LoadingOutlined></LoadingOutlined>
             </div>
             <SubscribeComponent
-                    v-if="name==='event-page' && !event_info.price && !this.organizators.includes(this.user.id)">
+                    v-if="name==='event-page' && !event_info.price && !this.organizators.includes(this.user.id)" :event_info="event_info">
             </SubscribeComponent>
 <!--            TODO pay component-->
             <pay-circle-outlined
