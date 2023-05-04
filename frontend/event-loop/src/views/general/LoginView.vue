@@ -3,6 +3,7 @@
     <a-row type="flex" justify="center" align="middle" style="min-height: 550px">
         <a-col :span="10">
             <LoginComponent></LoginComponent>
+            <button @click="redirectToYandex()">Авторизоваться через Яндекс</button>
         </a-col>
     </a-row>
 </template>
@@ -13,8 +14,8 @@
 import LoginComponent from "@/containers/user/LoginComponent.vue";
 import LayoutNav from "@/components/LayoutNav.vue";
 import {mapState} from "vuex";
-
 export default {
+
     components: {LayoutNav, LoginComponent},
     data() {
         return {}
@@ -23,6 +24,13 @@ export default {
         ...mapState({
             error: state => state.login.error
         })
-    }
+    },
+    methods: {
+        redirectToYandex() {
+            window.location.href = 'https://oauth.yandex.ru/authorize?response_type=code&client_id=bcc383a7ee3541b991461e2167192397&redirect_uri=http://localhost:5173/'
+        },
+    },
+
 }
+
 </script>

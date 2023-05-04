@@ -1,12 +1,13 @@
 from django.db.models import Avg, Q
 from rest_framework import mixins
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
+from rest_framework_simplejwt.tokens import RefreshToken
 
-from users_event.models import Event, Participant, Tag, Rating
+from users_event.models import Event, Participant, Tag, Rating, User
 from users_event.serializers import (
     EventInfoSerializer,
     TagSerializer,
@@ -16,6 +17,30 @@ from users_event.serializers import (
     ParticipantSerializer,
     ParticipantSerializerForCalendar,
 )
+
+
+@api_view(["POST"])
+@permission_classes([])
+def yandex_token_view(request):
+    # access_token = request.data.get('access_token')
+    # refresh_token = request.data.get('refresh_token')
+    print("Я ТУТТУТУТУТУ")
+    print(request.data)
+    user_info = request.data  # optional, if you want to store additional user info
+    # verify tokens, make requests to Yandex API, etc.
+    # ...
+    # create refresh token
+    user = User(name=user_info["display_name"], email=user_info["emails"][0])
+    try:
+        user.save()
+    except:
+        user = User.objects.filter(name=user_info["display_name"]).first()
+    refresh = RefreshToken.for_user(user)
+    # create access token
+    access = refresh.access_token
+    # set additional claims, if needed
+    # return tokens
+    return Response({"refresh": str(refresh), "access": str(access)})
 
 
 class ParticipantViewSetForCalendar(mixins.ListModelMixin, GenericViewSet):
