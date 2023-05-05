@@ -22,24 +22,14 @@ from users_event.serializers import (
 @api_view(["POST"])
 @permission_classes([])
 def yandex_token_view(request):
-    # access_token = request.data.get('access_token')
-    # refresh_token = request.data.get('refresh_token')
-    print("Я ТУТТУТУТУТУ")
-    print(request.data)
-    user_info = request.data  # optional, if you want to store additional user info
-    # verify tokens, make requests to Yandex API, etc.
-    # ...
-    # create refresh token
+    user_info = request.data
     user = User(name=user_info["display_name"], email=user_info["emails"][0])
     try:
         user.save()
     except:
-        user = User.objects.filter(name=user_info["display_name"]).first()
+        user = User.objects.filter(email=user_info["emails"][0]).first()
     refresh = RefreshToken.for_user(user)
-    # create access token
     access = refresh.access_token
-    # set additional claims, if needed
-    # return tokens
     return Response({"refresh": str(refresh), "access": str(access)})
 
 

@@ -47,26 +47,19 @@ export default {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
                 })
-                console.log(response.data)
                 const resp = response.data
                 const user_information = await axios.get(`https://login.yandex.ru/info?oauth_token=${resp.access_token}`)
-                console.log(user_information.data)
-                const username = user_information.data.display_name
-                const email = user_information.data.emails[0]
-                console.log(username, email)
                 const res_new_tokens = await axios.post(`http://127.0.0.1:8000/api/yandex_token/`, user_information.data)
                 storageTokens(res_new_tokens.data.access, res_new_tokens.data.refresh);
                 store.state.login.tokens = {
                     access: res_new_tokens.data.access,
                     refresh: res_new_tokens.data.refresh
                 }
-                console.log(res_new_tokens.data)
             } catch (error) {
                 console.error()
             }
             try {
                 await this.loadUser(data)
-                this.$router.push({name: 'profile'})
             } catch (e) {
                 console.log()
             }
