@@ -15,6 +15,7 @@ import LayoutNav from "@/components/LayoutNav.vue";
 import {mapState} from "vuex";
 
 export default {
+
     components: {LayoutNav, LoginComponent},
     data() {
         return {}
@@ -23,6 +24,8 @@ export default {
         ...mapState({
             error: state => state.login.error
         })
-    }
+    },
+
 }
+
 </script>
