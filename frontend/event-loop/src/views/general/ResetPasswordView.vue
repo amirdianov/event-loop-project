@@ -1,7 +1,7 @@
 <template>
     <a-row type="flex" justify="center" align="middle" style="min-height: 550px">
         <a-col :span="10">
-            <a-form
+            <a-form v-if="!resetDone"
                     :label-col="{ span: 6 }"
                     :wrapper-col="{ span: 15 }"
                     ref="formRef"
@@ -28,6 +28,9 @@
                     <a-button type="primary" html-type="submit" style="width: 100%">Изменить пароль</a-button>
                 </a-form-item>
             </a-form>
+            <div v-else style="display: flex; justify-content: center; border: 1px #002a29 solid; border-radius: 10px">
+                Данные успешно изменены!
+            </div>
         </a-col>
     </a-row>
 </template>
@@ -37,10 +40,18 @@
 import {defineComponent, reactive, ref} from 'vue';
 import {mapState} from "vuex";
 import {LockOutlined, MailOutlined} from "@ant-design/icons-vue";
+import {resetPassword} from "../../../services/api";
+import {storageTokens} from "../../../services/storage";
+import store from "@/store";
 
 export default defineComponent({
     name: "ResetPasswordView",
     components: {LockOutlined, MailOutlined},
+    data() {
+        return {
+            resetDone: false,
+        }
+    },
     setup() {
         const formRef = ref();
         const formState = reactive({
@@ -97,8 +108,19 @@ export default defineComponent({
         })
     },
     methods: {
-        submit(data) {
-            console.log(data)
+        async submit(data) {
+            debugger
+            const data_for_request = {
+                password: data["pass"],
+                uid: this.$route.params.uid,
+                token: this.$route.params.token
+            }
+            try {
+                await resetPassword(data_for_request)
+                this.resetDone = true
+            } catch (e) {
+                console.log(e)
+            }
         }
     }
 

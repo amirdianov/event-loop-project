@@ -136,3 +136,8 @@ export async function forgotPassword(email) {
     return response.data
 }
 
+export async function resetPassword(data) {
+    const response = await instance.post(`/reset_password/`, data)
+    return response.data
+}
+
