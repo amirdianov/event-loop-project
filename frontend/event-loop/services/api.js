@@ -128,7 +128,16 @@ export async function subscribers(event_id) {
 export async function getUsersSubscribedEvents() {
     await check_token(store.state.login.tokens, instance)
     const response = await instance.get(`/user_subscriptions`)
-    console.log(response.data)
+    return response.data
+}
+
+export async function forgotPassword(email) {
+    const response = await instance.post(`/forgot_password/`, email)
+    return response.data
+}
+
+export async function resetPassword(data) {
+    const response = await instance.post(`/reset_password/`, data)
     return response.data
 }
 

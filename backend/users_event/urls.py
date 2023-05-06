@@ -12,7 +12,6 @@ from users_event.views import (
     SubscribeViewSet,
     ParticipantViewSet,
     ParticipantViewSetForCalendar,
-    yandex_token_view,
 )
 
 users_router = SimpleRouter()
@@ -39,5 +38,4 @@ urlpatterns = [
         ParticipantViewSetForCalendar.as_view({"get": "list"}),
         name="subscriptions",
     ),
-    path("yandex_token/", yandex_token_view, name="yandex_token"),
 ]

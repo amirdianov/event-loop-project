@@ -1,6 +1,11 @@
+from django.conf import settings
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.core.mail import EmailMessage
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import mixins
-from rest_framework.decorators import api_view, permission_classes, action
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
@@ -61,3 +66,58 @@ class UserViewSet(
     def profile(self, request, pk=None):
         profile = UserProfileSerializer(request.user)
         return Response(profile.data)
+
+
+@api_view(["POST"])
+@permission_classes([])
+def forgot_password_view(request):
+    email = request.data["email"]
+    user = User.objects.get(email=email)
+
+    token_generator = PasswordResetTokenGenerator()
+    token = token_generator.make_token(user)
+
+    uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+    reset_url = f"http://localhost:5173/reset_password/{uidb64}/{token}/"
+    email = EmailMessage(
+        "Сброс пароля",
+        reset_url,
+        settings.DEFAULT_FROM_EMAIL,
+        [email],
+    )
+    email.send()
+    return Response({"status": "ok"})
+
+
+@api_view(["POST"])
+@permission_classes([])
+def reset_password_view(request):
+    token = request.data["token"]
+    uid = request.data["uid"]
+    try:
+        uid = urlsafe_base64_decode(uid).decode("utf-8")
+        user = User.objects.get(id=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and PasswordResetTokenGenerator().check_token(user, token):
+        password = request.data["password"]
+        user.set_password(password)
+        user.save()
+        return Response({"status": "ok"})
+
+    else:
+        return Response({"status": "error", "message": "Неверный токен"})
+
+
+@api_view(["POST"])
+@permission_classes([])
+def yandex_token_view(request):
+    user_info = request.data
+    user = User(name=user_info["display_name"], email=user_info["emails"][0])
+    try:
+        user.save()
+    except:
+        user = User.objects.filter(email=user_info["emails"][0]).first()
+    refresh = RefreshToken.for_user(user)
+    access = refresh.access_token
+    return Response({"refresh": str(refresh), "access": str(access)})

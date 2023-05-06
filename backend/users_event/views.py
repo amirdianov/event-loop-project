@@ -1,4 +1,9 @@
+from django.conf import settings
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.core.mail import EmailMessage
 from django.db.models import Avg, Q
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from rest_framework import mixins
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -17,20 +22,6 @@ from users_event.serializers import (
     ParticipantSerializer,
     ParticipantSerializerForCalendar,
 )
-
-
-@api_view(["POST"])
-@permission_classes([])
-def yandex_token_view(request):
-    user_info = request.data
-    user = User(name=user_info["display_name"], email=user_info["emails"][0])
-    try:
-        user.save()
-    except:
-        user = User.objects.filter(email=user_info["emails"][0]).first()
-    refresh = RefreshToken.for_user(user)
-    access = refresh.access_token
-    return Response({"refresh": str(refresh), "access": str(access)})
 
 
 class ParticipantViewSetForCalendar(mixins.ListModelMixin, GenericViewSet):
