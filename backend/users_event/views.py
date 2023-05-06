@@ -1,4 +1,9 @@
+from django.conf import settings
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.core.mail import send_mail, EmailMessage
 from django.db.models import Avg, Q
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 from rest_framework import mixins
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -17,6 +22,34 @@ from users_event.serializers import (
     ParticipantSerializer,
     ParticipantSerializerForCalendar,
 )
+
+
+@api_view(["POST"])
+@permission_classes([])
+def forgot_password_view(request):
+    email = request.data["email"]
+    user = User.objects.get(email=email)
+
+    # Генерируем токен для сброса пароля
+    token_generator = PasswordResetTokenGenerator()
+    token = token_generator.make_token(user)
+
+    # Создаем ссылку на сброс пароля
+    uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+    reset_url = f"http://localhost:5173/reset_password/{uidb64}/{token}/"
+
+    # Отправляем письмо на почту пользователя с ссылкой на сброс пароля
+    # ...
+    email = EmailMessage(
+        "Тема письма",
+        reset_url,
+        settings.DEFAULT_FROM_EMAIL,
+        [email],
+    )
+    email.send()
+
+    print(f"Уведомление отправлено!")
+    return Response({"status": "ok"})
 
 
 @api_view(["POST"])

@@ -18,16 +18,7 @@ const router = createRouter({
             component: () => import('../views/general/LoginView.vue'),
             meta: {unauthorizedAccess: true}
         },
-        {
-            path: '/profile',
-            name: 'profile',
-            component: () => import('../views/user/ProfileView.vue')
-        },
-        {
-            path: '/calendar',
-            name: 'calendar',
-            component: () => import('../views/user/CalendarView.vue')
-        },
+
         {
             path: '/about',
             name: 'about',
@@ -49,36 +40,55 @@ const router = createRouter({
 
         },
         {
+            path: '/forgot_password',
+            name: 'forgot_password',
+            component: () => import('../views/general/ForgotPasswordView.vue'),
+            meta: {unauthorizedAccess: true}
+
+        },
+        {
+            path: '/reset_password/:uid/:token',
+            name: 'reset_password',
+            component: () => import('../views/general/ResetPasswordView.vue'),
+            meta: {unauthorizedAccess: true}
+
+        },
+        {
+            path: '/profile',
+            name: 'profile',
+            component: () => import('../views/user/ProfileView.vue')
+        },
+        {
+            path: '/calendar',
+            name: 'calendar',
+            component: () => import('../views/user/CalendarView.vue')
+        },
+        {
             path: '/my-events',
             name: 'my-events',
             component: () => import('../views/events/UsersEventsView.vue'),
-            meta: {unauthorizedAccess: true}
 
         },
         {
             path: '/my-events/create',
             name: 'my-events-create',
             component: () => import('../views/events/CreateEditUsersEventView.vue'),
-            meta: {unauthorizedAccess: true}
 
         },
         {
             path: '/my-events/:id',
             name: 'my-event-page',
             component: () => import('../views/events/DetailEventsView.vue'),
-            meta: {unauthorizedAccess: true},
         },
         {
             path: '/my-events/:id/edit',
             name: 'my-event-page-edit',
             component: () => import('../views/events/CreateEditUsersEventView.vue'),
-            meta: {unauthorizedAccess: true},
         },
         {
             path: '/events/:slug',
             name: 'events',
             component: () => import('../views/events/EventsView.vue'),
-            meta: {unauthorizedAccess: true},
             // children: [
             //     {
             //         path: ':id',
@@ -91,7 +101,6 @@ const router = createRouter({
             path: '/events/:slug/:id',
             name: 'event-page',
             component: () => import('../views/events/DetailEventsView.vue'),
-            meta: {unauthorizedAccess: true}
         }
     ]
 })

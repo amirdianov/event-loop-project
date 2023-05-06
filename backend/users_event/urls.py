@@ -13,6 +13,7 @@ from users_event.views import (
     ParticipantViewSet,
     ParticipantViewSetForCalendar,
     yandex_token_view,
+    forgot_password_view,
 )
 
 users_router = SimpleRouter()
@@ -40,4 +41,5 @@ urlpatterns = [
         name="subscriptions",
     ),
     path("yandex_token/", yandex_token_view, name="yandex_token"),
+    path("forgot_password/", forgot_password_view, name="forgot_password"),
 ]
