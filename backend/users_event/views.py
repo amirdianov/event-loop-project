@@ -1,18 +1,13 @@
-from django.conf import settings
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.core.mail import EmailMessage
 from django.db.models import Avg, Q
-from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.http import HttpResponse
 from rest_framework import mixins
-from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
-from rest_framework_simplejwt.tokens import RefreshToken
 
-from users_event.models import Event, Participant, Tag, Rating, User
+from users_event.models import Event, Participant, Tag, Rating
 from users_event.serializers import (
     EventInfoSerializer,
     TagSerializer,
@@ -22,6 +17,13 @@ from users_event.serializers import (
     ParticipantSerializer,
     ParticipantSerializerForCalendar,
 )
+
+# from users_event.tasks import test_task
+#
+#
+# def hello_world(request):
+#     test_task.delay()
+#     return HttpResponse("<h1>Отправлено</h1>")
 
 
 class ParticipantViewSetForCalendar(mixins.ListModelMixin, GenericViewSet):
