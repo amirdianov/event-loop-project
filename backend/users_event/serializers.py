@@ -1,4 +1,5 @@
 from django.db.models import Q
+from django.utils import timezone
 from rest_framework import serializers
 
 from users_event.models import Event, Tag, Rating, Participant
@@ -47,11 +48,27 @@ class EventInfoSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class CustomDateTimeField(serializers.DateTimeField):
+    """Сериализатор для отображения времени на экране для пользователей"""
+
+    def to_representation(self, value):
+        value = timezone.localtime(value)
+        return value.strftime("%Y-%m-%d %H:%M:%S")
+
+
+class CustomDateTimeFieldForCalendar(serializers.DateTimeField):
+    """Сериализатор для отображения времени на календаре для пользователей"""
+
+    def to_representation(self, value):
+        value = timezone.localtime(value)
+        return value.strftime("%Y-%m-%d")
+
+
 class EventDetailSerializer(EventInfoSerializer):
     """Сериализатор, для получения детальной (полной) информации о мероприятии и для вывода информации на карточках"""
 
-    start_time = serializers.SerializerMethodField()
-    finish_time = serializers.SerializerMethodField()
+    start_time = CustomDateTimeField()
+    finish_time = CustomDateTimeField()
     rating_event = serializers.SerializerMethodField()
     organizer = serializers.SerializerMethodField()
 
@@ -60,11 +77,11 @@ class EventDetailSerializer(EventInfoSerializer):
         super().__init__(*args, **kwargs)
         self.user_id = user_id
 
-    def get_start_time(self, event):
-        return event.start_time.strftime("%Y-%m-%d %H:%M")
-
-    def get_finish_time(self, event):
-        return event.finish_time.strftime("%Y-%m-%d %H:%M")
+    # def get_start_time(self, event):
+    #     return event.start_time.strftime("%Y-%m-%d %H:%M")
+    #
+    # def get_finish_time(self, event):
+    #     return event.finish_time.strftime("%Y-%m-%d %H:%M")
 
     def get_rating_event(self, event):
         qs = Rating.objects.filter(event=event)
@@ -80,8 +97,10 @@ class EventDetailSerializer(EventInfoSerializer):
 
 
 class EventDetailSerializerForCalendar(EventDetailSerializer):
-    def get_start_time(self, event):
-        return event.start_time.strftime("%Y-%m-%d")
-
-    def get_finish_time(self, event):
-        return event.finish_time.strftime("%Y-%m-%d")
+    start_time = CustomDateTimeFieldForCalendar()
+    finish_time = CustomDateTimeFieldForCalendar()
+    # def get_start_time(self, event):
+    #     return event.start_time.strftime("%Y-%m-%d")
+    #
+    # def get_finish_time(self, event):
+    #     return event.finish_time.strftime("%Y-%m-%d")

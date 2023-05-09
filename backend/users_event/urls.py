@@ -12,6 +12,7 @@ from users_event.views import (
     SubscribeViewSet,
     ParticipantViewSet,
     ParticipantViewSetForCalendar,
+    # hello_world,
 )
 
 users_router = SimpleRouter()
@@ -38,4 +39,5 @@ urlpatterns = [
         ParticipantViewSetForCalendar.as_view({"get": "list"}),
         name="subscriptions",
     ),
+    # path("hello_world/", hello_world, name="hello_world"),
 ]

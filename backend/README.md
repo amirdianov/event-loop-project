@@ -12,6 +12,9 @@
 3. Поднять PostgreSQL с помощью Docker - `docker-compose up -d`
 4. Выполнить миграции - `python manage.py migrate` 
 5. Запуск сервера для разработки на http://localhost:8000 - `python manage.py runserver`
+6. Запуск celery `celery --app eventloop worker --pool=solo --loglevel=INFO`
+7. Запуск задач по расписанию `celery -A eventloop beat -l info`
+
 
 
 ## Обозначения символов в коммитах

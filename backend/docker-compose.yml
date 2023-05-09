@@ -10,6 +10,10 @@ services:
       POSTGRES_PASSWORD: "Amir2003"
     volumes:
       - "db:/var/lib/postgresql/data"
-
+  redis:
+    image: redis:7-alpine
+    ports:
+      - 6379:6379
 volumes:
   db:
+  redis:
