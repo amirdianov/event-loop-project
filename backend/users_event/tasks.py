@@ -1,3 +1,4 @@
+import pytz
 from django.conf import settings
 from django.core.mail import send_mail
 from django.db.models import Q
@@ -18,19 +19,14 @@ def send_event_notification(event_id):
     subscribed_users = Participant.objects.filter(
         Q(event_id=event_id) & Q(is_organizer=False)
     )
-    print("Я тут 3.0")
 
-    print(subscribed_users, event, event_id)
     for subscription in subscribed_users:
-        print("Я тут 4.0")
-        msg_text = (
-            f"Напоминаем вам о мероприятии {event.title}, которое начнется через час. "
-        )
-        if event.url:
+        msg_text = f"Напоминаем вам о мероприятии {event.title}, которое начнется уже менее, чем через час!. "
+        if event.url is not None:
             msg_text += f"Ссылка на мероприятие: {event.url}"
         send_mail(
             "Уведомление о мероприятии",
-            f"Напоминаем вам о мероприятии {event.title}, которое начнется через час. Ссылка на мероприятие: {event.url}",
+            f"Напоминаем вам о мероприятии {event.title}, которое начнется через час.",
             settings.DEFAULT_FROM_EMAIL,
             [subscription.user.email],
             fail_silently=False,
@@ -40,10 +36,9 @@ def send_event_notification(event_id):
 @app.task
 def check_events():
     now = timezone.now()
-    print("Я тут")
-    print(now + timezone.timedelta(hours=1))
-    events = Event.objects.filter(Q(start_time__lt=now + timezone.timedelta(hours=1)))
+    events = Event.objects.filter(
+        Q(start_time__gt=now) & Q(start_time__lt=now + timezone.timedelta(hours=1))
+    )
     print(events)
     for event in events:
-        print("Я тут 2.0")
         send_event_notification.delay(event.id)
