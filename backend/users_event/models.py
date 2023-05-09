@@ -56,6 +56,7 @@ class BaseManyToMany(models.Model):
 
 class Participant(BaseManyToMany):
     is_organizer = models.BooleanField()
+    sent_email = models.BooleanField(default=False)
 
 
 class Rating(BaseManyToMany):

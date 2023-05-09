@@ -1,4 +1,3 @@
-import pytz
 from django.conf import settings
 from django.core.mail import send_mail
 from django.db.models import Q
@@ -21,16 +20,19 @@ def send_event_notification(event_id):
     )
 
     for subscription in subscribed_users:
-        msg_text = f"Напоминаем вам о мероприятии {event.title}, которое начнется уже менее, чем через час!. "
-        if event.url is not None:
-            msg_text += f"Ссылка на мероприятие: {event.url}"
-        send_mail(
-            "Уведомление о мероприятии",
-            f"Напоминаем вам о мероприятии {event.title}, которое начнется через час.",
-            settings.DEFAULT_FROM_EMAIL,
-            [subscription.user.email],
-            fail_silently=False,
-        )
+        if not subscription.sent_email:
+            msg_text = f"Напоминаем вам о мероприятии {event.title}, которое начнется уже менее, чем через час!. "
+            if event.url is not None:
+                msg_text += f"Ссылка на мероприятие: {event.url}"
+            send_mail(
+                "Уведомление о мероприятии",
+                f"Напоминаем вам о мероприятии {event.title}, которое начнется через час.",
+                settings.DEFAULT_FROM_EMAIL,
+                [subscription.user.email],
+                fail_silently=False,
+            )
+            subscription.sent_email = True
+            subscription.save()
 
 
 @app.task
