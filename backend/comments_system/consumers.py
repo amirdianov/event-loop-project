@@ -16,6 +16,10 @@ class MainConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_add(room_id, self.channel_name)
         await self.accept()
 
+        event = await Event.objects.filter(id=room_id).aget()
+
+        await self.send(json.dumps({"event_title": event.title}))
+
     async def disconnect(self, close_code):
         # Leave room group
         await self.channel_layer.group_discard("main", self.channel_name)
