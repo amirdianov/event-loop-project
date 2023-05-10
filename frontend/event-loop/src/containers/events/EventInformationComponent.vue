@@ -19,7 +19,7 @@
             </div>
             <div v-if="!event.price && !this.organizators.includes(user.id)" class="payment">
                 <p><strong>Посещение свободное</strong></p>
-                <div v-if="!isLoading">
+                <div v-if="!showConfirmButton">
                     <a-button v-if="showConfirmButton">Подписаться на мероприятие</a-button>
                 </div>
 
