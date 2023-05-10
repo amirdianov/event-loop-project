@@ -10,7 +10,7 @@ export function initNotifications() {
         console.log('open');
         setTimeout(() => {
             ws.send(JSON.stringify({
-                'message': 'hello world'
+                'message': prompt()
             }));
         }, 1000);
     };
