@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "authorisation_token",
     "users_event",
+    "comments_system",
     "corsheaders",
     "drf_yasg",
     "django_celery_beat",
