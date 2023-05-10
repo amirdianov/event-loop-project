@@ -18,7 +18,8 @@ class MainConsumer(AsyncWebsocketConsumer):
 
         event = await Event.objects.filter(id=room_id).aget()
 
-        await self.send(json.dumps({"event_title": event.title}))
+        # await self.send(json.dumps({"event_title": event.title}))
+        await self.send(json.dumps({"message": event.title}))
 
     async def disconnect(self, close_code):
         # Leave room group

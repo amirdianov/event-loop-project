@@ -15,9 +15,9 @@ import './antd.less'
 //     components,
 //     directives,
 // })
-
-import {initNotifications} from "../services/notifications";
-initNotifications();
+//
+// import {initNotifications} from "../services/notifications";
+// initNotifications();
 
 const app = createApp(App)
 
