@@ -86,6 +86,13 @@ export async function getEvent(event_id) {
     return response.data
 }
 
+export async function getEventComments(event_id) {
+    // метод для получения информации о мероприятии, включая всю информацию о рейтинге и об ораганизаторах
+    await check_token(store.state.login.tokens, instance)
+    const response = await instance.get(`/event_comments`, {params: {event_id: event_id}})
+    return response.data
+}
+
 
 export async function update_event(data) {
     await check_token(store.state.login.tokens, instance)

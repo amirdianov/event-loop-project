@@ -1,8 +1,8 @@
 <template>
     <div v-if="!isLoading">
         <div v-for="(event, index) in this.allEvents" :key="index" style="display: inline-block; padding: 10px">
-                <CardComponent :event_info="event" name="event-page" :slug="slug">
-                </CardComponent>
+            <CardComponent :event_info="event" name="event-page" :slug="slug">
+            </CardComponent>
         </div>
     </div>
 </template>
@@ -36,7 +36,10 @@ export default {
     watch: {
         $route(to) {
             this.slug = this.$route.params.slug
-            this.loadEvents(this.slug)
+            if (this.slug) {
+                this.loadEvents(this.slug)
+                console.log('Я тут')
+            }
         }
     }
 }

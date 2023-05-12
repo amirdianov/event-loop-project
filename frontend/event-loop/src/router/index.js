@@ -39,12 +39,7 @@ const router = createRouter({
             meta: {unauthorizedAccess: true}
 
         },
-        {
-            path: '/notifications',
-            name: 'notifications',
-            component: () => import('../views/NotificationsView.vue'),
-            meta: {unauthorizedAccess: true}
-        },
+
         {
             path: '/forgot_password',
             name: 'forgot_password',

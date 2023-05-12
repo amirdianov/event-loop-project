@@ -11,9 +11,9 @@
                     <template #renderItem="{ item }">
                         <a-list-item style="margin-left: 15px">
                             <a-comment
-                                    :author="item.author"
-                                    :content="item.content"
-                                    :datetime="item.datetime"
+                                    :author="item.user_name"
+                                    :content="item.text"
+                                    :datetime="item.created_at"
                             />
                         </a-list-item>
                     </template>
@@ -44,10 +44,13 @@ dayjs.extend(relativeTime);
 export default defineComponent({
     data() {
         return {
-            comments: [],
+            comments: this.event_comments,
             submitting: false,
-            value: null,
+            value: '',
         }
+    },
+    props: {
+        event_comments: {}
     },
     created() {
         this.send = initNotifications(this.$route.params.id, (message) => {
