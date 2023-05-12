@@ -1,0 +1,97 @@
+<template>
+    <a-row type="flex" justify="space-around">
+        <a-col style="width: 100%; margin:  30px 20px 0 50px">
+            <h1><strong>Комментарии</strong></h1>
+            <div class="comments-list">
+                <a-list
+                        v-if="comments"
+                        :data-source="comments"
+                        item-layout="horizontal"
+                >
+                    <template #renderItem="{ item }">
+                        <a-list-item style="margin-left: 15px">
+                            <a-comment
+                                    :author="item.author"
+                                    :content="item.content"
+                                    :datetime="item.datetime"
+                            />
+                        </a-list-item>
+                    </template>
+                </a-list>
+            </div>
+            <a-comment>
+                <template #content>
+                    <a-form-item>
+                        <a-textarea v-model:value="this.value" :rows="4"/>
+                    </a-form-item>
+                    <a-form-item>
+                        <a-button html-type="submit" :loading="this.submitting" type="primary" @click="sendMessage">
+                            Комментировать
+                        </a-button>
+                    </a-form-item>
+                </template>
+            </a-comment>
+        </a-col>
+    </a-row>
+</template>
+<script>
+import {defineComponent} from 'vue';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
+import {initNotifications} from "../../../services/notifications";
+
+dayjs.extend(relativeTime);
+export default defineComponent({
+    data() {
+        return {
+            comments: [],
+            submitting: false,
+            value: null,
+        }
+    },
+    created() {
+        this.send = initNotifications(this.$route.params.id, (message) => {
+            this.comments = [message, ...this.comments];
+        })
+    },
+    methods: {
+        sendMessage() {
+            console.log('Я тут')
+            this.send({
+                author: 'Han Solo',
+                content: this.value,
+                datetime: dayjs().fromNow()
+            });
+            this.value = null;
+
+            // if (!this.value.value) {
+            //     return;
+            // }
+            // this.submitting.value = true;
+            // setTimeout(() => {
+            //     this.submitting.value = false;
+            //     this.send({
+            //         author: 'Han Solo',
+            //         content: this.value.value,
+            //         datetime: dayjs().fromNow()
+            //     });
+            //     this.value.value = null;
+            // }, 1000);
+        },
+    }
+})
+</script>
+<style>
+.ant-comment-avatar {
+    margin-right: 0;
+}
+
+.comments-list {
+    min-height: 200px;
+    max-height: 200px;
+    overflow: auto;
+    border: 1px solid #a9a8a8;
+    border-radius: 5px;
+    margin-top: 12px
+}
+</style>

@@ -1,6 +1,7 @@
 <template>
     <a-alert v-if="this.error" :message="this.error" type="error"/>
     <EventInformationComponent v-if="!isLoading" :event="this.event_info"/>
+    <CommentsSystemComponent v-if="!isLoading"/>
 </template>
 
 <script>
@@ -8,10 +9,10 @@
 import EventInformationComponent from "@/containers/events/EventInformationComponent.vue";
 import {mapMutations, mapState} from "vuex";
 import {getEvent} from "../../../services/api";
-
+import CommentsSystemComponent from "@/containers/events/CommentsSystemComponent.vue";
 export default {
     name: "DetailEventsView",
-    components: {EventInformationComponent},
+    components: {CommentsSystemComponent, EventInformationComponent},
     data() {
         return {
             event_info: '',

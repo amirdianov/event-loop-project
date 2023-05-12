@@ -48,7 +48,7 @@ class Event(models.Model):
 
 class BaseManyToMany(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    event = models.ForeignKey("Event", on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
 
     class Meta:
         abstract = True

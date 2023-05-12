@@ -14,6 +14,7 @@ export function initNotifications(roomId, onMessage) {
         open(roomId);
     };
     ws.onerror = () => {
+        console.log('Сработала ошибка')
         open(roomId);
     };
     ws.onmessage = (message) => {
@@ -23,6 +24,8 @@ export function initNotifications(roomId, onMessage) {
         // } else {
         //     console.log(message)
         // }
+        console.log('Сработал onmessage')
+        console.log(data)
         onMessage(data)
 
     };
@@ -35,10 +38,9 @@ export function initNotifications(roomId, onMessage) {
     };
 
     function send(data) {
+        console.log('Зашел в кастомный send')
         ws.send(JSON.stringify(data));
     }
 
     return send
-
-
 }
