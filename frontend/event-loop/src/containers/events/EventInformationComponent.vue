@@ -1,6 +1,6 @@
 <template>
-    <a-row type="flex" justify="space-around" align="middle" style="height: 100%">
-        <a-col :span="11" push="1">
+    <a-row type="flex" justify="space-around" align="middle">
+        <a-col :span="11" push="1" >
             <div><img :src="event.photo" alt="Фотография" width="400" height="400"></div>
 
         </a-col>
@@ -19,8 +19,8 @@
             </div>
             <div v-if="!event.price && !this.organizators.includes(user.id)" class="payment">
                 <p><strong>Посещение свободное</strong></p>
-                <div v-if="!isLoading">
-                    <a-button v-if="showConfirmButton">Подписаться на мероприятие</a-button>
+                <div v-if="showConfirmButton">
+                    <a-button>Подписаться на мероприятие</a-button>
                 </div>
 
             </div>

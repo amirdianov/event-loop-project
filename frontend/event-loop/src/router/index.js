@@ -39,6 +39,7 @@ const router = createRouter({
             meta: {unauthorizedAccess: true}
 
         },
+
         {
             path: '/forgot_password',
             name: 'forgot_password',

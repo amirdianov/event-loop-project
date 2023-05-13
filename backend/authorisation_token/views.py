@@ -1,3 +1,5 @@
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from django.conf import settings
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.core.mail import EmailMessage
@@ -65,6 +67,14 @@ class UserViewSet(
     @action(detail=False, methods=["get"], permission_classes=[IsAuthenticated])
     def profile(self, request, pk=None):
         profile = UserProfileSerializer(request.user)
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            str(10),
+            {
+                "type": f"chat_message",
+                "message": "channel_layer Using Outside Of Consumers",
+            },
+        )
         return Response(profile.data)
 
 

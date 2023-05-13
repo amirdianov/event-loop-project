@@ -1,21 +1,25 @@
 <template>
     <a-alert v-if="this.error" :message="this.error" type="error"/>
     <EventInformationComponent v-if="!isLoading" :event="this.event_info"/>
+    <CommentsSystemComponent v-if="!isLoadingEventComments" :event_comments="this.event_comments"/>
 </template>
 
 <script>
 
 import EventInformationComponent from "@/containers/events/EventInformationComponent.vue";
 import {mapMutations, mapState} from "vuex";
-import {getEvent} from "../../../services/api";
+import {getEvent, getEventComments} from "../../../services/api";
+import CommentsSystemComponent from "@/containers/events/CommentsSystemComponent.vue";
 
 export default {
     name: "DetailEventsView",
-    components: {EventInformationComponent},
+    components: {CommentsSystemComponent, EventInformationComponent},
     data() {
         return {
             event_info: '',
-            isLoading: true
+            event_comments: [],
+            isLoading: true,
+            isLoadingEventComments: true,
         }
     },
     computed: {
@@ -33,10 +37,17 @@ export default {
             this.isLoading = true
             this.event_info = await getEvent(event_id);
             this.isLoading = false
+        },
+        async loadEventComments(event_id) {
+            this.isLoadingEventComments = true
+            this.event_comments = await getEventComments(event_id)
+            this.isLoadingEventComments = false
         }
     },
     created() {
-        this.loadEvent(this.$route.params.id)
+        const event_id = this.$route.params.id;
+        this.loadEvent(event_id)
+        this.loadEventComments(event_id)
     }
 }
 </script>
