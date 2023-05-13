@@ -39,6 +39,8 @@ import {defineComponent} from 'vue';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import {initNotifications} from "../../../services/notifications";
+import store from "@/store";
+import {addEventComment} from "../../../services/api";
 
 dayjs.extend(relativeTime);
 export default defineComponent({
@@ -60,11 +62,13 @@ export default defineComponent({
     methods: {
         sendMessage() {
             console.log('Я тут')
-            this.send({
-                author: 'Han Solo',
-                content: this.value,
-                datetime: dayjs().fromNow()
-            });
+            let comment = {
+                user_name: store.state.login.user.name,
+                text: this.value,
+                created_at: dayjs().fromNow()
+            }
+            this.send(comment);
+            this.addComment(comment)
             this.value = null;
 
             // if (!this.value.value) {
@@ -81,6 +85,13 @@ export default defineComponent({
             //     this.value.value = null;
             // }, 1000);
         },
+        async addComment(comment) {
+            comment['user'] = store.state.login.user.id
+            comment['event'] = this.$route.params.id
+            this.submitting = true
+            await addEventComment(comment)
+            this.submitting = false
+        }
     }
 })
 </script>
