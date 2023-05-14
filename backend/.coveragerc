@@ -1,0 +1,6 @@
+[run]
+omit=*/migrations/*
+     *\__init__.py
+     */tests/*
+[report]
+show_missing=true
