@@ -3,6 +3,9 @@ import pytest
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
+from rest_framework_simplejwt.tokens import RefreshToken
+
+from authorisation_token.models import User
 
 
 # Create your tests here.
@@ -13,15 +16,51 @@ def api_client():
     return APIClient()
 
 
+@pytest.fixture(autouse=True)
+def init_db(db):
+    pass
+
+
+@pytest.fixture
+def user():
+    return User.objects.create_user(
+        name="TESTName",
+        surname="TESTSurname",
+        email="test@gmail.com",
+        password="TESTPassword",
+    )
+
+
+@pytest.fixture
+def jwt_token(user):
+    refresh = RefreshToken.for_user(user)
+    return {"Authorization": f"Bearer {str(refresh.access_token)}"}
+
+
 def test_status(api_client):
     response = api_client.get(reverse("status"))
     assert response.status_code == status.HTTP_200_OK
 
 
+def test_get_all_users(api_client, jwt_token):
+    response = api_client.get(reverse("users-list"), headers=jwt_token)
+    assert response.status_code == status.HTTP_200_OK
+
+
 def test_registration(api_client):
     response = api_client.post(
-        "/users/registration/",
-        {"name": "Amir", "email": "b@gmail.com", "password": "12345"},
+        reverse("users-registration"),
+        {
+            "name": "TESTName",
+            "surname": "TESTSurname",
+            "email": "test@gmail.com",
+            "password": "TESTPassword",
+        },
         format="json",
     )
-    assert response.status_code == status.HTTP_201_CREATED
+    assert response.status_code == status.HTTP_200_OK
+
+
+def test_profile(api_client, jwt_token):
+    response = api_client.get(reverse("users-profile"), headers=jwt_token)
+    assert response.status_code == status.HTTP_200_OK

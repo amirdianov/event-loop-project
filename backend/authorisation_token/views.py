@@ -49,7 +49,13 @@ class UserViewSet(
     queryset = User.objects.all()
     serializer_class = UserProfileSerializer
 
-    @action(detail=False, methods=["post"], permission_classes=[])
+    @action(
+        detail=False,
+        methods=["post"],
+        permission_classes=[],
+        url_name="registration",
+        url_path="registration",
+    )
     def registration(self, request, pk=None):
         user_info = UserRegistrationSerializer(data=request.data)
         user_info.is_valid(raise_exception=True)
@@ -64,17 +70,15 @@ class UserViewSet(
         tokens = get_tokens_for_user(user)
         return Response(TokensSerializer(tokens).data)
 
-    @action(detail=False, methods=["get"], permission_classes=[IsAuthenticated])
+    @action(
+        detail=False,
+        methods=["get"],
+        permission_classes=[IsAuthenticated],
+        url_name="profile",
+        url_path="profile",
+    )
     def profile(self, request, pk=None):
         profile = UserProfileSerializer(request.user)
-        channel_layer = get_channel_layer()
-        async_to_sync(channel_layer.group_send)(
-            str(10),
-            {
-                "type": f"chat_message",
-                "message": "channel_layer Using Outside Of Consumers",
-            },
-        )
         return Response(profile.data)
 
 
