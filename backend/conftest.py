@@ -1,5 +1,6 @@
 import pytest
 from rest_framework.test import APIClient
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from factories import UserFactory
 
@@ -12,6 +13,12 @@ def api_client():
 @pytest.fixture(autouse=True)
 def init_db(db):
     pass
+
+
+@pytest.fixture
+def jwt_token(user):
+    refresh = RefreshToken.for_user(user)
+    return {"Authorization": f"Bearer {str(refresh.access_token)}"}
 
 
 @pytest.fixture

@@ -2,34 +2,52 @@
 import pytest
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APIClient
-from rest_framework_simplejwt.tokens import RefreshToken
+
+from authorisation_token.enums import Role
+from authorisation_token.models import User
 
 
 @pytest.fixture
-def api_client():
-    return APIClient()
+def user_data():
+    return {
+        "name": "John",
+        "surname": "Doe",
+        "email": "johndoe@example.com",
+        "password": "p@ssw0rd",
+    }
 
 
-@pytest.fixture(autouse=True)
-def init_db(db):
-    pass
+def test_create_user(user_data):
+    user = User.objects.create_user(**user_data)
+    assert user.email == user_data["email"]
+    assert user.name == user_data["name"]
+    assert user.surname == user_data["surname"]
+    assert user.check_password(user_data["password"])
 
 
-# @pytest.fixture
-# def user():
-#     return User.objects.create_user(
-#         name="TESTName",
-#         surname="TESTSurname",
-#         email="test@gmail.com",
-#         password="TESTPassword",
-#     )
+def test_create_superuser(user_data):
+    superuser = User.objects.create_superuser(**user_data)
+    assert superuser.is_staff == True
+    assert superuser.is_superuser == True
+    assert superuser.role == Role.admin
 
 
-@pytest.fixture
-def jwt_token(user):
-    refresh = RefreshToken.for_user(user)
-    return {"Authorization": f"Bearer {str(refresh.access_token)}"}
+def test_is_staff(user):
+    user.role = Role.user
+    assert user.is_staff == False
+    user.role = Role.stuff
+    assert user.is_staff == True
+    user.role = Role.admin
+    assert user.is_staff == True
+
+
+def test_is_superuser(user):
+    user.role = Role.user
+    assert user.is_superuser == False
+    user.role = Role.stuff
+    assert user.is_superuser == False
+    user.role = Role.admin
+    assert user.is_superuser == True
 
 
 def test_status(api_client):
@@ -59,6 +77,17 @@ def test_registration(api_client):
 def test_profile(api_client, jwt_token):
     response = api_client.get(reverse("users-profile"), headers=jwt_token)
     assert response.status_code == status.HTTP_200_OK
+
+
+def test_user_update(api_client, user, jwt_token):
+    response = api_client.patch(
+        reverse("users-detail", args=(user.id,)),
+        data={"name": "New", "surname": "NewNew"},
+        headers=jwt_token,
+    )
+    assert response.status_code == status.HTTP_200_OK, response.content
+    user.refresh_from_db()
+    assert user.name == "New"
 
 
 def test_forgot_password_view(api_client, user):
