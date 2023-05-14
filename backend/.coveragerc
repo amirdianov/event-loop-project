@@ -1,6 +1,9 @@
 [run]
-omit=*/migrations/*
-     *\__init__.py
-     */tests/*
+omit =
+    */migrations/*
+    */tests/*
+    */__init__.py
+    */*/__init__.py
+    */tests.py
 [report]
 show_missing=true

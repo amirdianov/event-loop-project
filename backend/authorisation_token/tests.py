@@ -5,11 +5,6 @@ from rest_framework import status
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from authorisation_token.models import User
-
-
-# Create your tests here.
-
 
 @pytest.fixture
 def api_client():
@@ -21,14 +16,14 @@ def init_db(db):
     pass
 
 
-@pytest.fixture
-def user():
-    return User.objects.create_user(
-        name="TESTName",
-        surname="TESTSurname",
-        email="test@gmail.com",
-        password="TESTPassword",
-    )
+# @pytest.fixture
+# def user():
+#     return User.objects.create_user(
+#         name="TESTName",
+#         surname="TESTSurname",
+#         email="test@gmail.com",
+#         password="TESTPassword",
+#     )
 
 
 @pytest.fixture
@@ -63,4 +58,9 @@ def test_registration(api_client):
 
 def test_profile(api_client, jwt_token):
     response = api_client.get(reverse("users-profile"), headers=jwt_token)
+    assert response.status_code == status.HTTP_200_OK
+
+
+def test_forgot_password_view(api_client, user):
+    response = api_client.post(reverse("forgot_password"), data={"email": user.email})
     assert response.status_code == status.HTTP_200_OK
