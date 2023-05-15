@@ -1,10 +1,7 @@
 <template>
     <a-layout>
         <a-layout-header class="header" style="background-color: #002a29;">
-<!--            <div class="logo">-->
-<!--                <img src="@/assets/images/favicon.ico" width="10" height="10"-->
-<!--                     alt="Логотип">-->
-<!--            </div>-->
+            <div class="logo"/>
             <a-menu
                     v-model:selectedKeys="selectedKeys1"
                     theme="dark"
@@ -21,7 +18,7 @@
                 <a-menu-item key="3">
                     <RouterLink to="/support">Поддержка</RouterLink>
                 </a-menu-item>
-                <a-menu-item key="4" v-if="user === null" style="width: 100%; float: right">
+                <a-menu-item key="4" v-if="user === null">
                     <RouterLink to="/login">Войти | Зарегистрироваться</RouterLink>
                 </a-menu-item>
                 <a-menu-item key="5" v-if="user !== null">
