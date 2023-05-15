@@ -14,6 +14,7 @@ class UserFactory(factory.django.DjangoModelFactory):
 
 
 class EventFactory(factory.django.DjangoModelFactory):
+    title = factory.Faker("sentence")
     start_time = factory.Faker("date_object")
     finish_time = factory.Faker("date_object")
 
