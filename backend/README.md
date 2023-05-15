@@ -15,6 +15,8 @@
 6. Запуск celery `celery --app eventloop worker --pool=solo --loglevel=INFO`
 7. Запуск задач по расписанию `celery -A eventloop beat -l info`
 8. Запуск web-socket `docker run -p 6378:6379 -d redis:5`
+9. Запуск тестов `coverage run -m pytest`
+10. Проверка покрытия кода тестами `coverage report`
 
 
 

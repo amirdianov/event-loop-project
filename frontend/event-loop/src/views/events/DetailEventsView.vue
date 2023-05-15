@@ -1,15 +1,16 @@
 <template>
     <a-alert v-if="this.error" :message="this.error" type="error"/>
-    <EventInformationComponent v-if="!isLoading" :event="this.event_info"/>
-    <CommentsSystemComponent v-if="!isLoadingEventComments" :event_comments="this.event_comments"/>
+    <EventInformationComponent v-if="!this.isLoading" :event="this.event_info"/>
+    <CommentsSystemComponent v-if="!this.isLoading" :event_comments="this.event_comments"/>
 </template>
 
 <script>
 
 import EventInformationComponent from "@/containers/events/EventInformationComponent.vue";
-import {mapMutations, mapState} from "vuex";
+import {mapState} from "vuex";
 import {getEvent, getEventComments} from "../../../services/api";
 import CommentsSystemComponent from "@/containers/events/CommentsSystemComponent.vue";
+import store from "@/store";
 
 export default {
     name: "DetailEventsView",
@@ -18,30 +19,26 @@ export default {
         return {
             event_info: '',
             event_comments: [],
-            isLoading: true,
-            isLoadingEventComments: true,
         }
     },
     computed: {
         ...mapState({
             error: state => state.login.error,
-            // isLoading: state => state.login.isLoading,
+            isLoading: state => state.login.isLoading,
         }),
     },
     methods: {
-        ...mapMutations({
-            setLoading: 'login/setLoading'
-        }),
         // TODO почему не работает с глобальным loading
         async loadEvent(event_id) {
-            this.isLoading = true
+            store.state.login.isLoading = true
             this.event_info = await getEvent(event_id);
-            this.isLoading = false
+            console.log(this.event_info)
+            // store.state.login.isLoading = false
         },
         async loadEventComments(event_id) {
-            this.isLoadingEventComments = true
+            // store.state.login.isLoading = true
             this.event_comments = await getEventComments(event_id)
-            this.isLoadingEventComments = false
+            store.state.login.isLoading = false
         }
     },
     created() {

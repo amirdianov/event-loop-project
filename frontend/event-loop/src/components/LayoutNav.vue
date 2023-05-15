@@ -59,7 +59,7 @@
                         </template>
                         <a-menu-item key="1">
                             <RouterLink to="/profile">
-                                Личный кабинет
+                                Профиль
                             </RouterLink>
                         </a-menu-item>
                         <a-menu-item key="2">
@@ -70,7 +70,7 @@
                         <a-menu-item key="3">
                             <RouterLink to="/calendar">Мой календарь</RouterLink>
                         </a-menu-item>
-                        <a-menu-item key="4">Посещенные мероприятия</a-menu-item>
+                        <a-menu-item key="4">Список</a-menu-item>
                     </a-sub-menu>
                     <a-sub-menu key="sub2">
                         <template #title>
