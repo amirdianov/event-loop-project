@@ -22,7 +22,6 @@ class CommentView(mixins.CreateModelMixin, mixins.ListModelMixin, GenericViewSet
         )
 
     def list(self, request, *args, **kwargs):
-        print(request.GET["event_id"])
         queryset = self.filter_queryset(
             self.get_queryset(event_id=request.GET["event_id"])
         )

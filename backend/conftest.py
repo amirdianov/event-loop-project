@@ -2,7 +2,7 @@ import pytest
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from factories import UserFactory, EventFactory, ParticipantFactory
+from factories import UserFactory, EventFactory, ParticipantFactory, CommentFactory
 
 
 @pytest.fixture
@@ -34,3 +34,8 @@ def event(user):
 @pytest.fixture
 def participant(user, event):
     return ParticipantFactory(user=user, event=event)
+
+
+# @pytest.fixture
+# def comment(user, event):
+#     return CommentFactory(user=user, event=event)
