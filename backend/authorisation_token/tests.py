@@ -1,6 +1,9 @@
 # Create your tests here.
 import pytest
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.urls import reverse
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 from rest_framework import status
 
 from authorisation_token.enums import Role
@@ -93,3 +96,23 @@ def test_user_update(api_client, user, jwt_token):
 def test_forgot_password_view(api_client, user):
     response = api_client.post(reverse("forgot_password"), data={"email": user.email})
     assert response.status_code == status.HTTP_200_OK
+
+
+def test_reset_password_view(api_client, user):
+    token_generator = PasswordResetTokenGenerator()
+    token = token_generator.make_token(user)
+    uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+    response = api_client.post(
+        reverse("reset_password"),
+        data={"password": "12345", "uid": uidb64, "token": token},
+    )
+    assert response.status_code == status.HTTP_200_OK
+    response = api_client.post(
+        reverse("reset_password"), data={"password": "12345", "uid": "", "token": token}
+    )
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    response = api_client.post(
+        reverse("reset_password"),
+        data={"password": "12345", "uid": uidb64, "token": ""},
+    )
+    assert response.status_code == status.HTTP_400_BAD_REQUEST

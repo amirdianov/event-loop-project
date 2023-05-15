@@ -6,7 +6,7 @@ from django.core.mail import EmailMessage
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from drf_yasg.utils import swagger_auto_schema
-from rest_framework import mixins
+from rest_framework import mixins, status
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -118,9 +118,10 @@ def reset_password_view(request):
         user.set_password(password)
         user.save()
         return Response({"status": "ok"})
-
     else:
-        return Response({"status": "error", "message": "Неверный токен"})
+        return Response(
+            {"status": "error", "message": "Ошибка"}, status=status.HTTP_400_BAD_REQUEST
+        )
 
 
 @api_view(["POST"])
