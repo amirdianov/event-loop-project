@@ -55,7 +55,7 @@ class BaseManyToMany(models.Model):
 
 
 class Participant(BaseManyToMany):
-    is_organizer = models.BooleanField()
+    is_organizer = models.BooleanField(default=False)
     sent_email = models.BooleanField(default=False)
 
 

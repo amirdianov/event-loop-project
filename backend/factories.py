@@ -3,7 +3,7 @@ from factory import SubFactory
 
 from authorisation_token.models import User
 from comments_system.models import Comment
-from users_event.models import Event, Participant
+from users_event.models import Event, Participant, Tag
 
 
 class UserFactory(factory.django.DjangoModelFactory):
@@ -36,3 +36,10 @@ class CommentFactory(factory.django.DjangoModelFactory):
 
     class Meta:
         model = Comment
+
+
+class TagFactory(factory.django.DjangoModelFactory):
+    user = SubFactory(UserFactory)
+
+    class Meta:
+        model = Tag
