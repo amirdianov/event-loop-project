@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "drf_yasg",
     "django_celery_beat",
+    "stripe",
 ]
 
 MIDDLEWARE = [
@@ -221,3 +222,6 @@ EMAIL_USE_SSL = True
 
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER)
 DEFAULT_TO_EMAIL = os.environ.get("DEFAULT_TO_EMAIL", EMAIL_HOST_USER)
+
+STRIPE_SECRET_KEY = "sk_test_51N8KlCBJtD2zRVv8vYjuGaapFx8t5HuEUpvYnOGGotcR5aKPD2JnsYzP5JmrSmy6aNbunaZO0WnjcLArcINue9uF008cgID85V"
+STRIPE_PUBLISHABLE_KEY = "pk_test_51N8KlCBJtD2zRVv8FPFS8pcAzwuwflNLoXZktp9b599Fz7Wr0a6sT1gvTYHqngFvdLU3S5qGxxHqZ0CYWia2Vvhy00yqGxaYE9"

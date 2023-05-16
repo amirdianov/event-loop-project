@@ -12,6 +12,8 @@ from users_event.views import (
     SubscribeViewSet,
     ParticipantViewSet,
     ParticipantViewSetForCalendar,
+    pay_event_view,
+    confirm_payment_view,
     # hello_world,
 )
 
@@ -39,5 +41,6 @@ urlpatterns = [
         ParticipantViewSetForCalendar.as_view({"get": "list"}),
         name="subscriptions",
     ),
-    # path("hello_world/", hello_world, name="hello_world"),
+    path("pay_event/", pay_event_view, name="pay_event"),
+    path("confirm_payment/", confirm_payment_view, name="confirm_payment"),
 ]

@@ -1,7 +1,11 @@
+# from users_event.tasks import test_task
+#
+import stripe
+from django.conf import settings
 from django.db.models import Avg, Q
-from django.http import HttpResponse
+from django.http import JsonResponse
 from rest_framework import mixins
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -18,12 +22,45 @@ from users_event.serializers import (
     ParticipantSerializerForCalendar,
 )
 
-# from users_event.tasks import test_task
-#
-#
-# def hello_world(request):
-#     test_task.delay()
-#     return HttpResponse("<h1>Отправлено</h1>")
+
+@api_view(["GET", "POST"])
+def pay_event_view(request):
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    product = stripe.Product.create(
+        name="Название продукта",
+        description="Описание продукта",
+    )
+    price = stripe.Price.create(
+        unit_amount=2000,  # Сумма в минимальных единицах валюты (например, центы)
+        currency="usd",  # Валюта
+        product=f"{product.id}",  # Идентификатор продукта
+    )
+    session = stripe.checkout.Session.create(
+        payment_method_types=["card"],
+        line_items=[
+            {
+                "price": f"{price.id}",  # Идентификатор цены в Stripe Dashboard
+                "quantity": 1,
+            },
+        ],
+        mode="payment",
+        success_url="https://example.com/success/",
+        cancel_url="https://example.com/cancel/",
+    )
+
+    return Response({"sessionId": str(session.id)})
+
+
+@api_view(["GET", "POST"])
+def confirm_payment_view(request):
+    payment_intent_id = request.POST.get("payment_intent_id")
+
+    try:
+        intent = stripe.PaymentIntent.retrieve(payment_intent_id)
+        intent.confirm()
+        return JsonResponse({"status": "success"})
+    except Exception as e:
+        return JsonResponse({"error": str(e)})
 
 
 class ParticipantViewSetForCalendar(mixins.ListModelMixin, GenericViewSet):
