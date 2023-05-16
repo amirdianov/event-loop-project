@@ -20,10 +20,11 @@
                     v-if="name==='event-page' && !event_info.price && !this.organizators.includes(this.user.id)"
                     :event_info="event_info">
             </SubscribeComponent>
-            <!--            TODO pay component-->
-            <pay-circle-outlined
+            <PaymentSubscribeComponent
                     v-if="name==='event-page' && event_info.price && !this.organizators.includes(this.user.id)"
-                    style="font-size: 30px" @click="handleCheckout"/>
+                    :event_info="event_info">
+            </PaymentSubscribeComponent>
+
         </template>
         <a-card-meta :title=event_info.title
                      :description="event_info.price ? `Платный доступ` : `Посещение свободное`"
@@ -39,10 +40,10 @@
 <script>
 import {CarryOutOutlined, EditOutlined, LoadingOutlined, PayCircleOutlined} from '@ant-design/icons-vue';
 import {defineComponent} from 'vue';
-import {getEventRate, payEvent} from "../../../services/api";
+import {getEventRate} from "../../../services/api";
 import {mapState} from "vuex";
 import SubscribeComponent from "@/components/SubscribeComponent.vue";
-import {loadStripe} from "@stripe/stripe-js";
+import PaymentSubscribeComponent from "@/components/PaymentSubscribeComponent.vue";
 
 export default defineComponent({
     name: "CardComponent",
@@ -56,6 +57,7 @@ export default defineComponent({
         }
     },
     components: {
+        PaymentSubscribeComponent,
         SubscribeComponent,
         EditOutlined, CarryOutOutlined, PayCircleOutlined, LoadingOutlined
     },
@@ -76,30 +78,6 @@ export default defineComponent({
             console.log(obj)
             this.rate = obj['rate']
             this.isLoading = false
-        },
-        async handleCheckout() {
-            const stripePromise = loadStripe('pk_test_51N8KlCBJtD2zRVv8FPFS8pcAzwuwflNLoXZktp9b599Fz7Wr0a6sT1gvTYHqngFvdLU3S5qGxxHqZ0CYWia2Vvhy00yqGxaYE9');
-            // Получите sessionId с сервера
-            try {
-                const response = await payEvent(this.event_info.id);
-                console.log(response)
-                this.sessionId = response.sessionId;
-
-                if (this.sessionId) {
-                    const stripe = await stripePromise;
-                    const {error} = await stripe.redirectToCheckout({
-                        sessionId: this.sessionId,
-                    });
-
-                    if (error) {
-                        console.error(error);
-                    }
-                } else {
-                    console.error('sessionId is undefined');
-                }
-            } catch (error) {
-                console.error(error);
-            }
         }
     },
     created() {
@@ -110,7 +88,8 @@ export default defineComponent({
             this.getRate()
         }
     }
-});
+})
+;
 
 </script>
 

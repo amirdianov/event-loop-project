@@ -157,7 +157,12 @@ export async function resetPassword(data) {
 
 export async function payEvent(data) {
     await check_token(store.state.login.tokens, instance)
-    const response = await instance.get(`/pay_event/`, data)
-    console.log(response)
+    const response = await instance.post(`/pay_event/`, data)
+    return response.data
+}
+
+export async function getPKForPay(data) {
+    await check_token(store.state.login.tokens, instance)
+    const response = await instance.get(`/get_pk/`, data)
     return response.data
 }

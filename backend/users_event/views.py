@@ -3,7 +3,6 @@
 import stripe
 from django.conf import settings
 from django.db.models import Avg, Q
-from django.http import JsonResponse
 from rest_framework import mixins
 from rest_framework.decorators import action, api_view
 from rest_framework.permissions import IsAuthenticated
@@ -26,15 +25,32 @@ from users_event.serializers import (
 @api_view(["GET", "POST"])
 def pay_event_view(request):
     stripe.api_key = settings.STRIPE_SECRET_KEY
-    product = stripe.Product.create(
-        name="Название продукта",
-        description="Описание продукта",
-    )
-    price = stripe.Price.create(
-        unit_amount=2000,  # Сумма в минимальных единицах валюты (например, центы)
-        currency="usd",  # Валюта
-        product=f"{product.id}",  # Идентификатор продукта
-    )
+    products = stripe.Product.list(limit=100, active=True)
+    print(products)
+    print(request.data)
+    product = None
+    for existing_product in products:
+        if existing_product.name == request.data["event"]["title"]:
+            product = existing_product
+            break
+    if not product:
+        product = stripe.Product.create(
+            name=request.data["event"]["title"], images=["https://f.nodacdn.net/309636"]
+        )
+    price = None
+    prices = stripe.Price.list(product=product.id, limit=1)
+    if prices.data:
+        price = prices.data[0]
+
+    # Если цена не найдена, создать новую цену для продукта
+    if not price:
+        price = stripe.Price.create(
+            unit_amount=request.data["event"][
+                "price"
+            ],  # Сумма в минимальных единицах валюты (например, центы)
+            currency="usd",  # Валюта
+            product=product.id,  # Идентификатор продукта
+        )
     session = stripe.checkout.Session.create(
         payment_method_types=["card"],
         line_items=[
@@ -51,16 +67,9 @@ def pay_event_view(request):
     return Response({"sessionId": str(session.id)})
 
 
-@api_view(["GET", "POST"])
-def confirm_payment_view(request):
-    payment_intent_id = request.POST.get("payment_intent_id")
-
-    try:
-        intent = stripe.PaymentIntent.retrieve(payment_intent_id)
-        intent.confirm()
-        return JsonResponse({"status": "success"})
-    except Exception as e:
-        return JsonResponse({"error": str(e)})
+@api_view(["GET"])
+def get_pk_view(request):
+    return Response({"pk_token": settings.STRIPE_PUBLISHABLE_KEY})
 
 
 class ParticipantViewSetForCalendar(mixins.ListModelMixin, GenericViewSet):
