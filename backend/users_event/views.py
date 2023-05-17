@@ -56,7 +56,7 @@ def pay_event_view(request):
             currency="usd",  # Валюта
             product=product.id,  # Идентификатор продукта
         )
-    url = "http://localhost:5173/events/pay_response?payment_id={CHECKOUT_SESSION_ID}"
+    url = "http://localhost:5173/events/pay_response?payment_id={CHECKOUT_SESSION_ID}&product_name={PRODUCT_NAME}"
     session = stripe.checkout.Session.create(
         payment_method_types=["card"],
         line_items=[
@@ -68,6 +68,7 @@ def pay_event_view(request):
         mode="payment",
         success_url=url,
         cancel_url=url,
+        metadata={"event_title": request.data["event"]["title"]},
     )
     print(session.id)
     return Response({"sessionId": str(session.id)})
@@ -77,14 +78,21 @@ def pay_event_view(request):
 def pay_event_response_view(request):
     payment_id = request.GET.get("payment_id")
     session = stripe.checkout.Session.retrieve(payment_id)
+    event_title = session.metadata.get("event_title")
+
     payment_intent_id = session.payment_intent
     payment_intent = stripe.PaymentIntent.retrieve(payment_intent_id)
 
     payment_status = payment_intent.status
-    payment_amount = payment_intent.amount
-    print(payment_amount, payment_status)
+    payment_created = payment_intent.created
     if payment_status == "succeeded":
-        return Response({"status_pay": "ok"})
+        return Response(
+            {
+                "status_pay": "ok",
+                "event": EventInfoSerializer(Event.objects.get(title=event_title)).data,
+                "payment_created": payment_created,
+            }
+        )
     else:
         return Response({"status_pay": "wrong"})
 

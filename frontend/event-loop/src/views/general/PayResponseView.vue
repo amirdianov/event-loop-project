@@ -14,21 +14,24 @@ export default {
     },
     methods: {
         async getResponse() {
-            return await getPayResponse(this.$route.query.payment_id)
+            try {
+                const payInfo = await getPayResponse(this.$route.query.payment_id);
+                console.log(payInfo);
+                const status = payInfo.status_pay;
+                if (status === 'ok') {
+                    await subscribe({event: payInfo.event});
+                    this.text = 'Успешно!';
+                } else {
+                    this.text = 'Ошибка транзакции';
+                }
+            } catch (error) {
+                console.error(error);
+            }
         }
     },
-    async created() {
-        const payStatus = await this.getResponse()
-        console.log(payStatus)
-        const status = payStatus.status_pay
-        console.log(status)
-        if (status === 'ok') {
-            subscribe({'event': self.event_info});
-            this.text = 'Успешно!'
-        } else {
-            this.text = 'Ошибка транзакции'
-        }
-    },
+    mounted() {
+        this.getResponse();
+    }
 }
 </script>
 
