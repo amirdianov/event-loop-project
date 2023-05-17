@@ -166,3 +166,10 @@ export async function getPKForPay(data) {
     const response = await instance.get(`/get_pk/`, data)
     return response.data
 }
+
+
+export async function getPayResponse(data) {
+    await check_token(store.state.login.tokens, instance)
+    const response = await instance.get(`/pay_event_response/`, {params: {payment_id: data}})
+    return response.data
+}

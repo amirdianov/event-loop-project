@@ -22,6 +22,11 @@ from users_event.serializers import (
 )
 
 
+@api_view(["GET"])
+def get_pk_view(request):
+    return Response({"pk_token": settings.STRIPE_PUBLISHABLE_KEY})
+
+
 @api_view(["GET", "POST"])
 def pay_event_view(request):
     stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -51,6 +56,7 @@ def pay_event_view(request):
             currency="usd",  # Валюта
             product=product.id,  # Идентификатор продукта
         )
+    url = "http://localhost:5173/events/pay_response?payment_id={CHECKOUT_SESSION_ID}"
     session = stripe.checkout.Session.create(
         payment_method_types=["card"],
         line_items=[
@@ -60,16 +66,27 @@ def pay_event_view(request):
             },
         ],
         mode="payment",
-        success_url="https://example.com/success/",
-        cancel_url="https://example.com/cancel/",
+        success_url=url,
+        cancel_url=url,
     )
-
+    print(session.id)
     return Response({"sessionId": str(session.id)})
 
 
-@api_view(["GET"])
-def get_pk_view(request):
-    return Response({"pk_token": settings.STRIPE_PUBLISHABLE_KEY})
+@api_view(["GET", "POST"])
+def pay_event_response_view(request):
+    payment_id = request.GET.get("payment_id")
+    session = stripe.checkout.Session.retrieve(payment_id)
+    payment_intent_id = session.payment_intent
+    payment_intent = stripe.PaymentIntent.retrieve(payment_intent_id)
+
+    payment_status = payment_intent.status
+    payment_amount = payment_intent.amount
+    print(payment_amount, payment_status)
+    if payment_status == "succeeded":
+        return Response({"status_pay": "ok"})
+    else:
+        return Response({"status_pay": "wrong"})
 
 
 class ParticipantViewSetForCalendar(mixins.ListModelMixin, GenericViewSet):

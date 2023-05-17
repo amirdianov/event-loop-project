@@ -102,6 +102,11 @@ const router = createRouter({
             path: '/events/:slug/:id',
             name: 'event-page',
             component: () => import('../views/events/DetailEventsView.vue'),
+        },
+        {
+            path: '/events/pay_response',
+            name: 'pay-response-page',
+            component: () => import('../views/general/PayResponseView.vue'),
         }
     ]
 })

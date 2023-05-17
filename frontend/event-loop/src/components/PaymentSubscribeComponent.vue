@@ -52,7 +52,6 @@ export default defineComponent({
                             try {
                                 await self.handleCheckout();
                                 resolve()
-                                await subscribe({'event': self.event_info});
                             } catch (e) {
                                 console.log(e)
                             }
