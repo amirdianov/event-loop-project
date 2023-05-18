@@ -107,6 +107,10 @@ const router = createRouter({
             path: '/events/pay_response',
             name: 'pay-response-page',
             component: () => import('../views/general/PayResponseView.vue'),
+        },
+        {
+            path: '/:pathMatch(.*)*',
+            component: () => import('../views/general/NotFoundView.vue')
         }
     ]
 })
