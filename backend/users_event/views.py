@@ -1,5 +1,7 @@
 # from users_event.tasks import test_task
 #
+import datetime
+
 import stripe
 from django.conf import settings
 from django.db.models import Avg, Q
@@ -10,7 +12,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 
-from users_event.models import Event, Participant, Tag, Rating
+from users_event.models import Event, Participant, Tag, Rating, BankOperation
 from users_event.serializers import (
     EventInfoSerializer,
     TagSerializer,
@@ -56,7 +58,7 @@ def pay_event_view(request):
             currency="usd",  # Валюта
             product=product.id,  # Идентификатор продукта
         )
-    url = "http://localhost:5173/events/pay_response?payment_id={CHECKOUT_SESSION_ID}&product_name={PRODUCT_NAME}"
+    url = "http://localhost:5173/events/pay_response?payment_id={CHECKOUT_SESSION_ID}"
     session = stripe.checkout.Session.create(
         payment_method_types=["card"],
         line_items=[
@@ -79,18 +81,27 @@ def pay_event_response_view(request):
     payment_id = request.GET.get("payment_id")
     session = stripe.checkout.Session.retrieve(payment_id)
     event_title = session.metadata.get("event_title")
-
+    event = Event.objects.get(title=event_title)
     payment_intent_id = session.payment_intent
     payment_intent = stripe.PaymentIntent.retrieve(payment_intent_id)
 
     payment_status = payment_intent.status
     payment_created = payment_intent.created
+    payment_created = datetime.datetime.fromtimestamp(payment_created).isoformat()
+    print(payment_created)
+    operation = BankOperation(
+        user=request.user,
+        event=event,
+        status=payment_status,
+        created_at=payment_created,
+        payment_id=payment_id,
+    )
+    operation.save()
     if payment_status == "succeeded":
         return Response(
             {
                 "status_pay": "ok",
-                "event": EventInfoSerializer(Event.objects.get(title=event_title)).data,
-                "payment_created": payment_created,
+                "event": EventInfoSerializer(event).data,
             }
         )
     else:

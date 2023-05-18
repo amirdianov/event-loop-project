@@ -31,6 +31,10 @@ export default {
     },
     mounted() {
         this.getResponse();
+        setTimeout(() => {
+            // Выполнить перенаправление на главную страницу
+            this.$router.push({name: 'calendar'});
+        }, 5000); // 5000 миллисекунд = 5 секунд
     }
 }
 </script>

@@ -44,7 +44,7 @@ export default defineComponent({
                         icon: createVNode(CheckCircleOutlined, {style: 'color: green'}),
                         content: createVNode('div', {
                             style: 'color:red;',
-                        }, 'Действие нельзя будет отменить по техническим причинам'),
+                        }, 'Действие нельзя отменить - платная услуга'),
                         okText: 'Подтвердить',
                         cancelText: 'Отменить',
                         autoFocusButton: null,
