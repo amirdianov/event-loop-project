@@ -39,9 +39,9 @@
 
         <a-form-item :wrapper-col="{ offset: 5, span: 16 }">
             <a-button type="primary" html-type="submit" style="width: 100%">Войти</a-button>
-            <a-button style="margin-top: 10px; width: 100%; border-color: red">
+            <a-button @click="redirectToYandex()" style="margin-top: 10px; width: 100%; border-color: red">
                 <div>
-                    <svg @click="redirectToYandex()" xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"
                          viewBox="0 5 32 32"
                          style="color:red;">
                         <path fill="currentColor"
