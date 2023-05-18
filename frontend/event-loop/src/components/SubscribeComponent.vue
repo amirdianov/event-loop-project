@@ -1,7 +1,6 @@
 <template>
     <div v-if="!isLoading">
-        <carry-out-outlined v-if="this.showConfirmIcon" style="font-size: 30px" @click="callShowConfirm"/>
-        <check-outlined v-else style="font-size: 30px"/>
+        <slot :showConfirmIcon="showConfirmIcon" :callShowConfirm="callShowConfirm"></slot>
     </div>
 </template>
 
@@ -31,7 +30,6 @@ export default defineComponent({
         }),
     },
     methods: {
-
         callShowConfirm() {
             this.showConfirm(this.event_info)
         },

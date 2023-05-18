@@ -1,9 +1,7 @@
 <template>
     <div v-if="!isLoading">
-        <pay-circle-outlined v-if="this.showConfirmIcon" style="font-size: 30px" @click="callShowConfirm"/>
-        <check-outlined v-else style="font-size: 30px"/>
+        <slot :showConfirmIcon="showConfirmIcon" :callShowConfirm="callShowConfirm"></slot>
     </div>
-
 </template>
 
 <script>

@@ -19,10 +19,21 @@
             <SubscribeComponent
                     v-if="name==='event-page' && !event_info.price && !this.organizators.includes(this.user.id)"
                     :event_info="event_info">
+                <template v-slot:default="slotProps">
+                    <carry-out-outlined v-if="slotProps.showConfirmIcon" style="font-size: 30px"
+                                        @click="slotProps.callShowConfirm"/>
+                    <check-outlined v-else style="font-size: 30px"/>
+                </template>
+
             </SubscribeComponent>
             <PaymentSubscribeComponent
                     v-if="name==='event-page' && event_info.price && !this.organizators.includes(this.user.id)"
                     :event_info="event_info">
+                <template v-slot:default="slotProps">
+                    <pay-circle-outlined v-if="slotProps.showConfirmIcon" style="font-size: 30px" @click="slotProps.callShowConfirm"/>
+                    <check-outlined v-else style="font-size: 30px"/>
+                </template>
+
             </PaymentSubscribeComponent>
 
         </template>
@@ -38,7 +49,7 @@
     </a-card>
 </template>
 <script>
-import {CarryOutOutlined, EditOutlined, LoadingOutlined, PayCircleOutlined} from '@ant-design/icons-vue';
+import {CarryOutOutlined, CheckOutlined, EditOutlined, LoadingOutlined, PayCircleOutlined} from '@ant-design/icons-vue';
 import {defineComponent} from 'vue';
 import {getEventRate} from "../../../services/api";
 import {mapState} from "vuex";
@@ -57,6 +68,7 @@ export default defineComponent({
         }
     },
     components: {
+        CheckOutlined,
         PaymentSubscribeComponent,
         SubscribeComponent,
         EditOutlined, CarryOutOutlined, PayCircleOutlined, LoadingOutlined
