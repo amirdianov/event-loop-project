@@ -61,3 +61,9 @@ class Participant(BaseManyToMany):
 
 class Rating(BaseManyToMany):
     rating = models.IntegerField()
+
+
+class BankOperation(BaseManyToMany):
+    payment_id = models.CharField()
+    status = models.CharField()
+    created_at = models.DateTimeField()

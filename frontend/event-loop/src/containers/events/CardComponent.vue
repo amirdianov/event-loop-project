@@ -17,12 +17,25 @@
                 <LoadingOutlined></LoadingOutlined>
             </div>
             <SubscribeComponent
-                    v-if="name==='event-page' && !event_info.price && !this.organizators.includes(this.user.id)" :event_info="event_info">
+                    v-if="name==='event-page' && !event_info.price && !this.organizators.includes(this.user.id)"
+                    :event_info="event_info">
+                <template v-slot:default="slotProps">
+                    <carry-out-outlined v-if="slotProps.showConfirmIcon" style="font-size: 30px"
+                                        @click="slotProps.callShowConfirm"/>
+                    <check-outlined v-else style="font-size: 30px"/>
+                </template>
+
             </SubscribeComponent>
-<!--            TODO pay component-->
-            <pay-circle-outlined
+            <PaymentSubscribeComponent
                     v-if="name==='event-page' && event_info.price && !this.organizators.includes(this.user.id)"
-                    style="font-size: 30px"/>
+                    :event_info="event_info">
+                <template v-slot:default="slotProps">
+                    <pay-circle-outlined v-if="slotProps.showConfirmIcon" style="font-size: 30px" @click="slotProps.callShowConfirm"/>
+                    <check-outlined v-else style="font-size: 30px"/>
+                </template>
+
+            </PaymentSubscribeComponent>
+
         </template>
         <a-card-meta :title=event_info.title
                      :description="event_info.price ? `Платный доступ` : `Посещение свободное`"
@@ -36,11 +49,12 @@
     </a-card>
 </template>
 <script>
-import {CarryOutOutlined, EditOutlined, LoadingOutlined, PayCircleOutlined} from '@ant-design/icons-vue';
+import {CarryOutOutlined, CheckOutlined, EditOutlined, LoadingOutlined, PayCircleOutlined} from '@ant-design/icons-vue';
 import {defineComponent} from 'vue';
 import {getEventRate} from "../../../services/api";
 import {mapState} from "vuex";
 import SubscribeComponent from "@/components/SubscribeComponent.vue";
+import PaymentSubscribeComponent from "@/components/PaymentSubscribeComponent.vue";
 
 export default defineComponent({
     name: "CardComponent",
@@ -48,10 +62,14 @@ export default defineComponent({
         return {
             isLoading: false,
             rate: 0,
-            organizators: []
+            organizators: [],
+            sessionId: null,
+
         }
     },
     components: {
+        CheckOutlined,
+        PaymentSubscribeComponent,
         SubscribeComponent,
         EditOutlined, CarryOutOutlined, PayCircleOutlined, LoadingOutlined
     },
@@ -82,7 +100,8 @@ export default defineComponent({
             this.getRate()
         }
     }
-});
+})
+;
 
 </script>
 

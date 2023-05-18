@@ -4,17 +4,17 @@
     </div>
 </template>
 
-
 <script>
 import {createVNode, defineComponent} from 'vue';
-import {CarryOutOutlined, CheckCircleOutlined, CheckOutlined} from "@ant-design/icons-vue";
+import {CarryOutOutlined, CheckCircleOutlined, CheckOutlined, PayCircleOutlined} from "@ant-design/icons-vue";
 import {Modal} from 'ant-design-vue';
-import {subscribe, subscribers} from "../../services/api";
+import {getPKForPay, payEvent, subscribe, subscribers} from "../../services/api";
 import {mapState} from "vuex";
+import {loadStripe} from "@stripe/stripe-js";
 
 export default defineComponent({
-    name: "SubscribeComponent",
-    components: {CarryOutOutlined, CheckOutlined},
+    name: "PaymentSubscribeComponent",
+    components: {CarryOutOutlined, CheckOutlined, PayCircleOutlined},
     data() {
         return {
             showConfirmIcon: true,
@@ -31,23 +31,29 @@ export default defineComponent({
     },
     methods: {
         callShowConfirm() {
-            this.showConfirm(this.event_info)
+            this.showConfirm()
         },
-        async showConfirm(event) {
+        async showConfirm() {
             try {
+                const self = this; // Сохранение контекста `this`
                 await new Promise((resolve) => {
                     Modal.confirm({
                         title: 'Вы уверены, что хотите подписаться на мероприятие?',
                         icon: createVNode(CheckCircleOutlined, {style: 'color: green'}),
                         content: createVNode('div', {
                             style: 'color:red;',
-                        }, 'Действие нельзя будет отменить по техническим причинам'),
+                        }, 'Действие нельзя отменить - платная услуга'),
                         okText: 'Подтвердить',
                         cancelText: 'Отменить',
                         autoFocusButton: null,
                         async onOk() {
-                            await subscribe({'event': event});
-                            resolve()
+                            try {
+                                await self.handleCheckout();
+                                resolve()
+                            } catch (e) {
+                                console.log(e)
+                            }
+
                         },
                         onCancel() {
                             console.log('Cancel');
@@ -59,6 +65,31 @@ export default defineComponent({
             } catch (error) {
                 console.error(error);
 
+            }
+        },
+        async handleCheckout() {
+            try {
+                const response_PKToken = await getPKForPay();
+                const stripePromise = loadStripe(response_PKToken.pk_token);
+                const response = await payEvent({'event': this.event_info, 'user': this.user});
+                console.log(response)
+                const sessionId = response.sessionId;
+
+                if (sessionId) {
+                    const stripe = await stripePromise;
+                    const {error} = await stripe.redirectToCheckout({
+                        sessionId: sessionId,
+                    });
+
+                    if (error) {
+                        console.error(error);
+                    }
+
+                } else {
+                    console.error('sessionId is undefined');
+                }
+            } catch (error) {
+                console.error(error);
             }
         },
         async loadSubscribers() {

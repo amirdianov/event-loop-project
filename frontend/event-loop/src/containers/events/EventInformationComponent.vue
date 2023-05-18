@@ -1,6 +1,6 @@
 <template>
     <a-row type="flex" justify="space-around" align="middle">
-        <a-col :span="11" push="1" >
+        <a-col :span="11" push="1">
             <div><img :src="event.photo" alt="Фотография" width="400" height="400"></div>
 
         </a-col>
@@ -15,12 +15,26 @@
             </div>
             <div v-if="event.price && !this.organizators.includes(user.id)" class="payment">
                 <p><strong>Стоимость мероприятия: {{ event.price }} р</strong></p>
-                <a-button>Оплатить мероприятие</a-button>
+                <PaymentSubscribeComponent :event_info="event">
+                    <template v-slot:default="slotProps">
+                        <a-button v-if="slotProps.showConfirmIcon" @click="slotProps.callShowConfirm">Оплатить
+                            мероприятие
+                        </a-button>
+                        <a-button v-else disabled>Вы уже оплатили</a-button>
+                    </template>
+                </PaymentSubscribeComponent>
             </div>
             <div v-if="!event.price && !this.organizators.includes(user.id)" class="payment">
                 <p><strong>Посещение свободное</strong></p>
                 <div v-if="showConfirmButton">
-                    <a-button>Подписаться на мероприятие</a-button>
+                    <SubscribeComponent :event_info="event">
+                        <template v-slot:default="slotProps">
+                            <a-button v-if="slotProps.showConfirmIcon" @click="slotProps.callShowConfirm">Подписаться на
+                                мероприятие
+                            </a-button>
+                            <a-button v-else disabled>Вы уже подписались</a-button>
+                        </template>
+                    </SubscribeComponent>
                 </div>
 
             </div>
@@ -42,9 +56,12 @@
 <script>
 import {mapState} from "vuex";
 import {setRate, subscribers} from "../../../services/api";
+import SubscribeComponent from "@/components/SubscribeComponent.vue";
+import PaymentSubscribeComponent from "@/components/PaymentSubscribeComponent.vue";
 
 export default {
     name: "EventInformationComponent",
+    components: {PaymentSubscribeComponent, SubscribeComponent},
     data() {
         return {
             showRatingToRate: true,

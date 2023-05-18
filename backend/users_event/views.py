@@ -1,13 +1,18 @@
+# from users_event.tasks import test_task
+#
+import datetime
+
+import stripe
+from django.conf import settings
 from django.db.models import Avg, Q
-from django.http import HttpResponse
 from rest_framework import mixins
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import GenericViewSet
 
-from users_event.models import Event, Participant, Tag, Rating
+from users_event.models import Event, Participant, Tag, Rating, BankOperation
 from users_event.serializers import (
     EventInfoSerializer,
     TagSerializer,
@@ -18,12 +23,89 @@ from users_event.serializers import (
     ParticipantSerializerForCalendar,
 )
 
-# from users_event.tasks import test_task
-#
-#
-# def hello_world(request):
-#     test_task.delay()
-#     return HttpResponse("<h1>Отправлено</h1>")
+
+@api_view(["GET"])
+def get_pk_view(request):
+    return Response({"pk_token": settings.STRIPE_PUBLISHABLE_KEY})
+
+
+@api_view(["GET", "POST"])
+def pay_event_view(request):
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    products = stripe.Product.list(limit=100, active=True)
+    print(products)
+    print(request.data)
+    product = None
+    for existing_product in products:
+        if existing_product.name == request.data["event"]["title"]:
+            product = existing_product
+            break
+    if not product:
+        product = stripe.Product.create(
+            name=request.data["event"]["title"], images=["https://f.nodacdn.net/309636"]
+        )
+    price = None
+    prices = stripe.Price.list(product=product.id, limit=1)
+    if prices.data:
+        price = prices.data[0]
+
+    # Если цена не найдена, создать новую цену для продукта
+    if not price:
+        price = stripe.Price.create(
+            unit_amount=request.data["event"][
+                "price"
+            ],  # Сумма в минимальных единицах валюты (например, центы)
+            currency="usd",  # Валюта
+            product=product.id,  # Идентификатор продукта
+        )
+    url = "http://localhost:5173/events/pay_response?payment_id={CHECKOUT_SESSION_ID}"
+    session = stripe.checkout.Session.create(
+        payment_method_types=["card"],
+        line_items=[
+            {
+                "price": f"{price.id}",  # Идентификатор цены в Stripe Dashboard
+                "quantity": 1,
+            },
+        ],
+        mode="payment",
+        success_url=url,
+        cancel_url=url,
+        metadata={"event_title": request.data["event"]["title"]},
+    )
+    print(session.id)
+    return Response({"sessionId": str(session.id)})
+
+
+@api_view(["GET", "POST"])
+def pay_event_response_view(request):
+    payment_id = request.GET.get("payment_id")
+    session = stripe.checkout.Session.retrieve(payment_id)
+    event_title = session.metadata.get("event_title")
+    event = Event.objects.get(title=event_title)
+    payment_intent_id = session.payment_intent
+    payment_intent = stripe.PaymentIntent.retrieve(payment_intent_id)
+
+    payment_status = payment_intent.status
+    payment_created = payment_intent.created
+    payment_created = datetime.datetime.fromtimestamp(payment_created).isoformat()
+    print(payment_created)
+    operation = BankOperation(
+        user=request.user,
+        event=event,
+        status=payment_status,
+        created_at=payment_created,
+        payment_id=payment_id,
+    )
+    operation.save()
+    if payment_status == "succeeded":
+        return Response(
+            {
+                "status_pay": "ok",
+                "event": EventInfoSerializer(event).data,
+            }
+        )
+    else:
+        return Response({"status_pay": "wrong"})
 
 
 class ParticipantViewSetForCalendar(mixins.ListModelMixin, GenericViewSet):
