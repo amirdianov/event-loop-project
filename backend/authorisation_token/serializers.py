@@ -20,6 +20,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         fields = ("name", "surname", "email", "password")
 
 
+class PasswordSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("password",)
+
+
 class TokensSerializer(serializers.Serializer):
     refresh = serializers.CharField()
     access = serializers.CharField()

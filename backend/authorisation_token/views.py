@@ -1,5 +1,3 @@
-from asgiref.sync import async_to_sync
-from channels.layers import get_channel_layer
 from django.conf import settings
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.core.mail import EmailMessage
@@ -19,6 +17,7 @@ from authorisation_token.serializers import (
     UserProfileSerializer,
     UserRegistrationSerializer,
     TokensSerializer,
+    PasswordSerializer,
 )
 
 
@@ -80,6 +79,23 @@ class UserViewSet(
     def profile(self, request, pk=None):
         profile = UserProfileSerializer(request.user)
         return Response(profile.data)
+
+    @action(
+        detail=True,
+        methods=["post"],
+        permission_classes=[IsAuthenticated],
+        url_name="set_password",
+        url_path="set_password",
+    )
+    def set_password(self, request, pk):
+        user = self.get_object()
+        serializer = PasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            user.set_password(serializer.validated_data["password"])
+            user.save()
+            return Response({"status": "password set"})
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["POST"])

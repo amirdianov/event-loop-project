@@ -41,7 +41,13 @@ export async function profile() {
 export async function change_profile_information(data) {
     try {
         await check_token(store.state.login.tokens, instance)
-        const response = await instance.patch(`/users/${store.state.login.user.id}/`, data)
+        let response
+        console.log(data, Object.keys(data))
+        if (!Object.keys(data).includes('password')) {
+            response = await instance.patch(`/users/${store.state.login.user.id}/`, data)
+        } else {
+            response = await instance.post(`/users/${store.state.login.user.id}/set_password/`, data)
+        }
         return response.data
     } catch (e) {
         throw new Error(e)
