@@ -1,6 +1,7 @@
 # from users_event.tasks import test_task
 #
 import datetime
+from datetime import timedelta
 
 import stripe
 from django.conf import settings
@@ -142,7 +143,11 @@ class SubscribeViewSet(APIView):
         event_id = request.data["event"]["id"]
         ans = Participant(user=request.user, event_id=event_id, is_organizer=False)
         ans.save()
-        date, time = request.data["event"]["start_time"].split(" ")
+        start_time = datetime.datetime.strptime(
+            request.data["event"]["start_time"], "%Y-%m-%d %H:%M:%S"
+        )
+        notify_time = (start_time - timedelta(hours=1)).strftime("%Y-%m-%d %H:%M:%S")
+        date, time = notify_time.split(" ")
         print(date, time)
         year, month, day = date.split("-")
         hours, minutes, seconds = time.split(":")

@@ -213,12 +213,6 @@ CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 CELERY_REDIRECT_STDOUTS_LEVEL = "INFO"  # вывод команды print, при выполнении task
 
 CELERY_TIMEZONE = "Europe/Moscow"
-# CELERY_BEAT_SCHEDULE = {
-#     "check-start-events-every-minute": {
-#         "task": "users_event.tasks.check_events",
-#         "schedule": 60.0,  # запускать каждую минуту
-#     },
-# }
 
 
 # Sender email via smtp
