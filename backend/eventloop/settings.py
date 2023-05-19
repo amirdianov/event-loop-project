@@ -208,17 +208,17 @@ CORS_ALLOW_METHODS = ["DELETE", "GET", "OPTIONS", "PATCH", "POST", "PUT"]
 
 
 # Celery configurations
-CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6379/0")
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6377/0")
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 CELERY_REDIRECT_STDOUTS_LEVEL = "INFO"  # вывод команды print, при выполнении task
 
 CELERY_TIMEZONE = "Europe/Moscow"
-CELERY_BEAT_SCHEDULE = {
-    "check-start-events-every-minute": {
-        "task": "users_event.tasks.check_events",
-        "schedule": 60.0,  # запускать каждую минуту
-    },
-}
+# CELERY_BEAT_SCHEDULE = {
+#     "check-start-events-every-minute": {
+#         "task": "users_event.tasks.check_events",
+#         "schedule": 60.0,  # запускать каждую минуту
+#     },
+# }
 
 
 # Sender email via smtp
