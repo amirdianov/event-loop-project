@@ -1,5 +1,5 @@
 <template>
-    <a-form v-if="changePassword"
+    <a-form v-if="showChangePassword"
             :model="formState"
             name="basic"
             :label-col="{ span: 5 }"
@@ -45,7 +45,7 @@
         <a-form-item :wrapper-col="{ offset: 5, span: 16 }">
             <a-button type="primary" html-type="submit" style="margin-right: 10px; width: 100%">Подвердить изменения
             </a-button>
-            <p style="color: #1d39c4" @click="changePassword = !changePassword">Изменить пароль?</p>
+            <p style="color: #1d39c4" @click="showChangePassword = !showChangePassword">Изменить пароль?</p>
         </a-form-item>
     </a-form>
     <a-form v-else
@@ -55,7 +55,7 @@
             :wrapper-col="{ span: 16 }"
             :validate-messages="validateMessages"
             autocomplete="off"
-            @finish="submit"
+            @finish="changeInformation"
             @finishFailed="onFinishFailed">
         <a-form-item
                 label="Пароль"
@@ -71,7 +71,7 @@
         <a-form-item :wrapper-col="{ offset: 5, span: 16 }">
             <a-button type="primary" html-type="submit" style="margin-right: 10px; width: 100%">Подвердить изменения
             </a-button>
-            <p style="color: #1d39c4" @click="changePassword = !changePassword">Изменить личные данные?</p>
+            <p style="color: #1d39c4" @click="showChangePassword = !showChangePassword">Изменить личные данные?</p>
         </a-form-item>
     </a-form>
 
@@ -114,7 +114,7 @@ export default defineComponent({
     },
     data() {
         return {
-            changePassword: true,
+            showChangePassword: true,
         }
     },
     computed: {
