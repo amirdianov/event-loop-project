@@ -1,10 +1,12 @@
 # from users_event.tasks import test_task
 #
 import datetime
+from datetime import timedelta
 
 import stripe
 from django.conf import settings
 from django.db.models import Avg, Q
+from django_celery_beat.models import PeriodicTask, CrontabSchedule
 from rest_framework import mixins
 from rest_framework.decorators import action, api_view
 from rest_framework.permissions import IsAuthenticated
@@ -141,6 +143,34 @@ class SubscribeViewSet(APIView):
         event_id = request.data["event"]["id"]
         ans = Participant(user=request.user, event_id=event_id, is_organizer=False)
         ans.save()
+        start_time = datetime.datetime.strptime(
+            request.data["event"]["start_time"], "%Y-%m-%d %H:%M:%S"
+        )
+        notify_time = (start_time - timedelta(hours=1)).strftime("%Y-%m-%d %H:%M:%S")
+        date, time = notify_time.split(" ")
+        print(date, time)
+        year, month, day = date.split("-")
+        hours, minutes, seconds = time.split(":")
+        crontab_schedule = CrontabSchedule(
+            minute=minutes,
+            hour=hours,
+            day_of_week="*",
+            day_of_month=day,
+            month_of_year=month,
+            timezone="Europe/Moscow",
+        )
+
+        crontab_schedule.save()
+
+        task = PeriodicTask(
+            name=f"send_event_notification_{request.user.id}_{event_id}",
+            task="users_event.tasks.send_event_notification",
+            crontab=crontab_schedule,
+            enabled=True,
+            one_off=True,
+            args=[event_id],
+        )
+        task.save()
         return Response({"message": "Subscribe successful"})
 
 
