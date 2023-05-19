@@ -42,7 +42,6 @@ export async function change_profile_information(data) {
     try {
         await check_token(store.state.login.tokens, instance)
         let response
-        console.log(data, Object.keys(data))
         if (!Object.keys(data).includes('password')) {
             response = await instance.patch(`/users/${store.state.login.user.id}/`, data)
         } else {

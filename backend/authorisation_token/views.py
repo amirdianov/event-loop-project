@@ -93,7 +93,8 @@ class UserViewSet(
         if serializer.is_valid():
             user.set_password(serializer.validated_data["password"])
             user.save()
-            return Response({"status": "password set"})
+            profile = UserProfileSerializer(user)
+            return Response(profile.data)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
