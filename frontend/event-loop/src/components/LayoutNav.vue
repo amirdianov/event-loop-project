@@ -70,7 +70,9 @@
                         <a-menu-item key="3">
                             <RouterLink to="/calendar">Мой календарь</RouterLink>
                         </a-menu-item>
-                        <a-menu-item key="4">Список</a-menu-item>
+                        <a-menu-item key="4">
+                            <RouterLink to="/list-events">Мой список</RouterLink>
+                        </a-menu-item>
                     </a-sub-menu>
                     <a-sub-menu key="sub2">
                         <template #title>

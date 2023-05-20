@@ -65,15 +65,20 @@ const router = createRouter({
             component: () => import('../views/user/CalendarView.vue')
         },
         {
+            path: '/list-events',
+            name: 'list-events',
+            component: () => import('../views/user/ListEventsView.vue')
+        },
+        {
             path: '/my-events',
             name: 'my-events',
-            component: () => import('../views/events/UsersEventsView.vue'),
+            component: () => import('../views/user/UsersEventsView.vue'),
 
         },
         {
             path: '/my-events/create',
             name: 'my-events-create',
-            component: () => import('../views/events/CreateEditUsersEventView.vue'),
+            component: () => import('../views/user/CreateEditUsersEventView.vue'),
 
         },
         {
@@ -84,7 +89,7 @@ const router = createRouter({
         {
             path: '/my-events/:id/edit',
             name: 'my-event-page-edit',
-            component: () => import('../views/events/CreateEditUsersEventView.vue'),
+            component: () => import('../views/user/CreateEditUsersEventView.vue'),
         },
         {
             path: '/events/:slug',

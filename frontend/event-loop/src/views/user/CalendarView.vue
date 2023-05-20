@@ -28,6 +28,7 @@ export default defineComponent({
         onMounted(async () => {
             try {
                 eventsInformation.value = await getUsersSubscribedEvents();
+                console.log(eventsInformation.value)
                 isLoading.value = false
             } catch (e) {
                 console.log(e);
@@ -38,7 +39,6 @@ export default defineComponent({
             let listData = [];
             const date = value.format("YYYY-MM-DD");
             eventsInformation.value.forEach((variable) => {
-                console.log(variable.event.start_time, variable.event.finish_time, date)
                 if (variable.event.start_time === date) {
                     listData.push({type: 'success', content: `${variable.event.title}`})
                 }
@@ -56,7 +56,8 @@ export default defineComponent({
             value,
             getListData,
             getMonthData,
-            isLoading
+            isLoading,
+            eventsInformation
         };
     },
 });
