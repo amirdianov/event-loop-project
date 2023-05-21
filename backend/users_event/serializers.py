@@ -19,6 +19,7 @@ class RatingSerializer(serializers.ModelSerializer):
 
 class MeanRatingSerializer(serializers.Serializer):
     rate = serializers.FloatField()
+    count = serializers.IntegerField()
 
 
 class ParticipantSerializer(serializers.ModelSerializer):

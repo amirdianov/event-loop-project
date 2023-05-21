@@ -203,11 +203,10 @@ class RatingViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, GenericViewS
     @action(detail=False, methods=["get"], permission_classes=[IsAuthenticated])
     def mean_rate(self, request, *args, **kwargs):
         event_id = self.request.GET["event_id"]
-        avg_rating = Rating.objects.filter(event=event_id).aggregate(Avg("rating"))[
-            "rating__avg"
-        ]
+        ratings = Rating.objects.filter(event=event_id)
+        avg_rating = ratings.aggregate(Avg("rating"))["rating__avg"]
         print(avg_rating)
-        serializer = self.get_serializer({"rate": avg_rating})
+        serializer = self.get_serializer({"rate": avg_rating, "count": len(ratings)})
         return Response(serializer.data)
 
 
