@@ -42,10 +42,11 @@ def test_get_event_subscribers(api_client, event, jwt_token):
 
 # TODO переписать - сделать вывод в ответ на post запрос - добавленный объект и у него проверять юзера
 def test_user_subscribe(api_client, event, jwt_token, participant, user):
+    print(event.start_time)
     response = api_client.post(
         reverse("subscribe"),
         headers=jwt_token,
-        data={"event": {"id": event.id}},
+        data={"event": {"id": event.id, "start_time": event.start_time}},
         format="json",
     )
     participant.refresh_from_db()

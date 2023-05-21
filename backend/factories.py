@@ -2,11 +2,14 @@ import random
 
 import factory
 from factory import SubFactory
+from faker import Faker
 
 from authorisation_token.models import User
 from comments_system.models import Comment
 from users_event.enums import Category
 from users_event.models import Event, Participant, Tag
+
+fake = Faker()
 
 
 class UserFactory(factory.django.DjangoModelFactory):
@@ -18,8 +21,8 @@ class UserFactory(factory.django.DjangoModelFactory):
 
 class EventFactory(factory.django.DjangoModelFactory):
     title = factory.Faker("sentence")
-    start_time = factory.Faker("date_object")
-    finish_time = factory.Faker("date_object")
+    start_time = fake.date_time().strftime("%Y-%m-%d %H:%M:%S")
+    finish_time = fake.date_time().strftime("%Y-%m-%d %H:%M:%S")
     category = random.choice(Category.choices[0])
 
     class Meta:
