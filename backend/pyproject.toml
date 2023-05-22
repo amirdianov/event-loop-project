@@ -26,6 +26,7 @@ pytest = "^7.3.1"
 pytest-django = "^4.5.2"
 factory-boy = "^3.2.1"
 stripe = "^5.4.0"
+faker = "^18.9.0"
 
 
 [tool.poetry.group.dev.dependencies]

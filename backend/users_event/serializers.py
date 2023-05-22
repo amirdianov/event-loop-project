@@ -19,6 +19,7 @@ class RatingSerializer(serializers.ModelSerializer):
 
 class MeanRatingSerializer(serializers.Serializer):
     rate = serializers.FloatField()
+    count = serializers.IntegerField()
 
 
 class ParticipantSerializer(serializers.ModelSerializer):
@@ -32,7 +33,7 @@ class ParticipantSerializerForCalendar(ParticipantSerializer):
 
     def get_event(self, obj):
         event = Event.objects.filter(id=obj.event_id).first()
-        serializer = EventDetailSerializerForCalendar(event)
+        serializer = EventDetailSerializerForCalendar(event, context=self.context)
         return serializer.data
 
 
@@ -92,7 +93,7 @@ class EventDetailSerializer(EventInfoSerializer):
 
     def get_organizer(self, event):
         qs = Participant.objects.filter(Q(event=event) & Q(is_organizer=True))
-        serializer = ParticipantSerializer(qs, many=True)
+        serializer = ParticipantSerializer(qs, many=True, context=self.context)
         return serializer.data
 
 

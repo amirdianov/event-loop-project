@@ -26,16 +26,15 @@
             </div>
             <div v-if="!event.price && !this.organizators.includes(user.id)" class="payment">
                 <p><strong>Посещение свободное</strong></p>
-                <div v-if="showConfirmButton">
-                    <SubscribeComponent :event_info="event">
-                        <template v-slot:default="slotProps">
-                            <a-button v-if="slotProps.showConfirmIcon" @click="slotProps.callShowConfirm">Подписаться на
-                                мероприятие
-                            </a-button>
-                            <a-button v-else disabled>Вы уже подписались</a-button>
-                        </template>
-                    </SubscribeComponent>
-                </div>
+
+                <SubscribeComponent :event_info="event">
+                    <template v-slot:default="slotProps">
+                        <a-button v-if="slotProps.showConfirmIcon" @click="slotProps.callShowConfirm">Подписаться на
+                            мероприятие
+                        </a-button>
+                        <a-button v-else disabled>Вы уже подписались</a-button>
+                    </template>
+                </SubscribeComponent>
 
             </div>
             <div class="rate" v-if="showRatingToRate" style="margin-top: 10px" @click="rateEvent">
@@ -55,13 +54,14 @@
 
 <script>
 import {mapState} from "vuex";
-import {setRate, subscribers} from "../../../services/api";
+import {setRate} from "../../../services/api";
 import SubscribeComponent from "@/components/SubscribeComponent.vue";
 import PaymentSubscribeComponent from "@/components/PaymentSubscribeComponent.vue";
+import {LoadingOutlined} from "@ant-design/icons-vue";
 
 export default {
     name: "EventInformationComponent",
-    components: {PaymentSubscribeComponent, SubscribeComponent},
+    components: {LoadingOutlined, PaymentSubscribeComponent, SubscribeComponent},
     data() {
         return {
             showRatingToRate: true,
@@ -91,15 +91,9 @@ export default {
             this.showRating = true
             this.users_value = this.value
         },
-        async loadSubscribers() {
-            this.isLoading = true
-            const all_subscribers = await subscribers(this.event.id)
-            this.isLoading = false
-            return all_subscribers
-        }
-
     },
     async created() {
+        console.log(this.event)
         // проверка на то, является ли пользователь создателем
         this.event.organizer.forEach((element) => {
             this.organizators.push(element.user)
@@ -115,14 +109,6 @@ export default {
         } else {
             this.showRatingToRate = false
         }
-        // проверка на то, является ли пользователь подписчиком
-        const all_subscribers = await this.loadSubscribers()
-        all_subscribers.forEach((element) => {
-            console.log('Я тут')
-            if (element.user === this.user.id) {
-                this.showConfirmButton = false
-            }
-        })
     }
 }
 </script>

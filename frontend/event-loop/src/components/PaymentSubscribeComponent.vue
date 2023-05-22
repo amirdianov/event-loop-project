@@ -2,19 +2,28 @@
     <div v-if="!isLoading">
         <slot :showConfirmIcon="showConfirmIcon" :callShowConfirm="callShowConfirm"></slot>
     </div>
+    <div v-if="isLoading">
+        <LoadingOutlined></LoadingOutlined>
+    </div>
 </template>
 
 <script>
 import {createVNode, defineComponent} from 'vue';
-import {CarryOutOutlined, CheckCircleOutlined, CheckOutlined, PayCircleOutlined} from "@ant-design/icons-vue";
+import {
+    CarryOutOutlined,
+    CheckCircleOutlined,
+    CheckOutlined,
+    LoadingOutlined,
+    PayCircleOutlined
+} from "@ant-design/icons-vue";
 import {Modal} from 'ant-design-vue';
-import {getPKForPay, payEvent, subscribe, subscribers} from "../../services/api";
+import {getPKForPay, payEvent, subscribers} from "../../services/api";
 import {mapState} from "vuex";
 import {loadStripe} from "@stripe/stripe-js";
 
 export default defineComponent({
     name: "PaymentSubscribeComponent",
-    components: {CarryOutOutlined, CheckOutlined, PayCircleOutlined},
+    components: {LoadingOutlined, CarryOutOutlined, CheckOutlined, PayCircleOutlined},
     data() {
         return {
             showConfirmIcon: true,

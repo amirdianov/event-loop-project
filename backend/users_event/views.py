@@ -137,40 +137,57 @@ class ParticipantViewSet(APIView):
 
 
 class SubscribeViewSet(APIView):
-    """API для подписки пользователя на бесплатное мероприятие"""
+    """API для подписки/отписки пользователя на бесплатное мероприятие"""
 
     def post(self, request):
+        print(request.data)
         event_id = request.data["event"]["id"]
-        ans = Participant(user=request.user, event_id=event_id, is_organizer=False)
-        ans.save()
-        start_time = datetime.datetime.strptime(
-            request.data["event"]["start_time"], "%Y-%m-%d %H:%M:%S"
-        )
-        notify_time = (start_time - timedelta(hours=1)).strftime("%Y-%m-%d %H:%M:%S")
-        date, time = notify_time.split(" ")
-        print(date, time)
-        year, month, day = date.split("-")
-        hours, minutes, seconds = time.split(":")
-        crontab_schedule = CrontabSchedule(
-            minute=minutes,
-            hour=hours,
-            day_of_week="*",
-            day_of_month=day,
-            month_of_year=month,
-            timezone="Europe/Moscow",
-        )
+        if "unsubscribe" not in request.data.keys():
+            ans = Participant(user=request.user, event_id=event_id, is_organizer=False)
+            ans.save()
+            start_time = datetime.datetime.strptime(
+                request.data["event"]["start_time"], "%Y-%m-%d %H:%M:%S"
+            )
+            notify_time = (start_time - timedelta(hours=1)).strftime(
+                "%Y-%m-%d %H:%M:%S"
+            )
+            date, time = notify_time.split(" ")
+            print(date, time)
+            year, month, day = date.split("-")
+            hours, minutes, seconds = time.split(":")
+            crontab_schedule = CrontabSchedule(
+                minute=minutes,
+                hour=hours,
+                day_of_week="*",
+                day_of_month=day,
+                month_of_year=month,
+                timezone="Europe/Moscow",
+            )
 
-        crontab_schedule.save()
+            crontab_schedule.save()
 
-        task = PeriodicTask(
-            name=f"send_event_notification_{request.user.id}_{event_id}",
-            task="users_event.tasks.send_event_notification",
-            crontab=crontab_schedule,
-            enabled=True,
-            one_off=True,
-            args=[event_id],
-        )
-        task.save()
+            task = PeriodicTask(
+                name=f"send_event_notification_{request.user.id}_{event_id}",
+                task="users_event.tasks.send_event_notification",
+                crontab=crontab_schedule,
+                enabled=True,
+                one_off=True,
+                args=[event_id],
+            )
+            task.save()
+        else:
+            subscribe_to_delete = Participant.objects.get(
+                event_id=event_id, user_id=request.user.id
+            )
+            task_to_delete = PeriodicTask.objects.get(
+                name=f"send_event_notification_{request.user.id}_{event_id}"
+            )
+            crontab_to_delete = CrontabSchedule.objects.get(
+                id=task_to_delete.crontab_id
+            )
+            subscribe_to_delete.delete()
+            task_to_delete.delete()
+            crontab_to_delete.delete()
         return Response({"message": "Subscribe successful"})
 
 
@@ -203,11 +220,10 @@ class RatingViewSet(mixins.CreateModelMixin, mixins.ListModelMixin, GenericViewS
     @action(detail=False, methods=["get"], permission_classes=[IsAuthenticated])
     def mean_rate(self, request, *args, **kwargs):
         event_id = self.request.GET["event_id"]
-        avg_rating = Rating.objects.filter(event=event_id).aggregate(Avg("rating"))[
-            "rating__avg"
-        ]
+        ratings = Rating.objects.filter(event=event_id)
+        avg_rating = ratings.aggregate(Avg("rating"))["rating__avg"]
         print(avg_rating)
-        serializer = self.get_serializer({"rate": avg_rating})
+        serializer = self.get_serializer({"rate": avg_rating, "count": len(ratings)})
         return Response(serializer.data)
 
 

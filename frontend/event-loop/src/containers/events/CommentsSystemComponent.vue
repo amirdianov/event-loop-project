@@ -71,19 +71,6 @@ export default defineComponent({
             this.addComment(comment)
             this.value = null;
 
-            // if (!this.value.value) {
-            //     return;
-            // }
-            // this.submitting.value = true;
-            // setTimeout(() => {
-            //     this.submitting.value = false;
-            //     this.send({
-            //         author: 'Han Solo',
-            //         content: this.value.value,
-            //         datetime: dayjs().fromNow()
-            //     });
-            //     this.value.value = null;
-            // }, 1000);
         },
         async addComment(comment) {
             comment['user'] = store.state.login.user.id

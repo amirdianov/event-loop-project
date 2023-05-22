@@ -17,9 +17,9 @@ class CommentView(mixins.CreateModelMixin, mixins.ListModelMixin, GenericViewSet
             return CommentCreateSerializer
 
     def get_queryset(self, *args, **kwargs):
-        return Comment.objects.filter(event_id=kwargs["event_id"]).order_by(
-            "-created_at"
-        )
+        # TODO проверить корректность работы на комментариях
+        event_id = kwargs.get("event_id")
+        return Comment.objects.filter(event_id=event_id).order_by("-created_at")
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(
