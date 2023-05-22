@@ -10,7 +10,7 @@
             <component :is="type" style="margin-right: 8px"/>
             {{ text }}
           </span>
-                    <UnsubscribeComponent :event="item.event">
+                    <UnsubscribeComponent :event="item.event" v-model:eventsInfo="eventsInformation">
                         <template v-slot:default="slotProps" >
                             <a-button v-if="!item.event.price" @click=slotProps.unsubscribe type="dashed"
                                       style="border-color: red; color: red" >
@@ -91,6 +91,7 @@ export default defineComponent({
                     eventsInformation.value.push({
                         actions: actions,
                         event: element.event,
+                        eventId: element.event.id,
                         title: element.event.title,
                         photo: element.event.photo,
                         description: element.event.price ? "Платный доступ" : "Посещение свободное",

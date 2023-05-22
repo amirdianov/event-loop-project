@@ -176,10 +176,18 @@ class SubscribeViewSet(APIView):
             )
             task.save()
         else:
-            subscribe = Participant.objects.get(
+            subscribe_to_delete = Participant.objects.get(
                 event_id=event_id, user_id=request.user.id
             )
-            subscribe.delete()
+            task_to_delete = PeriodicTask.objects.get(
+                name=f"send_event_notification_{request.user.id}_{event_id}"
+            )
+            crontab_to_delete = CrontabSchedule.objects.get(
+                id=task_to_delete.crontab_id
+            )
+            subscribe_to_delete.delete()
+            task_to_delete.delete()
+            crontab_to_delete.delete()
         return Response({"message": "Subscribe successful"})
 
 
