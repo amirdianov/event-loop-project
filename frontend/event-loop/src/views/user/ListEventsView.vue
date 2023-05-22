@@ -1,5 +1,5 @@
 <template>
-    <a-list v-if="!store.state.isLoading" item-layout="vertical" size="large" :pagination="pagination"
+    <a-list :loading="initLoading" item-layout="vertical" size="large" :pagination="pagination"
             :data-source="eventsInformation">
         <template #footer>
         </template>
@@ -70,7 +70,7 @@ export default defineComponent({
     setup() {
         const responseData = ref([]);
         const eventsInformation = ref([]);
-        const isLoading = ref(true);
+        const initLoading = ref(true);
         const commentsCount = ref()
         const rateCount = ref()
         store.state.login.isLoading = true
@@ -98,13 +98,11 @@ export default defineComponent({
                         content: element.event.description.length > 500 ? element.event.description.slice(0, 500) + ' ...' : element.event.description,
                     });
                 }
-                isLoading.value = false
-
+                initLoading.value = false
                 store.state.login.isLoading = false
             } catch (e) {
                 console.log(e);
-                isLoading.value = false
-
+                initLoading.value = false
                 store.state.login.isLoading = false
 
             }
@@ -113,12 +111,12 @@ export default defineComponent({
             onChange: page => {
                 console.log(page);
             },
-            pageSize: 4,
+            pageSize: 2,
         };
         return {
             eventsInformation,
             pagination,
-            isLoading,
+            initLoading,
         };
     },
 });
