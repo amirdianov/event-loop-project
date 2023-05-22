@@ -7,6 +7,7 @@
             @finish="submit"
             :wrapper-col="{span: 20}"
             :label-col="{span: 4}"
+            :rules="rules"
     >
         <a-form-item :name="['event', 'title']" label="Заголовок" :rules="[{ required: true}]">
             <a-input v-model:value="formState.event.title"/>
@@ -33,16 +34,16 @@
         <a-form-item :name="['event', 'url']" label="Ссылка">
             <a-input v-model:value="formState.event.url" style="width: 100%"></a-input>
         </a-form-item>
-        <a-form-item :name="['event', 'start_time']" label="Начало мероприятия" :rules="[{ required: true}]"
+        <a-form-item :name="['event', 'start_time']" label="Начало мероприятия"
         >
             <time-component @update:model-value="formState.event.start_time = $event"
             ></time-component>
         </a-form-item>
-        <a-form-item :name="['event', 'finish_time']" label="Конец мероприятия" :rules="[{ required: true}]">
+        <a-form-item :name="['event', 'finish_time']" label="Конец мероприятия">
             <time-component @update:model-value="formState.event.finish_time = $event"></time-component>
         </a-form-item>
         <!--        TODO antdv upload file-->
-        <a-form-item :name="['event', 'photo']" label="Фото" style="margin-bottom: 20px">
+        <a-form-item :name="['event', 'photo']" label="Фото" style="margin-bottom: 20px" :rules="[{ required: true}]">
             <!--                        <upload-component v-model:value="formState.event.photo"></upload-component>-->
             <input type="file" ref="file">
         </a-form-item>
@@ -99,15 +100,50 @@ export default defineComponent({
                 url: null,
             },
         });
-        const onFinish = values => {
-            console.log(values)
+        let validateStart = async (_rule, value) => {
+            console.log(value)
+            if (value === '') {
+                return Promise.reject('Поле должно быть заполнено!');
+            } else if (value >= formState.event.finish_time && formState.event.finish_time !== '') {
+                return Promise.reject('Введите предыдущую дату');
+            } else {
+                return Promise.resolve();
+            }
+        };
+        let validateFinish = async (_rule, value) => {
+            console.log(value)
+            if (value === '') {
+                return Promise.reject('Поле должно быть заполнено!');
+            } else if (value <= formState.event.start_time) {
+                return Promise.reject('Введите последующую дату');
+            } else {
+                return Promise.resolve();
+            }
+        };
+        const rules = {
+            event: {
+                start_time: [
+                    {
+                        required: true,
+                        validator: validateStart,
+                        trigger: 'change',
+                    },
+                ],
+                finish_time: [
+                    {
+                        required: true,
+                        validator: validateFinish,
+                        trigger: 'change',
+                    },
+                ],
+            },
         };
         return {
             formState,
-            onFinish,
             layout,
             validateMessages,
-            options1
+            options1,
+            rules,
         };
     },
     methods: {
