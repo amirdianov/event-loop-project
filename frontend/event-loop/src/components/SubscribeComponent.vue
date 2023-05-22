@@ -2,19 +2,22 @@
     <div v-if="!isLoading">
         <slot :showConfirmIcon="showConfirmIcon" :callShowConfirm="callShowConfirm"></slot>
     </div>
+    <div v-if="isLoading">
+        <LoadingOutlined></LoadingOutlined>
+    </div>
 </template>
 
 
 <script>
 import {createVNode, defineComponent} from 'vue';
-import {CarryOutOutlined, CheckCircleOutlined, CheckOutlined} from "@ant-design/icons-vue";
+import {CarryOutOutlined, CheckCircleOutlined, CheckOutlined, LoadingOutlined} from "@ant-design/icons-vue";
 import {Modal} from 'ant-design-vue';
 import {subscribe, subscribers} from "../../services/api";
 import {mapState} from "vuex";
 
 export default defineComponent({
     name: "SubscribeComponent",
-    components: {CarryOutOutlined, CheckOutlined},
+    components: {LoadingOutlined, CarryOutOutlined, CheckOutlined},
     data() {
         return {
             showConfirmIcon: true,
@@ -63,6 +66,7 @@ export default defineComponent({
         },
         async loadSubscribers() {
             this.isLoading = true
+            console.log(this.event_info.id)
             const all_subscribers = await subscribers(this.event_info.id)
             this.isLoading = false
             return all_subscribers

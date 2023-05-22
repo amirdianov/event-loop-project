@@ -136,6 +136,11 @@ export async function subscribe(data) {
     const response = await instance.post(`/subscribe/`, data)
     return response.data
 }
+export async function unsubscribe(data) {
+    await check_token(store.state.login.tokens, instance)
+    const response = await instance.post(`/subscribe/`, data)
+    return response.data
+}
 
 export async function subscribers(event_id) {
     await check_token(store.state.login.tokens, instance)

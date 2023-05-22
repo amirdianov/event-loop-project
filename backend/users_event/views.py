@@ -137,40 +137,49 @@ class ParticipantViewSet(APIView):
 
 
 class SubscribeViewSet(APIView):
-    """API для подписки пользователя на бесплатное мероприятие"""
+    """API для подписки/отписки пользователя на бесплатное мероприятие"""
 
     def post(self, request):
+        print(request.data)
         event_id = request.data["event"]["id"]
-        ans = Participant(user=request.user, event_id=event_id, is_organizer=False)
-        ans.save()
-        start_time = datetime.datetime.strptime(
-            request.data["event"]["start_time"], "%Y-%m-%d %H:%M:%S"
-        )
-        notify_time = (start_time - timedelta(hours=1)).strftime("%Y-%m-%d %H:%M:%S")
-        date, time = notify_time.split(" ")
-        print(date, time)
-        year, month, day = date.split("-")
-        hours, minutes, seconds = time.split(":")
-        crontab_schedule = CrontabSchedule(
-            minute=minutes,
-            hour=hours,
-            day_of_week="*",
-            day_of_month=day,
-            month_of_year=month,
-            timezone="Europe/Moscow",
-        )
+        if "unsubscribe" not in request.data.keys():
+            ans = Participant(user=request.user, event_id=event_id, is_organizer=False)
+            ans.save()
+            start_time = datetime.datetime.strptime(
+                request.data["event"]["start_time"], "%Y-%m-%d %H:%M:%S"
+            )
+            notify_time = (start_time - timedelta(hours=1)).strftime(
+                "%Y-%m-%d %H:%M:%S"
+            )
+            date, time = notify_time.split(" ")
+            print(date, time)
+            year, month, day = date.split("-")
+            hours, minutes, seconds = time.split(":")
+            crontab_schedule = CrontabSchedule(
+                minute=minutes,
+                hour=hours,
+                day_of_week="*",
+                day_of_month=day,
+                month_of_year=month,
+                timezone="Europe/Moscow",
+            )
 
-        crontab_schedule.save()
+            crontab_schedule.save()
 
-        task = PeriodicTask(
-            name=f"send_event_notification_{request.user.id}_{event_id}",
-            task="users_event.tasks.send_event_notification",
-            crontab=crontab_schedule,
-            enabled=True,
-            one_off=True,
-            args=[event_id],
-        )
-        task.save()
+            task = PeriodicTask(
+                name=f"send_event_notification_{request.user.id}_{event_id}",
+                task="users_event.tasks.send_event_notification",
+                crontab=crontab_schedule,
+                enabled=True,
+                one_off=True,
+                args=[event_id],
+            )
+            task.save()
+        else:
+            subscribe = Participant.objects.get(
+                event_id=event_id, user_id=request.user.id
+            )
+            subscribe.delete()
         return Response({"message": "Subscribe successful"})
 
 
