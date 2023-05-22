@@ -42,9 +42,9 @@ export default defineComponent({
                     Modal.confirm({
                         title: 'Вы уверены, что хотите подписаться на мероприятие?',
                         icon: createVNode(CheckCircleOutlined, {style: 'color: green'}),
-                        content: createVNode('div', {
-                            style: 'color:red;',
-                        }, 'Действие нельзя будет отменить по техническим причинам'),
+                        // content: createVNode('div', {
+                        //     style: 'color:red;',
+                        // }, 'Действие нельзя будет отменить по техническим причинам'),
                         okText: 'Подтвердить',
                         cancelText: 'Отменить',
                         autoFocusButton: null,
