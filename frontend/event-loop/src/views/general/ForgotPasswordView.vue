@@ -41,7 +41,7 @@
 import {LockOutlined, MailOutlined} from "@ant-design/icons-vue";
 import {defineComponent, reactive} from "vue";
 import {mapState} from "vuex";
-import {forgotPassword} from "../../../services/api";
+import {forgotPassword} from "../../../services/api/user";
 
 export default defineComponent({
     name: "ForgotPasswordView",

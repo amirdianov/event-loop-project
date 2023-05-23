@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import {getPayResponse, subscribe} from "../../../services/api";
+import {getPayResponse, subscribe} from "../../../services/api/subscribtion";
 import {LoadingOutlined} from "@ant-design/icons-vue";
 import LoginComponent from "@/containers/user/LoginComponent.vue";
 

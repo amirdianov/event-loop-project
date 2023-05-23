@@ -8,9 +8,10 @@
 
 import EventInformationComponent from "@/containers/events/EventInformationComponent.vue";
 import {mapState} from "vuex";
-import {getEvent, getEventComments} from "../../../services/api";
 import CommentsSystemComponent from "@/containers/events/CommentsSystemComponent.vue";
 import store from "@/store";
+import {getEvent} from "../../../services/api/event";
+import {getEventComments} from "../../../services/api/comments";
 
 export default {
     name: "DetailEventsView",

@@ -51,7 +51,7 @@
 <script>
 import {CarryOutOutlined, CheckOutlined, EditOutlined, LoadingOutlined, PayCircleOutlined} from '@ant-design/icons-vue';
 import {defineComponent} from 'vue';
-import {getEventRate} from "../../../services/api";
+import {getEventRate} from "../../../services/api/rate";
 import {mapState} from "vuex";
 import SubscribeComponent from "@/components/SubscribeComponent.vue";
 import PaymentSubscribeComponent from "@/components/PaymentSubscribeComponent.vue";

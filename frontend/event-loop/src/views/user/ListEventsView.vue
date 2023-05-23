@@ -50,9 +50,11 @@
 <script>
 import {LikeOutlined, MessageOutlined, StarOutlined} from '@ant-design/icons-vue';
 import {defineComponent, onMounted, ref} from 'vue';
-import {getEventComments, getEventRate, getUsersSubscribedEvents} from "../../../services/api";
 import store from "@/store";
 import UnsubscribeComponent from "@/components/UnsubscribeComponent.vue";
+import {getUsersSubscribedEvents} from "../../../services/api/subscribtion";
+import {getEventComments} from "../../../services/api/comments";
+import {getEventRate} from "../../../services/api/rate";
 
 export default defineComponent({
     computed: {

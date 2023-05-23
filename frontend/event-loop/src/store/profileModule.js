@@ -1,4 +1,4 @@
-import {change_profile_information} from "../../services/api";
+import {change_profile_information} from "../../services/api/user";
 import store from "@/store/index";
 
 export const profileModule = {

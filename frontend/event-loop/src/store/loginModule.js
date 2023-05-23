@@ -1,4 +1,4 @@
-import {auth, profile, registration} from "../../services/api";
+import {auth, profile, registration} from "../../services/api/user";
 import store from "@/store/index";
 import {clearTokens, getTokens, storageTokens} from "../../services/storage";
 

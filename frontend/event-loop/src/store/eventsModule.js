@@ -1,5 +1,5 @@
 import store from "@/store/index";
-import {all_events, create_event, update_event, user_event, user_events} from "../../services/api";
+import {all_events, create_event, update_event, user_event, user_events} from "../../services/api/event";
 
 export const eventsModule = {
     state: () => ({
