@@ -11,11 +11,13 @@ export const profileModule = {
             try {
                 store.state.login.user = await change_profile_information(data)
                 commit("setSuccess", true)
+                store.state.login.isLoading = false
             } catch (e) {
                 store.state.login.isLoading = true
-                commit("setError", 'К сожалению, данные изменить не удалось')
+                commit("setError", e.message)
+                store.state.login.isLoading = false
+                throw new Error(e)
             }
-            store.state.login.isLoading = false
         }
     },
     mutations: {
