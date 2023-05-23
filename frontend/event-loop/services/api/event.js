@@ -13,20 +13,39 @@ export async function create_event(data) {
     for (const value of data.values()) {
         console.log(value);
     }
-    await check_token(store.state.login.tokens, instance)
-
-    const response = await instance.post('/my_events/', data, {
-        "content-type": `multipart/form-data; boundary=${data._boundary}`,
-    },)
-    return response.data
+    try {
+        await check_token(store.state.login.tokens, instance)
+        const response = await instance.post('/my_events/', data, {
+            "content-type": `multipart/form-data; boundary=${data._boundary}`,
+        },)
+        return response.data
+    } catch (e) {
+        if (e.response.status === 400) {
+            throw new Error("Ошибка при вводе данных")
+        } else if (e.response.status === 500) {
+            throw new Error("Ошибка сервера")
+        } else {
+            throw new Error("Произошла ошибка")
+        }
+    }
 }
 
 export async function update_event(data) {
-    await check_token(store.state.login.tokens, instance)
-    const response = await instance.patch(`/my_events/${data.id}/`, data.data, {
-        "content-type": `multipart/form-data; boundary=${data._boundary}`,
-    },)
-    return response.data
+    try {
+        await check_token(store.state.login.tokens, instance)
+        const response = await instance.patch(`/my_events/${data.id}/`, data.data, {
+            "content-type": `multipart/form-data; boundary=${data._boundary}`,
+        },)
+        return response.data
+    } catch (e) {
+        if (e.response.status === 400) {
+            throw new Error("Ошибка при вводе данных")
+        } else if (e.response.status === 500) {
+            throw new Error("Ошибка сервера")
+        } else {
+            throw new Error("Произошла ошибка")
+        }
+    }
 }
 
 export async function user_events() {

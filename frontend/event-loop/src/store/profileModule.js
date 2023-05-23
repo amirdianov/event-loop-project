@@ -2,9 +2,6 @@ import {change_profile_information} from "../../services/api/user";
 import store from "@/store/index";
 
 export const profileModule = {
-    state: () => ({
-        isSuccess: false
-    }),
     actions: {
         async changeUserInformation({commit}, data) {
             store.state.login.isLoading = true
@@ -22,8 +19,8 @@ export const profileModule = {
     },
     mutations: {
         setSuccess(state, success) {
-            state.isSuccess = success
-            setTimeout(() => state.isSuccess = false, 3000);
+            store.state.login.isSuccess = success
+            setTimeout(() => store.state.login.isSuccess = false, 3000);
         },
         setError(state, error) {
             store.state.login.error = error

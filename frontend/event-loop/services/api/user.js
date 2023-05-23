@@ -35,7 +35,6 @@ export async function registration(data) {
 
 export async function profile() {
     try {
-        console.log(store.state.login.tokens)
         await check_token(store.state.login.tokens, instance)
         const response = await instance.get('/users/profile/')
         return response.data

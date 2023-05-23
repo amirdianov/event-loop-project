@@ -35,7 +35,7 @@ export default {
     computed: {
         ...mapState({
             error: state => state.login.error,
-            isSuccess: state => state.profile.isSuccess,
+            isSuccess: state => state.login.isSuccess,
             isLoading: state => state.login.isLoading,
         })
     }

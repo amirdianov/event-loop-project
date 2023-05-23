@@ -43,9 +43,8 @@
             <time-component @update:model-value="formState.event.finish_time = $event"></time-component>
         </a-form-item>
         <!--        TODO antdv upload file-->
-        <a-form-item :name="['event', 'photo']" label="Фото" style="margin-bottom: 20px" :rules="[{ required: true}]">
-            <!--                        <upload-component v-model:value="formState.event.photo"></upload-component>-->
-            <input type="file" ref="file">
+        <a-form-item :name="['event', 'photo']" label="Фото" style="margin-bottom: 20px">
+            <input type="file" ref="file" @change="handleFileChange">
         </a-form-item>
         <a-form-item :wrapper-col="{ ...layout.wrapperCol, offset: 4}" style="margin-bottom: 0">
             <a-button type="primary" html-type="submit">Подтвердить</a-button>
@@ -101,7 +100,6 @@ export default defineComponent({
             },
         });
         let validateStart = async (_rule, value) => {
-            console.log(value)
             if (value === '') {
                 return Promise.reject('Поле должно быть заполнено!');
             } else if (value >= formState.event.finish_time && formState.event.finish_time !== '') {
@@ -111,7 +109,6 @@ export default defineComponent({
             }
         };
         let validateFinish = async (_rule, value) => {
-            console.log(value)
             if (value === '') {
                 return Promise.reject('Поле должно быть заполнено!');
             } else if (value <= formState.event.start_time) {
@@ -136,6 +133,11 @@ export default defineComponent({
                         trigger: 'change',
                     },
                 ],
+                photo: [
+                    {
+                        required: true,
+                    }
+                ]
             },
         };
         return {
@@ -151,8 +153,16 @@ export default defineComponent({
             createUsersEvent: 'events/createUsersEvent',
             updateUserEvent: 'events/updateUsersEvent'
         }),
+        handleFileChange(event) {
+            if (event.target.files.length > 0) {
+                this.formState.event.photo = event.target.files[0];
+                this.rules.event.photo = [];
+            } else {
+                this.formState.event.photo = '';
+                this.rules.event.photo = [{required: true}];
+            }
+        },
         async submit(data) {
-            console.log(data)
             const formData = new FormData();
             let keys = Object.keys(data['event'])
             keys.forEach((key) => {
@@ -183,9 +193,17 @@ export default defineComponent({
             }
             try {
                 if (this.$route.params.id) {
-                    await this.updateUserEvent({data: formData, id: this.$route.params.id})
+                    try {
+                        await this.updateUserEvent({data: formData, id: this.$route.params.id})
+                    } catch (e) {
+                        console.log(e)
+                    }
                 } else {
-                    await this.createUsersEvent(formData)
+                    try {
+                        await this.createUsersEvent(formData)
+                    } catch (e) {
+                        console.log(e)
+                    }
                 }
                 this.$router.push({name: 'my-events'})
 
