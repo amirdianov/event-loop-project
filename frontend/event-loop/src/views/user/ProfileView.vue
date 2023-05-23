@@ -1,11 +1,6 @@
 <template>
-    <a-alert v-if="this.isSuccess"
-             message="Успешно"
-             description="Информация обновлена!"
-             type="success"
-             show-icon
-    />
-    <a-alert v-if="this.error" :message="this.error" type="error"/>
+    <MessageComponent v-if="this.isSuccess" typeMessage="success" messageText="Данные успешно изменены"/>
+    <MessageComponent v-if="this.error" typeMessage="error" messageText="Ошибка" :messageDescription="this.error"/>
     <a-row type="flex" justify="space-around" align="middle" style="height: 100%">
         <a-col :span="6">
             <a-avatar :size="400">
@@ -25,10 +20,11 @@ import LayoutNav from "@/components/LayoutNav.vue";
 import {mapActions, mapState} from "vuex";
 import ProfileInformationComponent from "@/containers/user/ProfileInformationComponent.vue";
 import {UserOutlined} from "@ant-design/icons-vue";
+import MessageComponent from "@/components/MessageComponent.vue";
 
 export default {
     name: "ProfileView",
-    components: {ProfileInformationComponent, LayoutNav, UserOutlined},
+    components: {MessageComponent, ProfileInformationComponent, LayoutNav, UserOutlined},
     methods: {
         ...mapActions({logout: 'login/logout'}),
         logout_click() {
