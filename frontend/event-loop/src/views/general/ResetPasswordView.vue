@@ -40,7 +40,7 @@
 import {defineComponent, reactive, ref} from 'vue';
 import {mapState} from "vuex";
 import {LockOutlined, MailOutlined} from "@ant-design/icons-vue";
-import {resetPassword} from "../../../services/api";
+import {resetPassword} from "../../../services/api/user";
 import {storageTokens} from "../../../services/storage";
 import store from "@/store";
 

@@ -1,4 +1,4 @@
-import {auth, profile, registration} from "../../services/api";
+import {auth, profile, registration} from "../../services/api/user";
 import store from "@/store/index";
 import {clearTokens, getTokens, storageTokens} from "../../services/storage";
 
@@ -8,7 +8,8 @@ export const loginModule =
             user: null,
             tokens: getTokens(),
             isLoading: null,
-            error: null
+            error: null,
+            isSuccess: false,
         }),
         actions: {
             async loginUser({commit}, data) {
@@ -19,17 +20,12 @@ export const loginModule =
                     storageTokens(resp_tokens.access, resp_tokens.refresh);
                     commit("setTokens", resp_tokens)
                     await store.dispatch('login/loadUser')
+                    commit("setLoading", false)
                 } catch (e) {
                     commit("setLoading", false)
-                    if (e.response.status === 401) {
-                        commit("setError", "Проверьте корректность введенных данных")
-                    }
-                    if (e.response.status === 500) {
-                        commit("setError", "Что-то пошло не так")
-                    }
+                    commit("setError", e.message)
                     throw new Error(e)
                 }
-                commit("setLoading", false)
             },
             async registrationUser({commit}, data) {
                 commit("setLoading", true)
@@ -41,12 +37,7 @@ export const loginModule =
                     commit("setError", null)
                 } catch (e) {
                     commit("setLoading", false)
-                    if (e.response.status === 400) {
-                        commit("setError", "Проверьте правильность введенных данных")
-                    }
-                    if (e.response.status === 500) {
-                        commit("setError", "Что-то пошло не так")
-                    }
+                    commit("setError", e.message)
                     throw new Error(e)
                 }
                 commit("setLoading", false)
@@ -55,7 +46,6 @@ export const loginModule =
                 commit("setLoading", true)
                 try {
                     const user = await profile()
-                    // await store.dispatch('events/loadUsersEvents')
                     commit("setUser", user)
                 } catch (e) {
                     console.log(e);
@@ -89,6 +79,10 @@ export const loginModule =
             setError(state, error) {
                 state.error = error
                 setTimeout(() => state.error = null, 3000);
+            },
+            setSuccess(state, success) {
+                state.isSuccess = success
+                setTimeout(() => state.isSuccess = false, 3000);
             },
             setLoading(state, loading) {
                 state.isLoading = loading

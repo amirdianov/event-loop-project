@@ -1,5 +1,5 @@
 <template>
-    <a-alert v-if="this.error" :message="this.error" type="error"/>
+    <MessageComponent v-if="this.error" typeMessage="error" messageText="Ошибка" :messageDescription="this.error"/>
     <a-row type="flex" justify="center" align="middle" style="min-height: 550px">
         <a-col :span="10">
             <RegistrationComponent></RegistrationComponent>
@@ -8,19 +8,20 @@
 </template>
 
 <script>
-import LayoutNav from "@/components/LayoutNav.vue";
 import RegistrationComponent from "@/containers/user/RegistrationComponent.vue";
 import {mapState} from "vuex";
+import MessageComponent from "@/components/MessageComponent.vue";
 
 export default {
     name: "RegistrationView",
-    components: {RegistrationComponent},
+    components: {MessageComponent, RegistrationComponent},
     data() {
         return {}
     },
     computed: {
         ...mapState({
-            error: state => state.login.error
+            error: state => state.login.error,
+            isSuccess: state => state.login.isSuccess
         })
     }
 }

@@ -1,5 +1,5 @@
 import store from "@/store/index";
-import {all_events, create_event, update_event, user_event, user_events} from "../../services/api";
+import {all_events, create_event, update_event, user_event, user_events} from "../../services/api/event";
 
 export const eventsModule = {
     state: () => ({
@@ -45,15 +45,17 @@ export const eventsModule = {
         async createUsersEvent({commit}, data) {
             try {
                 await create_event(data)
+                commit("setSuccess", true)
             } catch (e) {
-                commit("setError", 'Ошибка')
+                commit("setError", e.message)
             }
         },
         async updateUsersEvent({commit}, data) {
             try {
                 await update_event(data)
+                commit("setSuccess", true)
             } catch (e) {
-                commit("setError", 'Ошибка')
+                commit("setError", e.message)
             }
         }
     },
@@ -61,6 +63,10 @@ export const eventsModule = {
         setError(state, error) {
             store.state.login.error = error
             setTimeout(() => store.state.login.error = null, 3000);
+        },
+        setSuccess(state, success) {
+            store.state.login.isSuccess = success
+            setTimeout(() => store.state.login.isSuccess = null, 3000);
         },
         setAllEvents(state, events) {
             state.allEvents = events

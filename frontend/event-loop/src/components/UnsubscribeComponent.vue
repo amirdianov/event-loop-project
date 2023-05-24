@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import {unsubscribe} from "../../services/api";
+import {unsubscribe} from "../../services/api/subscribtion";
 import {Modal} from "ant-design-vue";
 import {createVNode} from "vue";
 import {CheckCircleOutlined} from "@ant-design/icons-vue";

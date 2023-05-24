@@ -12,6 +12,9 @@
             <edit-outlined v-if="name==='my-event-page'" key="edit" style="font-size: 30px"
                            @click="this.$router.push({name: 'my-event-page-edit', params: {id: event_info.id, slug: slug}})">
             </edit-outlined>
+            <delete-outlined v-if="name==='my-event-page'" key="delete" style="font-size: 30px"
+                             @click="deleteEvent"
+            ></delete-outlined>
             <a-rate v-if="name==='event-page' && !isLoading" :value="this.rate" disabled allow-half/>
             <div v-if="name==='event-page' && isLoading">
                 <LoadingOutlined></LoadingOutlined>
@@ -30,7 +33,8 @@
                     v-if="name==='event-page' && event_info.price && !this.organizators.includes(this.user.id)"
                     :event_info="event_info">
                 <template v-slot:default="slotProps">
-                    <pay-circle-outlined v-if="slotProps.showConfirmIcon" style="font-size: 30px" @click="slotProps.callShowConfirm"/>
+                    <pay-circle-outlined v-if="slotProps.showConfirmIcon" style="font-size: 30px"
+                                         @click="slotProps.callShowConfirm"/>
                     <check-outlined v-else style="font-size: 30px"/>
                 </template>
 
@@ -49,12 +53,20 @@
     </a-card>
 </template>
 <script>
-import {CarryOutOutlined, CheckOutlined, EditOutlined, LoadingOutlined, PayCircleOutlined} from '@ant-design/icons-vue';
+import {
+    CarryOutOutlined,
+    CheckOutlined,
+    DeleteOutlined,
+    EditOutlined,
+    LoadingOutlined,
+    PayCircleOutlined
+} from '@ant-design/icons-vue';
 import {defineComponent} from 'vue';
-import {getEventRate} from "../../../services/api";
-import {mapState} from "vuex";
+import {getEventRate} from "../../../services/api/rate";
+import {mapActions, mapState} from "vuex";
 import SubscribeComponent from "@/components/SubscribeComponent.vue";
 import PaymentSubscribeComponent from "@/components/PaymentSubscribeComponent.vue";
+import {delete_event} from "../../../services/api/event";
 
 export default defineComponent({
     name: "CardComponent",
@@ -71,7 +83,7 @@ export default defineComponent({
         CheckOutlined,
         PaymentSubscribeComponent,
         SubscribeComponent,
-        EditOutlined, CarryOutOutlined, PayCircleOutlined, LoadingOutlined
+        EditOutlined, CarryOutOutlined, PayCircleOutlined, LoadingOutlined, DeleteOutlined
     },
     props: {
         event_info: {},
@@ -84,11 +96,18 @@ export default defineComponent({
         }),
     },
     methods: {
+        ...mapActions({loadUsersEvents: "events/loadUsersEvents"}),
         async getRate() {
             this.isLoading = true
             const obj = await getEventRate(this.event_info.id)
             console.log(obj)
             this.rate = obj['rate']
+            this.isLoading = false
+        },
+        async deleteEvent() {
+            this.isLoading = true
+            await delete_event(this.event_info.id)
+            await this.loadUsersEvents()
             this.isLoading = false
         }
     },

@@ -40,7 +40,7 @@ import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import {initNotifications} from "../../../services/notifications";
 import store from "@/store";
-import {addEventComment} from "../../../services/api";
+import {addEventComment} from "../../../services/api/comments";
 
 dayjs.extend(relativeTime);
 export default defineComponent({

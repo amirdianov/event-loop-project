@@ -17,7 +17,7 @@
 </template>
 <script>
 import {defineComponent, onMounted, ref} from 'vue';
-import {getUsersSubscribedEvents} from "../../../services/api";
+import {getUsersSubscribedEvents} from "../../../services/api/subscribtion";
 
 export default defineComponent({
     setup() {

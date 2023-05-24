@@ -54,7 +54,7 @@
 
 <script>
 import {mapState} from "vuex";
-import {setRate} from "../../../services/api";
+import {setRate} from "../../../services/api/rate";
 import SubscribeComponent from "@/components/SubscribeComponent.vue";
 import PaymentSubscribeComponent from "@/components/PaymentSubscribeComponent.vue";
 import {LoadingOutlined} from "@ant-design/icons-vue";

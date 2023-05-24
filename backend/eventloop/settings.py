@@ -151,7 +151,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "authorisation_token.User"
 
-
 # DRF configurations
 REST_FRAMEWORK = {
     # "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
@@ -164,7 +163,6 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.SessionAuthentication",
     ],
 }
-
 
 # Simple jwt authorization configurations
 SIMPLE_JWT = {
@@ -201,11 +199,9 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
 
-
 # Cors configurations
 CORS_ALLOWED_ORIGINS = ["http://localhost:5173", "http://127.0.0.1:8000"]
 CORS_ALLOW_METHODS = ["DELETE", "GET", "OPTIONS", "PATCH", "POST", "PUT"]
-
 
 # Celery configurations
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6377/0")
@@ -213,7 +209,6 @@ CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 CELERY_REDIRECT_STDOUTS_LEVEL = "INFO"  # вывод команды print, при выполнении task
 
 CELERY_TIMEZONE = "Europe/Moscow"
-
 
 # Sender email via smtp
 EMAIL_HOST = os.environ.get("EMAIL_HOST")
@@ -225,7 +220,10 @@ EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", EMAIL_HOST_USER)
 DEFAULT_TO_EMAIL = os.environ.get("DEFAULT_TO_EMAIL", EMAIL_HOST_USER)
 
-
 # Stripe payment system
 STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
 STRIPE_PUBLISHABLE_KEY = os.environ.get("STRIPE_PUBLISHABLE_KEY")
+
+# Yandex OAuth
+CLIENT_ID_YANDEX = os.environ.get("CLIENT_ID_YANDEX")
+CLIENT_SECRET_YANDEX = os.environ.get("CLIENT_SECRET_YANDEX")

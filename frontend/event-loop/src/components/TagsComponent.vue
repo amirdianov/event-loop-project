@@ -13,7 +13,7 @@
 </template>
 <script>
 import {defineComponent} from 'vue';
-import {getTags} from "../../services/api";
+import {getTags} from "../../services/api/tag";
 
 export default defineComponent({
     data() {

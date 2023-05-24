@@ -1,5 +1,5 @@
 <template>
-    <a-form
+    <a-form ref="form"
             :model="formState"
             v-bind="layout"
             name="nest-messages"
@@ -7,6 +7,7 @@
             @finish="submit"
             :wrapper-col="{span: 20}"
             :label-col="{span: 4}"
+            :rules="rules"
     >
         <a-form-item :name="['event', 'title']" label="Заголовок" :rules="[{ required: true}]">
             <a-input v-model:value="formState.event.title"/>
@@ -33,18 +34,17 @@
         <a-form-item :name="['event', 'url']" label="Ссылка">
             <a-input v-model:value="formState.event.url" style="width: 100%"></a-input>
         </a-form-item>
-        <a-form-item :name="['event', 'start_time']" label="Начало мероприятия" :rules="[{ required: true}]"
+        <a-form-item :name="['event', 'start_time']" label="Начало мероприятия"
         >
             <time-component @update:model-value="formState.event.start_time = $event"
             ></time-component>
         </a-form-item>
-        <a-form-item :name="['event', 'finish_time']" label="Конец мероприятия" :rules="[{ required: true}]">
+        <a-form-item :name="['event', 'finish_time']" label="Конец мероприятия">
             <time-component @update:model-value="formState.event.finish_time = $event"></time-component>
         </a-form-item>
         <!--        TODO antdv upload file-->
         <a-form-item :name="['event', 'photo']" label="Фото" style="margin-bottom: 20px">
-            <!--                        <upload-component v-model:value="formState.event.photo"></upload-component>-->
-            <input type="file" ref="file">
+            <input type="file" ref="file" @change="handleFileChange">
         </a-form-item>
         <a-form-item :wrapper-col="{ ...layout.wrapperCol, offset: 4}" style="margin-bottom: 0">
             <a-button type="primary" html-type="submit">Подтвердить</a-button>
@@ -62,6 +62,7 @@ export default defineComponent({
     name: 'CreateEditEventInformationComponent',
     components: {TagsComponent, TimeComponent},
     setup() {
+        const file = ref(null)
         const layout = {
             labelCol: {
                 span: 8,
@@ -99,15 +100,70 @@ export default defineComponent({
                 url: null,
             },
         });
-        const onFinish = values => {
-            console.log(values)
+        let validateStart = async (_rule, value) => {
+            if (value === '') {
+                return Promise.reject('Поле должно быть заполнено!');
+            } else if (value >= formState.event.finish_time && formState.event.finish_time !== '') {
+                return Promise.reject('Введите предыдущую дату');
+            } else {
+                return Promise.resolve();
+            }
+        };
+        let validateFinish = async (_rule, value) => {
+            if (value === '') {
+                return Promise.reject('Поле должно быть заполнено!');
+            } else if (value <= formState.event.start_time) {
+                return Promise.reject('Введите последующую дату');
+            } else {
+                return Promise.resolve();
+            }
+        };
+        // let validatePhoto = async (_rule, value) => {
+        //     console.log(file.value.files[0])
+        //     if (file.value.files[0] !== undefined) {
+        //         formState.event.photo = file.value.files[0];
+        //         rules.event.photo = [{required: false, trigger: 'change', validator: validatePhoto}];
+        //         return Promise.resolve()
+        //     } else {
+        //         formState.event.photo = '';
+        //         rules.event.photo = [{required: true, trigger: 'change', validator: validatePhoto}];
+        //         return Promise.reject('Поле должно быть заполнено!');
+        //     }
+        // }
+
+        const rules = {
+            event: {
+                start_time: [
+                    {
+                        required: true,
+                        validator: validateStart,
+                        trigger: 'change',
+                    },
+                ],
+                finish_time: [
+                    {
+                        required: true,
+                        validator: validateFinish,
+                        trigger: 'change',
+                    },
+                ],
+                photo: [
+                    {
+                        required: true,
+                        // validator: validatePhoto,
+                        trigger: 'change',
+                    }
+                ]
+            },
         };
         return {
             formState,
-            onFinish,
             layout,
             validateMessages,
-            options1
+            options1,
+            rules,
+            file,
+            // validatePhoto
         };
     },
     methods: {
@@ -115,8 +171,20 @@ export default defineComponent({
             createUsersEvent: 'events/createUsersEvent',
             updateUserEvent: 'events/updateUsersEvent'
         }),
+        handleFileChange() {
+            console.log('change')
+            if (this.$refs.file.files.length > 0) {
+                console.log('второй')
+                this.formState.event.photo = this.$refs.file.files[0];
+                this.rules.event.photo = [];
+            } else {
+                console.log('третий')
+                this.formState.event.photo = '';
+                this.rules.event.photo = [{required: false, trigger: 'change', validator: this.validatePhoto}];
+
+            }
+        },
         async submit(data) {
-            console.log(data)
             const formData = new FormData();
             let keys = Object.keys(data['event'])
             keys.forEach((key) => {
@@ -147,9 +215,17 @@ export default defineComponent({
             }
             try {
                 if (this.$route.params.id) {
-                    await this.updateUserEvent({data: formData, id: this.$route.params.id})
+                    try {
+                        await this.updateUserEvent({data: formData, id: this.$route.params.id})
+                    } catch (e) {
+                        console.log(e)
+                    }
                 } else {
-                    await this.createUsersEvent(formData)
+                    try {
+                        await this.createUsersEvent(formData)
+                    } catch (e) {
+                        console.log(e)
+                    }
                 }
                 this.$router.push({name: 'my-events'})
 

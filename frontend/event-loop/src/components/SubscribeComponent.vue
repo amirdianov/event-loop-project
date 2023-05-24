@@ -12,7 +12,7 @@
 import {createVNode, defineComponent} from 'vue';
 import {CarryOutOutlined, CheckCircleOutlined, CheckOutlined, LoadingOutlined} from "@ant-design/icons-vue";
 import {Modal} from 'ant-design-vue';
-import {subscribe, subscribers} from "../../services/api";
+import {subscribe, subscribers} from "../../services/api/subscribtion";
 import {mapState} from "vuex";
 
 export default defineComponent({

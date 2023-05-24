@@ -17,7 +17,7 @@ import {
     PayCircleOutlined
 } from "@ant-design/icons-vue";
 import {Modal} from 'ant-design-vue';
-import {getPKForPay, payEvent, subscribers} from "../../services/api";
+import {getPKForPay, payEvent, subscribers} from "../../services/api/subscribtion";
 import {mapState} from "vuex";
 import {loadStripe} from "@stripe/stripe-js";
 
