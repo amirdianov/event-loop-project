@@ -73,8 +73,19 @@ export async function change_profile_information(data) {
 
 
 export async function forgotPassword(email) {
-    const response = await instance.post(`/forgot_password/`, email)
-    return response.data
+    try {
+        const response = await instance.post(`/forgot_password/`, email)
+        return response.data
+    } catch (e) {
+        if (e.response.status === 400) {
+            throw new Error("Ошибка при вводе данных")
+        } else if (e.response.status === 500) {
+            throw new Error("Ошибка сервера")
+        } else {
+            throw new Error("Произошла ошибка")
+        }
+    }
+
 }
 
 export async function resetPassword(data) {

@@ -1,4 +1,5 @@
 <template>
+    <MessageComponent v-if="this.error" typeMessage="error" messageText="Ошибка" :messageDescription="this.error"/>
     <a-row type="flex" justify="center" align="middle" style="min-height: 550px">
         <a-col :span="10">
             <a-form v-if="!sendMail"
@@ -42,10 +43,12 @@ import {LockOutlined, MailOutlined} from "@ant-design/icons-vue";
 import {defineComponent, reactive} from "vue";
 import {mapState} from "vuex";
 import {forgotPassword} from "../../../services/api/user";
+import store from "@/store";
+import MessageComponent from "@/components/MessageComponent.vue";
 
 export default defineComponent({
     name: "ForgotPasswordView",
-    components: {LockOutlined, MailOutlined},
+    components: {MessageComponent, LockOutlined, MailOutlined},
     data() {
         return {
             sendMail: false,
@@ -81,14 +84,14 @@ export default defineComponent({
     },
     methods: {
         async submit(data) {
-            this.sendMail = true
             try {
                 await forgotPassword(data)
+                this.sendMail = true
                 setTimeout(() => {
                     this.$router.push({name: 'login'})
                 }, 5000)
             } catch (e) {
-                console.log(e)
+                store.state.login.error = e.message
             }
         }
 
