@@ -1,5 +1,5 @@
 <template>
-    <a-form
+    <a-form ref="form"
             :model="formState"
             v-bind="layout"
             name="nest-messages"
@@ -62,6 +62,7 @@ export default defineComponent({
     name: 'CreateEditEventInformationComponent',
     components: {TagsComponent, TimeComponent},
     setup() {
+        const file = ref(null)
         const layout = {
             labelCol: {
                 span: 8,
@@ -117,6 +118,19 @@ export default defineComponent({
                 return Promise.resolve();
             }
         };
+        // let validatePhoto = async (_rule, value) => {
+        //     console.log(file.value.files[0])
+        //     if (file.value.files[0] !== undefined) {
+        //         formState.event.photo = file.value.files[0];
+        //         rules.event.photo = [{required: false, trigger: 'change', validator: validatePhoto}];
+        //         return Promise.resolve()
+        //     } else {
+        //         formState.event.photo = '';
+        //         rules.event.photo = [{required: true, trigger: 'change', validator: validatePhoto}];
+        //         return Promise.reject('Поле должно быть заполнено!');
+        //     }
+        // }
+
         const rules = {
             event: {
                 start_time: [
@@ -136,6 +150,8 @@ export default defineComponent({
                 photo: [
                     {
                         required: true,
+                        // validator: validatePhoto,
+                        trigger: 'change',
                     }
                 ]
             },
@@ -146,6 +162,8 @@ export default defineComponent({
             validateMessages,
             options1,
             rules,
+            file,
+            // validatePhoto
         };
     },
     methods: {
@@ -153,13 +171,17 @@ export default defineComponent({
             createUsersEvent: 'events/createUsersEvent',
             updateUserEvent: 'events/updateUsersEvent'
         }),
-        handleFileChange(event) {
-            if (event.target.files.length > 0) {
-                this.formState.event.photo = event.target.files[0];
+        handleFileChange() {
+            console.log('change')
+            if (this.$refs.file.files.length > 0) {
+                console.log('второй')
+                this.formState.event.photo = this.$refs.file.files[0];
                 this.rules.event.photo = [];
             } else {
+                console.log('третий')
                 this.formState.event.photo = '';
-                this.rules.event.photo = [{required: true}];
+                this.rules.event.photo = [{required: false, trigger: 'change', validator: this.validatePhoto}];
+
             }
         },
         async submit(data) {
