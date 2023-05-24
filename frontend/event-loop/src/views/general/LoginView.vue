@@ -1,5 +1,4 @@
 <template>
-    <MessageComponent v-if="this.isSuccess" typeMessage="success" messageText="Вы вошли в систему"/>
     <MessageComponent v-if="this.error" typeMessage="error" messageText="Ошибка" :messageDescription="this.error"/>
     <a-row type="flex" justify="center" align="middle" style="min-height: 550px">
         <a-col :span="10">
