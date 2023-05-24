@@ -89,9 +89,12 @@ export default defineComponent({
                 this.sendMail = true
                 setTimeout(() => {
                     this.$router.push({name: 'login'})
-                }, 5000)
+                }, 3000)
             } catch (e) {
                 store.state.login.error = e.message
+                setTimeout(() => {
+                    store.state.login.error = false
+                }, 3000)
             }
         }
 

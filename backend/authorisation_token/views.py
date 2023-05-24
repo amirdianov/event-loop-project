@@ -2,6 +2,7 @@ import requests
 from django.conf import settings
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.core.mail import EmailMessage
+from django.http import Http404
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from drf_yasg.utils import swagger_auto_schema
@@ -105,21 +106,24 @@ class UserViewSet(
 @permission_classes([])
 def forgot_password_view(request):
     email = request.data["email"]
-    user = User.objects.get(email=email)
+    try:
+        user = User.objects.get(email=email)
 
-    token_generator = PasswordResetTokenGenerator()
-    token = token_generator.make_token(user)
+        token_generator = PasswordResetTokenGenerator()
+        token = token_generator.make_token(user)
 
-    uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
-    reset_url = f"http://localhost:5173/reset_password/{uidb64}/{token}/"
-    email = EmailMessage(
-        "Сброс пароля",
-        reset_url,
-        settings.DEFAULT_FROM_EMAIL,
-        [email],
-    )
-    email.send()
-    return Response({"status": "ok"})
+        uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
+        reset_url = f"http://localhost:5173/reset_password/{uidb64}/{token}/"
+        email = EmailMessage(
+            "Сброс пароля",
+            reset_url,
+            settings.DEFAULT_FROM_EMAIL,
+            [email],
+        )
+        email.send()
+        return Response({"status": "ok"})
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["POST"])
