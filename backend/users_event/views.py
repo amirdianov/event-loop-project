@@ -89,21 +89,24 @@ def pay_event_response_view(request):
 
     payment_status = payment_intent.status
     payment_created = payment_intent.created
-    payment_created = datetime.datetime.fromtimestamp(payment_created).isoformat()
-    print(payment_created)
-    operation = BankOperation(
-        user=request.user,
-        event=event,
-        status=payment_status,
-        created_at=payment_created,
-        payment_id=payment_id,
+    payment_created = datetime.datetime.fromtimestamp(payment_created).strftime(
+        "%Y-%m-%d %H:%M:%S"
     )
-    operation.save()
+    print(payment_created)
     if payment_status == "succeeded":
+        operation = BankOperation(
+            user=request.user,
+            event=event,
+            status=payment_status,
+            created_at=payment_created,
+            payment_id=payment_id,
+        )
+        operation.save()
+
         return Response(
             {
                 "status_pay": "ok",
-                "event": EventInfoSerializer(event).data,
+                "event": EventDetailSerializer(event).data,
             }
         )
     else:

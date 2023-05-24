@@ -44,10 +44,10 @@ export default {
             this.isLoadingNow = false
         }
     },
-    created() {
+    async created() {
         const event_id = this.$route.params.id;
-        this.loadEvent(event_id)
-        this.loadEventComments(event_id)
+        await this.loadEvent(event_id)
+        await this.loadEventComments(event_id)
     }
 }
 </script>

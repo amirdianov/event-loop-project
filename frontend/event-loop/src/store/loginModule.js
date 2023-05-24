@@ -21,7 +21,6 @@ export const loginModule =
                     commit("setTokens", resp_tokens)
                     await store.dispatch('login/loadUser')
                     commit("setLoading", false)
-                    commit("setSuccess", true)
                 } catch (e) {
                     commit("setLoading", false)
                     commit("setError", e.message)
@@ -36,7 +35,6 @@ export const loginModule =
                     commit("setTokens", resp_tokens)
                     await store.dispatch('login/loadUser')
                     commit("setError", null)
-                    commit("setSuccess", true)
                 } catch (e) {
                     commit("setLoading", false)
                     commit("setError", e.message)
