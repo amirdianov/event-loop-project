@@ -1,3 +1,4 @@
+import requests
 from django.conf import settings
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.core.mail import EmailMessage
@@ -19,6 +20,7 @@ from authorisation_token.serializers import (
     TokensSerializer,
     PasswordSerializer,
 )
+from eventloop.settings import CLIENT_ID_YANDEX, CLIENT_SECRET_YANDEX
 
 
 def get_tokens_for_user(user):
@@ -144,7 +146,26 @@ def reset_password_view(request):
 @api_view(["POST"])
 @permission_classes([])
 def yandex_token_view(request):
-    user_info = request.data
+    print("я тут")
+    code = request.data["code"]
+
+    data = {
+        "grant_type": "authorization_code",
+        "code": code,
+        "client_id": CLIENT_ID_YANDEX,
+        "client_secret": CLIENT_SECRET_YANDEX,
+        "redirect_uri": "http://localhost:5173/",
+    }
+    print(data)
+    token = requests.post(
+        url="https://oauth.yandex.ru/token",
+        headers={"Content-Type": "application/x-www-form-urlencoded"},
+        data=data,
+    )
+    print(token.json())
+    user_info = requests.get(
+        f'https://login.yandex.ru/info?oauth_token={token.json()["access_token"]}'
+    ).json()
     user = User(name=user_info["display_name"], email=user_info["emails"][0])
     try:
         user.save()

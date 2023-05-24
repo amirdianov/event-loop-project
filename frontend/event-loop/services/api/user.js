@@ -1,6 +1,7 @@
 import store from "@/store";
 import {check_token} from "../token_verify";
 import {instance} from "./instance"
+import axios from "axios";
 
 export async function auth(email, password) {
     try {
@@ -78,5 +79,11 @@ export async function forgotPassword(email) {
 
 export async function resetPassword(data) {
     const response = await instance.post(`/reset_password/`, data)
+    return response.data
+}
+
+export async function yandexToken(data) {
+    console.log('я тут')
+    const response = await axios.post(`http://127.0.0.1:8000/api/yandex_token/`, data)
     return response.data
 }
