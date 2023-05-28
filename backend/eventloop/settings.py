@@ -29,7 +29,7 @@ SECRET_KEY = "django-insecure-0*j$(ij$674n6@78ij%pb2)$r2&uqlx5tjc*@m-ka+!xacn70i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -140,6 +140,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = "static"
+
 
 MEDIA_ROOT = "media"
 MEDIA_URL = "/media/"
@@ -203,7 +205,7 @@ SIMPLE_JWT = {
 CORS_ALLOWED_ORIGINS = ["http://localhost:5173", "http://127.0.0.1:8000"]
 CORS_ALLOW_METHODS = ["DELETE", "GET", "OPTIONS", "PATCH", "POST", "PUT"]
 
-# Celery configurations
+# Celery configurations (78 port for redis in websockets)
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6377/0")
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 CELERY_REDIRECT_STDOUTS_LEVEL = "INFO"  # вывод команды print, при выполнении task
