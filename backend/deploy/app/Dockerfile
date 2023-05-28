@@ -11,13 +11,13 @@ COPY backend/poetry.lock backend/pyproject.toml ./
 
 RUN poetry install --only main --no-root
 
-COPY . .
+COPY /backend .
 
-RUN python backend/manage.py collectstatic --noinput
+RUN python manage.py collectstatic --noinput
 
 EXPOSE $PORT
 
 #RUN docker run -p 6378:6379 -d redis:5
 
-CMD python backend/manage.py migrate && \
-    python backend/manage.py runserver 0.0.0.0:8000
+CMD python manage.py migrate && \
+    python manage.py runserver 0.0.0.0:8000
