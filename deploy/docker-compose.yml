@@ -5,7 +5,7 @@ services:
     ports:
       - "8000:8000"
     build:
-      dockerfile: backend/deploy/app/Dockerfile
+      dockerfile: deploy/app/back/Dockerfile
       context: ..
     depends_on:
       - postgres
@@ -13,12 +13,12 @@ services:
       DB_HOST: postgres
       DB_PORT: "5432"
     volumes:
-      - media:/app/media/
+      - media:/app/backend/media/
   frontend:
     image: eventloop_front:latest
     build:
       context: ..
-      dockerfile: frontend/event-loop/deploy/app/Dockerfile
+      dockerfile: deploy/app/front/Dockerfile
     ports:
       - "8080:80"
   postgres:
@@ -34,7 +34,7 @@ services:
   redis:
     image: redis:7-alpine
     ports:
-      - "6377:6379"
+      - "6379:6379"
 volumes:
   db:
   redis:

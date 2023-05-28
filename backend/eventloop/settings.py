@@ -210,7 +210,7 @@ CORS_ALLOWED_ORIGINS = [
 CORS_ALLOW_METHODS = ["DELETE", "GET", "OPTIONS", "PATCH", "POST", "PUT"]
 
 # Celery configurations (78 port for redis in websockets)
-CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6377/0")
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://redis:6379/0")
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 CELERY_REDIRECT_STDOUTS_LEVEL = "INFO"  # вывод команды print, при выполнении task
 
