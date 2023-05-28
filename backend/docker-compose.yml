@@ -14,6 +14,13 @@ services:
       DB_PORT: "5432"
     volumes:
       - media:/app/media/
+  frontend:
+    image: eventloop_front:latest
+    build:
+      context: ..
+      dockerfile: frontend/event-loop/deploy/app/Dockerfile
+    ports:
+      - "8080:80"
   postgres:
     image: postgres:14-alpine
     ports:

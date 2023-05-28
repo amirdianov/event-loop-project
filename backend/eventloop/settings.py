@@ -202,7 +202,11 @@ SIMPLE_JWT = {
 }
 
 # Cors configurations
-CORS_ALLOWED_ORIGINS = ["http://localhost:5173", "http://127.0.0.1:8000"]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:8000",
+    "http://localhost:8080",
+]
 CORS_ALLOW_METHODS = ["DELETE", "GET", "OPTIONS", "PATCH", "POST", "PUT"]
 
 # Celery configurations (78 port for redis in websockets)
