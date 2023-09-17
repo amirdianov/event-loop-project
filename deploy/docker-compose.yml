@@ -12,6 +12,8 @@ services:
     environment:
       DB_HOST: postgres
       DB_PORT: "5432"
+      REDIS_WEBSOCKET_HOST: redis_web_sockets
+      REDIS_WEBSOCKET_PORT: "6379"
     volumes:
       - media:/app/backend/media/
   frontend:
@@ -35,7 +37,32 @@ services:
     image: redis:7-alpine
     ports:
       - "6379:6379"
+  redis_web_sockets:
+    image: redis:7-alpine
+    ports:
+      - "6378:6379"
+  celery:
+    build:
+      dockerfile: deploy/app/back/Dockerfile
+      context: ..
+    depends_on:
+      - app
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+    command: [ "celery", "-A", "eventloop", "worker", "-l", "info" ]
+  celery_beat:
+    build:
+      dockerfile: deploy/app/back/Dockerfile
+      context: ..
+    depends_on:
+      - app
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+    command: [ "celery", "-A", "eventloop", "beat", "-l", "info" ]
 volumes:
   db:
   redis:
   media:
+  static:

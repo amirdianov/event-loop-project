@@ -8,13 +8,15 @@ WORKDIR /app/backend
 
 COPY backend/poetry.lock backend/pyproject.toml ./
 
-
 RUN poetry install --only main --no-root
 
 COPY /backend .
 
-RUN python manage.py collectstatic --noinput
-
 EXPOSE $PORT
 
-CMD sh -c 'sleep 10 && celery -A eventloop worker -l info & celery -A eventloop beat -l info & python manage.py migrate && python manage.py runserver 0.0.0.0:$PORT'
+COPY deploy/app/back/entrypoint.sh /app/scripts/
+RUN chmod +x -R /app/scripts/
+ENTRYPOINT ["/app/scripts/entrypoint.sh"]
+
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
