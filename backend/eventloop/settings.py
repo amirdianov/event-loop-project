@@ -29,7 +29,7 @@ SECRET_KEY = "django-insecure-0*j$(ij$674n6@78ij%pb2)$r2&uqlx5tjc*@m-ka+!xacn70i
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -102,7 +102,12 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("127.0.0.1", 6378)],
+            "hosts": [
+                (
+                    os.environ.get("REDIS_WEBSOCKET_HOST", "127.0.0.1"),
+                    os.environ.get("REDIS_WEBSOCKET_PORT", 6378),
+                )
+            ],
         },
     },
 }
@@ -140,6 +145,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = "static"
+
 
 MEDIA_ROOT = "media"
 MEDIA_URL = "/media/"
@@ -200,11 +207,15 @@ SIMPLE_JWT = {
 }
 
 # Cors configurations
-CORS_ALLOWED_ORIGINS = ["http://localhost:5173", "http://127.0.0.1:8000"]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:8000",
+    "http://localhost:8080",
+]
 CORS_ALLOW_METHODS = ["DELETE", "GET", "OPTIONS", "PATCH", "POST", "PUT"]
 
-# Celery configurations
-CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6377/0")
+# Celery configurations (78 port for redis in websockets)
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://redis:6379/0")
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 CELERY_REDIRECT_STDOUTS_LEVEL = "INFO"  # вывод команды print, при выполнении task
 

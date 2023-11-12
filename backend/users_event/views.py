@@ -237,6 +237,8 @@ class EventViewSet(
     mixins.ListModelMixin,
     GenericViewSet,
 ):
+    permission_classes = []
+
     def get_serializer_class(self):
         if self.action in ("retrieve", "list"):
             return EventDetailSerializer
@@ -265,6 +267,7 @@ class UserEventViewSet(
     GenericViewSet,
 ):
     serializer_class = EventInfoSerializer
+    permission_classes = []
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset(user_id=self.request.user.id))
